@@ -6,8 +6,6 @@ class CharacterAlignment:
     The alignment of a character
     """
 
-    # TODO: add dicts for moralities, natures, and alignments
-
     class Nature(Enum):
         """
         How lawful or chaotic a character is
@@ -26,6 +24,18 @@ class CharacterAlignment:
         NEUTRAL = 1
         EVIL = 2
 
+    _nature_names = {
+        Nature.LAWFUL: "Lawful",
+        Nature.NEUTRAL: "Neutral",
+        Nature.CHAOTIC: "Chaotic"
+    }
+
+    _morality_names = {
+        Morality.GOOD: "Good",
+        Morality.NEUTRAL: "Neutral",
+        Morality.EVIL: "Evil"
+    }
+
     def __init__(self, nature: Nature, morality: Morality):
         """
         Initializes the alignment's fields
@@ -42,10 +52,10 @@ class CharacterAlignment:
         Gets the name of the alignment
 
         :return: The name of the alignment; typically is of the form "<nature name> <morality name>"; if both nature
-        and morality are NEUTRAL, the name is "TRUE NEUTRAL"
+        and morality are NEUTRAL, the name is "True Neutral"
         """
 
         if self._nature == self.Nature.NEUTRAL and self._morality == self.Morality.NEUTRAL:
-            return "TRUE NEUTRAL"
+            return "True Neutral"
 
-        return self._nature.name + " " + self._morality.name
+        return self._nature_names[self._nature] + " " + self._morality_names[self._morality]

@@ -1,8 +1,9 @@
 from main.model.character_components.character_advancements import CharacterAdvancements
 from main.model.character_components.character_alignment import CharacterAlignment
-from main.model.character_components.character_class import CharacterClass
-from main.model.character_components.race.character_race import CharacterRace
 from main.model.character_components.race.character_races import CharacterRaces
+from typing import Type
+
+from main.model.character_components.character_race import CharacterRace
 
 
 class Character:
@@ -21,20 +22,19 @@ class Character:
             self,
             name: str,
             player_name: str,
-            class_name: str,
-            race_name: str,
+            class_: Type[CharacterClass],
+            race: Type[CharacterRace],
             level: int,
             background: str,
             alignment: CharacterAlignment
     ):
         """
-        Builds the character in its initial state; raises KeyError if there is no class with the given class_name or no
-        race with the given race_name; raises ValueError if the given level is unreachable
+        Builds the character in its initial state; raises ValueError if the given level is unreachable
 
         :param name: Name of the character
         :param player_name: Name of the player playing the character
-        :param class_name: The name of the character's class
-        :param race_name: The name of the character's race
+        :param class_: The character's class
+        :param race: The character's race
         :param level: Character's starting level
         :param background: Background of the character
         :param alignment: Alignment of the character
@@ -44,8 +44,6 @@ class Character:
 
         self.name = name
         self._player_name = player_name
-        self._class = CharacterClasses.get(class_name)
-        self._race = CharacterRaces.get(race_name)
 
         # TODO: add class variables
         # TODO: add race variables

@@ -11,30 +11,30 @@ class CharacterAlignmentTest(unittest.TestCase):
     def test_name(self):
         # Good
         alignment = CharacterAlignment(self.nature.LAWFUL, self.morality.GOOD)
-        self.assertEqual(alignment.name(), "LAWFUL GOOD")
+        self.assertEqual(alignment.name(), "Lawful Good")
 
         alignment = CharacterAlignment(self.nature.NEUTRAL, self.morality.GOOD)
-        self.assertEqual(alignment.name(), "NEUTRAL GOOD")
+        self.assertEqual(alignment.name(), "Neutral Good")
 
         alignment = CharacterAlignment(self.nature.CHAOTIC, self.morality.GOOD)
-        self.assertEqual(alignment.name(), "CHAOTIC GOOD")
+        self.assertEqual(alignment.name(), "Chaotic Good")
 
         # Neutral
         alignment = CharacterAlignment(self.nature.LAWFUL, self.morality.NEUTRAL)
-        self.assertEqual(alignment.name(), "LAWFUL NEUTRAL")
+        self.assertEqual(alignment.name(), "Lawful Neutral")
 
         alignment = CharacterAlignment(self.nature.NEUTRAL, self.morality.NEUTRAL)
-        self.assertEqual(alignment.name(), "TRUE NEUTRAL")
+        self.assertEqual(alignment.name(), "True Neutral")
 
         alignment = CharacterAlignment(self.nature.CHAOTIC, self.morality.NEUTRAL)
-        self.assertEqual(alignment.name(), "CHAOTIC NEUTRAL")
+        self.assertEqual(alignment.name(), "Chaotic Neutral")
 
         # Evil
         alignment = CharacterAlignment(self.nature.LAWFUL, self.morality.EVIL)
-        self.assertEqual(alignment.name(), "LAWFUL EVIL")
+        self.assertEqual(alignment.name(), "Lawful Evil")
 
         alignment = CharacterAlignment(self.nature.NEUTRAL, self.morality.EVIL)
-        self.assertEqual(alignment.name(), "NEUTRAL EVIL")
+        self.assertEqual(alignment.name(), "Neutral Evil")
 
         alignment = CharacterAlignment(self.nature.CHAOTIC, self.morality.EVIL)
-        self.assertEqual(alignment.name(), "CHAOTIC EVIL")
+        self.assertEqual(alignment.name(), "Chaotic Evil")
