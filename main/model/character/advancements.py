@@ -1,4 +1,3 @@
-from collections import namedtuple
 from math import floor
 
 
@@ -34,18 +33,6 @@ class Advancements:
     ]
 
     @classmethod
-    def get_experience_points(cls, level: int) -> int:
-        """
-        Gets the experience points required to attain the given level; raises IndexError if there is no exp amount
-        that a character can have that will allow them to attain the given level, as defined by the exp list
-
-        :param level: The level of the character
-        :return: The minimum experience points needed for a character to get to the given level
-        """
-
-        return cls._exp_list[level - 1]
-
-    @classmethod
     def get_level(cls, exp: int) -> int:
         """
         Gets the level for the given amount of experience points
@@ -57,15 +44,27 @@ class Advancements:
         return cls._get_exp_index(exp) + 1
 
     @classmethod
-    def get_proficiency_bonus(cls, exp: int) -> int:
+    def get_min_exp(cls, level: int) -> int:
         """
-        Gets the proficiency bonus for the given amount of experience points
+        Gets the experience points required to attain the given level; raises IndexError if there is no exp amount
+        that a character can have that will allow them to attain the given level, as defined by the exp list
 
-        :param exp: The amount of experience points
-        :return: The proficiency bonus for the given exp
+        :param level: The level of the character
+        :return: The minimum experience points needed for a character to get to the given level
         """
 
-        return floor(cls._get_exp_index(exp) * cls._RATE_PB_INCR) + cls._MIN_PB
+        return cls._exp_list[level - 1]
+
+    @classmethod
+    def get_proficiency_bonus(cls, level: int) -> int:
+        """
+        Gets the proficiency bonus for the given level
+
+        :param level: The level of the character
+        :return: The proficiency bonus for the given level
+        """
+
+        return floor((level - 1) * cls._RATE_PB_INCR) + cls._MIN_PB
 
     @classmethod
     def reachable_level(cls, level: int) -> bool:

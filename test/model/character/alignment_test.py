@@ -1,9 +1,9 @@
 import unittest
 
-from main.model.character_components.alignment import Alignment
+from main.model.character.alignment import Alignment
 
 
-class CharacterAlignmentTest(unittest.TestCase):
+class AlignmentTest(unittest.TestCase):
     def setUp(self):
         self.nature = Alignment.Nature
         self.morality = Alignment.Morality

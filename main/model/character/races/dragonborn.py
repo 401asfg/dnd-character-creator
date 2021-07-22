@@ -1,26 +1,26 @@
 from typing import List
 
-from main.model.character_components.alignment import Alignment
-from main.model.character_components.race import Race
-from main.model.character_components.size import Size
+from main.model.character.alignment import Alignment
+from main.model.character.race import Race
+from main.model.character.size import Size
 
 
-class Elf(Race):
+class Dragonborn(Race):
     """
-    The racial information for a elf character
+    The racial information for a dragonborn character
     """
 
     @classmethod
     def get_name(cls) -> str:
-        return "Elf"
+        return "Dragonborn"
 
     @classmethod
     def get_strength_bonus(cls) -> int:
-        return 0
+        return 2
 
     @classmethod
     def get_dexterity_bonus(cls) -> int:
-        return 2
+        return 0
 
     @classmethod
     def get_constitution_bonus(cls) -> int:
@@ -41,6 +41,7 @@ class Elf(Race):
     @classmethod
     def get_acceptable_alignment_natures(cls) -> List[Alignment.Nature]:
         return [
+            Alignment.Nature.LAWFUL,
             Alignment.Nature.NEUTRAL,
             Alignment.Nature.CHAOTIC
         ]
@@ -49,17 +50,16 @@ class Elf(Race):
     def get_acceptable_alignment_moralities(cls) -> List[Alignment.Morality]:
         return [
             Alignment.Morality.GOOD,
-            Alignment.Morality.NEUTRAL,
             Alignment.Morality.EVIL
         ]
 
     @classmethod
     def get_min_adult_age(cls) -> int:
-        return 100
+        return 15
 
     @classmethod
     def get_life_expectancy(cls) -> int:
-        return 750
+        return 80
 
     @classmethod
     def get_size(cls) -> Size:
