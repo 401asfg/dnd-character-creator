@@ -1,5 +1,8 @@
 from main.model.character_components.character_advancements import CharacterAdvancements
-from main.model.character_components.character_races import CharacterRaces
+from main.model.character_components.character_alignment import CharacterAlignment
+from main.model.character_components.character_class import CharacterClass
+from main.model.character_components.race.character_race import CharacterRace
+from main.model.character_components.race.character_races import CharacterRaces
 
 
 class Character:
@@ -14,26 +17,39 @@ class Character:
     # TODO: add rest of functions
     # TODO: add exceptions to ctor (note all exceptions)
 
-    def __init__(self, character_name, player_name, class_name, race_name, level, background, alignment):
+    def __init__(
+            self,
+            name: str,
+            player_name: str,
+            class_name: str,
+            race_name: str,
+            level: int,
+            background: str,
+            alignment: CharacterAlignment
+    ):
         """
-        Builds the character in its initial state; raises KeyError if there is no class with the given class_name, or if
-        there is no race with the given race_name; raises ValueError if the given level is unreachable
+        Builds the character in its initial state; raises KeyError if there is no class with the given class_name or no
+        race with the given race_name; raises ValueError if the given level is unreachable
 
-        :param character_name: (String) Name of the character
-        :param player_name: (String) Name of the player playing the character
-        :param class_name: (String) Name of the character's class; used to get CharacterClass from dictionary of
-        character classes
-        :param race_name: (String) Name of the character's race; used to get CharacterRace from dictionary of character
-        races
-        :param level: (Integer) Character's starting level
-        :param background: (String) Background of the character
-        :param alignment: (CharacterAlignment) Alignment of the character
+        :param name: Name of the character
+        :param player_name: Name of the player playing the character
+        :param class_name: The name of the character's class
+        :param race_name: The name of the character's race
+        :param level: Character's starting level
+        :param background: Background of the character
+        :param alignment: Alignment of the character
         """
 
-        self._character_name = character_name
+        # TODO: set new variables based on the character class and character race's static methods
+
+        self.name = name
         self._player_name = player_name
-        self._character_class =
-        self._character_race = CharacterRaces.get(race_name)
+        self._class = CharacterClasses.get(class_name)
+        self._race = CharacterRaces.get(race_name)
+
+        # TODO: add class variables
+        # TODO: add race variables
+
         self._background = background
         self._alignment = alignment
 
@@ -48,12 +64,12 @@ class Character:
         self._exp = CharacterAdvancements.get_experience_points(self._level)
         self._proficiency_bonus = CharacterAdvancements.get_proficiency_bonus(self._exp)
 
-    def gain_exp(self, points):
+    def gain_exp(self, points: int):
         """
         Give the character experience points; adjust the character's level and proficiency bonus to those which
         correspond with the new exp amount, as defined in the CharacterAdvancements class
 
-        :param points: (Integer) The amount of experience points to give the character
+        :param points: The amount of experience points to give the character
         """
 
         self._exp += points
@@ -84,43 +100,35 @@ class Character:
         # TODO: add downed and death mechanics
 
     @property
-    def character_name(self):
-        return self._character_name
+    def name(self) -> str:
+        return self.name
 
     @property
-    def player_name(self):
+    def player_name(self) -> str:
         return self._player_name
 
     # TODO: Add properties for dictionary derived values
 
     @property
-    def character_class(self):
-        return self._character_class
-
-    @property
-    def character_race(self):
-        return self._character_race
-
-    @property
-    def level(self):
+    def level(self) -> int:
         return self._level
 
     @property
-    def background(self):
+    def background(self) -> str:
         return self._background
 
     @property
-    def successful_death_saves(self):
+    def successful_death_saves(self) -> int:
         return self._successful_death_saves
 
     @property
-    def failed_death_saves(self):
+    def failed_death_saves(self) -> int:
         return self.failed_death_saves
 
     @property
-    def alignment(self):
+    def alignment(self) -> CharacterAlignment:
         return self._alignment
 
     @property
-    def experience_points(self):
+    def experience_points(self) -> int:
         return self._exp
