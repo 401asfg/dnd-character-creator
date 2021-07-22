@@ -1,9 +1,9 @@
-from main.model.character_components.character_advancements import CharacterAdvancements
-from main.model.character_components.character_alignment import CharacterAlignment
-from main.model.character_components.race.character_races import CharacterRaces
+from main.model.character_components.advancements import Advancements
+from main.model.character_components.alignment import Alignment
+from main.model.character_components.class_ import Class
 from typing import Type
 
-from main.model.character_components.character_race import CharacterRace
+from main.model.character_components.race import Race
 
 
 class Character:
@@ -22,11 +22,11 @@ class Character:
             self,
             name: str,
             player_name: str,
-            class_: Type[CharacterClass],
-            race: Type[CharacterRace],
+            class_: Type[Class],
+            race: Type[Race],
             level: int,
             background: str,
-            alignment: CharacterAlignment
+            alignment: Alignment
     ):
         """
         Builds the character in its initial state; raises ValueError if the given level is unreachable
@@ -51,7 +51,7 @@ class Character:
         self._background = background
         self._alignment = alignment
 
-        if CharacterAdvancements.reachable_level(level):
+        if Advancements.reachable_level(level):
             self._level = level
         else:
             raise ValueError("The given level is not reachable by a character")
@@ -59,8 +59,8 @@ class Character:
         self._successful_death_saves = 0
         self.failed_death_saves = 0
 
-        self._exp = CharacterAdvancements.get_experience_points(self._level)
-        self._proficiency_bonus = CharacterAdvancements.get_proficiency_bonus(self._exp)
+        self._exp = Advancements.get_experience_points(self._level)
+        self._proficiency_bonus = Advancements.get_proficiency_bonus(self._exp)
 
     def gain_exp(self, points: int):
         """
@@ -71,8 +71,8 @@ class Character:
         """
 
         self._exp += points
-        self._level = CharacterAdvancements.get_level(self._exp)
-        self._proficiency_bonus = CharacterAdvancements.get_proficiency_bonus(self._exp)
+        self._level = Advancements.get_level(self._exp)
+        self._proficiency_bonus = Advancements.get_proficiency_bonus(self._exp)
 
     def pass_death_save(self):
         """
@@ -124,7 +124,7 @@ class Character:
         return self.failed_death_saves
 
     @property
-    def alignment(self) -> CharacterAlignment:
+    def alignment(self) -> Alignment:
         return self._alignment
 
     @property

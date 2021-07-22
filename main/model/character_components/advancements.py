@@ -2,7 +2,7 @@ from collections import namedtuple
 from math import floor
 
 
-class CharacterAdvancements:
+class Advancements:
     """
     The database of the levels and proficiency bonuses that correspond with key amounts of experience points
     """

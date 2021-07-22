@@ -1,11 +1,11 @@
 from typing import List
 
-from main.model.character_components.character_alignment import CharacterAlignment
-from main.model.character_components.character_race import CharacterRace
-from main.model.character_components.character_size import CharacterSize
+from main.model.character_components.alignment import Alignment
+from main.model.character_components.race import Race
+from main.model.character_components.size import Size
 
 
-class Elf(CharacterRace):
+class Elf(Race):
     """
     The racial information for a elf character
     """
@@ -39,18 +39,18 @@ class Elf(CharacterRace):
         return 0
 
     @classmethod
-    def get_acceptable_alignment_natures(cls) -> List[CharacterAlignment.Nature]:
+    def get_acceptable_alignment_natures(cls) -> List[Alignment.Nature]:
         return [
-            CharacterAlignment.Nature.NEUTRAL,
-            CharacterAlignment.Nature.CHAOTIC
+            Alignment.Nature.NEUTRAL,
+            Alignment.Nature.CHAOTIC
         ]
 
     @classmethod
-    def get_acceptable_alignment_moralities(cls) -> List[CharacterAlignment.Morality]:
+    def get_acceptable_alignment_moralities(cls) -> List[Alignment.Morality]:
         return [
-            CharacterAlignment.Morality.GOOD,
-            CharacterAlignment.Morality.NEUTRAL,
-            CharacterAlignment.Morality.EVIL
+            Alignment.Morality.GOOD,
+            Alignment.Morality.NEUTRAL,
+            Alignment.Morality.EVIL
         ]
 
     @classmethod
@@ -62,8 +62,8 @@ class Elf(CharacterRace):
         return 750
 
     @classmethod
-    def get_size(cls) -> CharacterSize:
-        return CharacterSize.MEDIUM
+    def get_size(cls) -> Size:
+        return Size.MEDIUM
 
     @classmethod
     def get_speed(cls) -> int:

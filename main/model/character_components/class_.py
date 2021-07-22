@@ -1,4 +1,4 @@
-class CharacterClass:
+class Class:
     """
     A class that a character can be
     """

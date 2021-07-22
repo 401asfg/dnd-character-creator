@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class CharacterSize(Enum):
+class Size(Enum):
     """
     The size of a character
     """

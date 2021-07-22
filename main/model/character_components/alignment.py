@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class CharacterAlignment:
+class Alignment:
     """
     The alignment of a character
     """

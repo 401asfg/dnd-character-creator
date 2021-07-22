@@ -1,11 +1,11 @@
 from abc import abstractmethod, ABC
 from typing import List
 
-from main.model.character_components.character_alignment import CharacterAlignment
-from main.model.character_components.character_size import CharacterSize
+from main.model.character_components.alignment import Alignment
+from main.model.character_components.size import Size
 
 
-class CharacterRace(ABC):
+class Race(ABC):
     """
     The abstract representation of a character's race; not to be used, only inherited
     """
@@ -80,7 +80,7 @@ class CharacterRace(ABC):
 
     @classmethod
     @abstractmethod
-    def get_acceptable_alignment_natures(cls) -> List[CharacterAlignment.Nature]:
+    def get_acceptable_alignment_natures(cls) -> List[Alignment.Nature]:
         """
         :return: The alignment natures that a character can have
         """
@@ -89,7 +89,7 @@ class CharacterRace(ABC):
 
     @classmethod
     @abstractmethod
-    def get_acceptable_alignment_moralities(cls) -> List[CharacterAlignment.Morality]:
+    def get_acceptable_alignment_moralities(cls) -> List[Alignment.Morality]:
         """
         :return: The alignment moralities that a character can have
         """
@@ -116,7 +116,7 @@ class CharacterRace(ABC):
 
     @classmethod
     @abstractmethod
-    def get_size(cls) -> CharacterSize:
+    def get_size(cls) -> Size:
         """
         :return: The size of a character of this race
         """

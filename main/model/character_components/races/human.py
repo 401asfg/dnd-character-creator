@@ -1,11 +1,11 @@
 from typing import List
 
-from main.model.character_components.character_alignment import CharacterAlignment
-from main.model.character_components.character_race import CharacterRace
-from main.model.character_components.character_size import CharacterSize
+from main.model.character_components.alignment import Alignment
+from main.model.character_components.race import Race
+from main.model.character_components.size import Size
 
 
-class Human(CharacterRace):
+class Human(Race):
     """
     The racial information for a human character
     """
@@ -39,19 +39,19 @@ class Human(CharacterRace):
         return 1
 
     @classmethod
-    def get_acceptable_alignment_natures(cls) -> List[CharacterAlignment.Nature]:
+    def get_acceptable_alignment_natures(cls) -> List[Alignment.Nature]:
         return [
-            CharacterAlignment.Nature.LAWFUL,
-            CharacterAlignment.Nature.NEUTRAL,
-            CharacterAlignment.Nature.CHAOTIC
+            Alignment.Nature.LAWFUL,
+            Alignment.Nature.NEUTRAL,
+            Alignment.Nature.CHAOTIC
         ]
 
     @classmethod
-    def get_acceptable_alignment_moralities(cls) -> List[CharacterAlignment.Morality]:
+    def get_acceptable_alignment_moralities(cls) -> List[Alignment.Morality]:
         return [
-            CharacterAlignment.Morality.GOOD,
-            CharacterAlignment.Morality.NEUTRAL,
-            CharacterAlignment.Morality.EVIL
+            Alignment.Morality.GOOD,
+            Alignment.Morality.NEUTRAL,
+            Alignment.Morality.EVIL
         ]
 
     @classmethod
@@ -63,8 +63,8 @@ class Human(CharacterRace):
         return 99
 
     @classmethod
-    def get_size(cls) -> CharacterSize:
-        return CharacterSize.MEDIUM
+    def get_size(cls) -> Size:
+        return Size.MEDIUM
 
     @classmethod
     def get_speed(cls) -> int:
