@@ -1,7 +1,9 @@
+from main.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character_components.advancements import Advancements
 from main.model.character_components.alignment import Alignment
 from main.model.character_components.class_ import Class
 from typing import Type
+from enum import Enum
 
 from main.model.character_components.race import Race
 
@@ -10,6 +12,15 @@ class Character:
     """
     A 5th edition D&D character, with stats, skills, and info
     """
+
+    class State(Enum):
+        """
+        The state of the character
+        """
+
+        ALIVE = 0
+        DOWNED = 1
+        DEAD = 2
 
     MAX_SUCCESSFUL_DEATH_SAVES = 3
     MAX_FAILED_DEATH_SAVES = 3
@@ -42,6 +53,8 @@ class Character:
 
         # TODO: set new variables based on the character class and character race's static methods
 
+        self._state = self.State.ALIVE
+
         self.name = name
         self._player_name = player_name
 
@@ -57,7 +70,7 @@ class Character:
             raise ValueError("The given level is not reachable by a character")
 
         self._successful_death_saves = 0
-        self.failed_death_saves = 0
+        self._failed_death_saves = 0
 
         self._exp = Advancements.get_experience_points(self._level)
         self._proficiency_bonus = Advancements.get_proficiency_bonus(self._exp)
@@ -74,28 +87,54 @@ class Character:
         self._level = Advancements.get_level(self._exp)
         self._proficiency_bonus = Advancements.get_proficiency_bonus(self._exp)
 
-    def pass_death_save(self):
+    # TODO: Use property instead of function for death_save?
+
+    def death_save(self, success: bool):
         """
-        Succeed in a death save; increment successful death saves; if successful death saves is equal to the maximum
-        successful death saves, the character is revived
-        """
+        Make a death save; increments the successful or failed death save counter depending on success; if the success
+        counter reaches MAX_SUCCESSFUL_DEATH_SAVES, character's state is changed to ALIVE; if the fail counter reaches
+        MAX_FAILED_DEATH_SAVES, character's state is changed to DEAD; if either max is reached, reverts death saves;
+        raises IncorrectCharacterState if the character is not downed
 
-        self._successful_death_saves += 1
-
-        if self._successful_death_saves >= self.MAX_SUCCESSFUL_DEATH_SAVES:
-            self._successful_death_saves = 0
-
-        # TODO: add downed and revive mechanics
-
-    def fail_death_save(self):
-        """
-        Fail in a death save; increment failed death saves; if failed death saves is equal to the maximum failed death
-        saves, the character is killed
+        :param success: Whether or not the death save was successful; if true increments the successful death save
+        counter; otherwise, increments the failed death save counter
         """
 
-        self.failed_death_saves += 1
+        if self._state != self.State.DOWNED:
+            raise IncorrectCharacterStateException("Tried to make a death save while the character was not downed")
 
-        # TODO: add downed and death mechanics
+        def death_save_of_type(count: int, count_max: int, outcome_state: Character.State) -> int:
+            """
+            Make either a successful or failed death save
+
+            :param count: The value of a death save counter
+            :param count_max: The max value the death save counter, represented by count, should go to; if count_max
+            equals count + 1, sets character's state to outcome_state and reverts death saves
+            :param outcome_state: The character's state is changed to this if count + 1 equals count_max
+            :return: count + 1 or 0 if count equals count_max
+            """
+
+            count += 1
+
+            if count == count_max:
+                self._state = outcome_state
+                self._reset_death_saves()
+                return 0
+
+            return count
+
+        if success:
+            self._successful_death_saves = death_save_of_type(
+                self._successful_death_saves,
+                self.MAX_SUCCESSFUL_DEATH_SAVES,
+                self.State.ALIVE
+            )
+        else:
+            self._failed_death_saves = death_save_of_type(
+                self._failed_death_saves,
+                self.MAX_FAILED_DEATH_SAVES,
+                self.State.DEAD
+            )
 
     @property
     def name(self) -> str:
@@ -130,3 +169,11 @@ class Character:
     @property
     def experience_points(self) -> int:
         return self._exp
+
+    def _reset_death_saves(self):
+        """
+        Resets both death save counts to 0
+        """
+
+        self._successful_death_saves = 0
+        self._failed_death_saves = 0
