@@ -48,6 +48,13 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.wisdom.score, 16)
         self.assertEqual(self.character.charisma.score, 16)
 
+        self.assertEqual(self.character.strength.saving_throw, 2)
+        self.assertEqual(self.character.dexterity.saving_throw, -1)
+        self.assertEqual(self.character.constitution.saving_throw, 4)
+        self.assertEqual(self.character.intelligence.saving_throw, 3)
+        self.assertEqual(self.character.wisdom.saving_throw, 5)
+        self.assertEqual(self.character.charisma.saving_throw, 3)
+
         self.assertEqual(self.character.background, "Background")
         self.assertEqual(self.character.state, State.ALIVE)
         self.assertEqual(self.character.hit_points, 10)
@@ -243,9 +250,6 @@ class CharacterTest(unittest.TestCase):
 
         assert_error(34)
         assert_error(0)
-
-    def test_saving_throws(self):
-        # TODO: implement
 
     def _assert_death_save(
             self,

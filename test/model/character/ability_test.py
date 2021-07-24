@@ -36,39 +36,27 @@ class AbilityTest(unittest.TestCase):
         assert_error(542)
         assert_error(2135235234)
 
-    def test_value_setter(self):
-        def assert_same_value(x: int):
-            """
-            Asserts that after ability.score = x, ability.score and x.value are equal
-            """
-
-            ability = Ability(NaturalPlus(1))
-            ability.score = NaturalPlus(x)
-            self.assertEqual(ability.score, x)
-
-        for_each_ability_score_value(assert_same_value)
-
-        def assert_error(x: int):
-            """
-            Asserts that ability.score = x raises an error
-            """
-
-            try:
-                ability = Ability(NaturalPlus(1))
-                ability.score = NaturalPlus(x)
-                self.fail("The greater than 20 value should have caused ability.score to raise an error.")
-            except ValueError:
-                assert_same_value(1)
-
-        assert_error(21)
-        assert_error(22)
-        assert_error(23)
-        assert_error(43)
-        assert_error(32)
-        assert_error(93)
-        assert_error(234)
-        assert_error(654)
-        assert_error(754747455)
+    def test_modifier(self):
+        self.assertEqual(Ability(NaturalPlus(1)).modifier, -5)
+        self.assertEqual(Ability(NaturalPlus(2)).modifier, -4)
+        self.assertEqual(Ability(NaturalPlus(3)).modifier, -4)
+        self.assertEqual(Ability(NaturalPlus(4)).modifier, -3)
+        self.assertEqual(Ability(NaturalPlus(5)).modifier, -3)
+        self.assertEqual(Ability(NaturalPlus(6)).modifier, -2)
+        self.assertEqual(Ability(NaturalPlus(7)).modifier, -2)
+        self.assertEqual(Ability(NaturalPlus(8)).modifier, -1)
+        self.assertEqual(Ability(NaturalPlus(9)).modifier, -1)
+        self.assertEqual(Ability(NaturalPlus(10)).modifier, 0)
+        self.assertEqual(Ability(NaturalPlus(11)).modifier, 0)
+        self.assertEqual(Ability(NaturalPlus(12)).modifier, 1)
+        self.assertEqual(Ability(NaturalPlus(13)).modifier, 1)
+        self.assertEqual(Ability(NaturalPlus(14)).modifier, 2)
+        self.assertEqual(Ability(NaturalPlus(15)).modifier, 2)
+        self.assertEqual(Ability(NaturalPlus(16)).modifier, 3)
+        self.assertEqual(Ability(NaturalPlus(17)).modifier, 3)
+        self.assertEqual(Ability(NaturalPlus(18)).modifier, 4)
+        self.assertEqual(Ability(NaturalPlus(19)).modifier, 4)
+        self.assertEqual(Ability(NaturalPlus(20)).modifier, 5)
 
 
 def for_each_ability_score_value(fn: Callable[[int], None]):

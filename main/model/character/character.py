@@ -1,4 +1,4 @@
-from main.model.character.ability import Ability
+from main.model.character.ability import Ability as DiceRollAbility
 from main.model.character.size import Size
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
@@ -26,6 +26,41 @@ class Character:
     # TODO: add rest of functions
     # TODO: add exceptions to ctor (note all exceptions)
 
+    class Ability(DiceRollAbility):
+        """
+        An ability in the context of it belonging to the character
+        """
+
+        # TODO: test class
+
+        def __init__(
+                self,
+                dice_roll_ability: DiceRollAbility,
+                racial_ability_bonus: NaturalPlus,
+                class_proficiency: bool,
+                proficiency_bonus: NaturalPlus
+        ):
+            """
+            Initializes the class; sets the ability score to the dice roll score plus the racial bonus for this ability
+
+            :param dice_roll_ability: An ability with its score taken directly from the dice roll
+            :param racial_ability_bonus: The racial bonus to add to the ability's score
+            :param class_proficiency: Whether or not the character's class is proficient in this ability
+            :param proficiency_bonus: The character's proficiency bonus
+            """
+
+            super().__init__(NaturalPlus(dice_roll_ability.score + racial_ability_bonus.value))
+            self._proficiency = class_proficiency
+            self._proficiency_bonus = proficiency_bonus
+
+        @property
+        def saving_throw(self):
+            """
+            :return: The saving throw modifier for the current ability score and class proficiency
+            """
+
+            return self.modifier + self._proficiency * self._proficiency_bonus.value
+
     def __init__(
             self,
             name: str,
@@ -33,12 +68,12 @@ class Character:
             class_: Type[Class],
             race: Type[Race],
             level: NaturalPlus,
-            strength: Ability,
-            dexterity: Ability,
-            constitution: Ability,
-            intelligence: Ability,
-            wisdom: Ability,
-            charisma: Ability,
+            strength: DiceRollAbility,
+            dexterity: DiceRollAbility,
+            constitution: DiceRollAbility,
+            intelligence: DiceRollAbility,
+            wisdom: DiceRollAbility,
+            charisma: DiceRollAbility,
             background: str,
             alignment: Alignment,
             age: Natural
@@ -47,87 +82,30 @@ class Character:
         Builds the character in its initial state; raises ValueError if the given level is unreachable or the given
         alignment is inappropriate for a character of the given race
 
-        :param name: Name of the character
+        :param name: The character's name
         :param player_name: Name of the player playing the character
         :param class_: The character's class
         :param race: The character's race
         :param level: The character's starting level
-        :param strength: The character's strength ability score, with no bonuses added
-        :param dexterity: The character's dexterity ability score, with no bonuses added
-        :param constitution: The character's constitution ability score, with no bonuses added
-        :param intelligence: The character's intelligence ability score, with no bonuses added
-        :param wisdom: The character's wisdom ability score, with no bonuses added
-        :param charisma: The character's charisma ability score, with no bonuses added
-        :param background: Background of the character
-        :param alignment: Alignment of the character
-        :param age: Age of the character
+        :param strength: The character's strength ability with its score taken directly from the dice roll
+        :param dexterity: The character's dexterity ability with its score taken directly from the dice roll
+        :param constitution: The character's constitution ability with its score taken directly from the dice roll
+        :param intelligence: The character's intelligence ability with its score taken directly from the dice roll
+        :param wisdom: The character's wisdom ability with its score taken directly from the dice roll
+        :param charisma: The character's charisma ability with its score taken directly from the dice roll
+        :param background: The character's background
+        :param alignment: The character's alignment
+        :param age: The character's age
         """
 
         # TODO: set new variables based on the character class and character race's static methods
 
         # TODO: modify tests with ability scores
 
-        self._state = State.ALIVE
-        self._successful_death_saves = 0
-        self._failed_death_saves = 0
-
-        self._name = name
-        self._player_name = player_name
-        self._age = age
-
-        self._class = class_
-        self._race = race
-        self._background = background
-
-        def check(x, check_fn: Callable[[Any], bool], error_msg: str):
-            """
-            Checks x; either returns x's value or raises a ValueError if check_fn(x) returns false
-
-            :param x: The parameter to check
-            :param check_fn: The function that checks x; takes x as its only input and returns true or false
-            :param error_msg: The message to be included with the ValueError that will be raised should check_fn return
-            false
-            :return: x
-            """
-
-            if check_fn(x):
-                return x
-
-            raise ValueError(error_msg)
-
-        def acceptable_racial_alignment(alignment_: Alignment) -> bool:
-            """
-            :param alignment_: The alignment that is checked to see if it acceptable for a character of this race
-            :return: True if alignment is acceptable for a character of this race; otherwise false
-            """
-
-            in_natures = alignment_.nature in self._race.get_acceptable_alignment_natures()
-            in_moralities = alignment_.morality in self._race.get_acceptable_alignment_moralities()
-            return in_natures and in_moralities
-
-        self._alignment = check(
-            alignment,
-            acceptable_racial_alignment,
-            "A character of this race cannot have this alignment."
-        )
-
-        self._exp = Advancements.get_min_exp(
-            check(
-                level.value,
-                Advancements.reachable_level,
-                "No character can reach this level."
-            )
-        )
-
-        self._strength = Ability(NaturalPlus(strength.score + self._race.get_strength_bonus()))
-        self._dexterity = Ability(NaturalPlus(dexterity.score + self._race.get_dexterity_bonus()))
-        self._constitution = Ability(NaturalPlus(constitution.score + self._race.get_constitution_bonus()))
-        self._intelligence = Ability(NaturalPlus(intelligence.score + self._race.get_intelligence_bonus()))
-        self._wisdom = Ability(NaturalPlus(wisdom.score + self._race.get_wisdom_bonus()))
-        self._charisma = Ability(NaturalPlus(charisma.score + self._race.get_charisma_bonus()))
-
-        self._max_hit_points = self._class.get_hit_points() + self._constitution.modifier
-        self.hit_points = self._max_hit_points
+        self._initialize_core_fields(name, player_name, class_, race, background, age)
+        self._initialize_exception_raising_fields(alignment, level)
+        self._initialize_abilities(strength, dexterity, constitution, intelligence, wisdom, charisma)
+        self._initialize_hit_points()
 
     def gain_exp(self, points: int):
         """
@@ -228,54 +206,6 @@ class Character:
     def charisma(self) -> Ability:
         return self._charisma
 
-    @property
-    def strength_saving_throw(self) -> int:
-        """
-        :return: The character's strength saving throw
-        """
-
-        return self.strength.modifier + self._class.strength_proficiency() * self.proficiency_bonus
-
-    @property
-    def dexterity_saving_throw(self) -> int:
-        """
-        :return: The character's dexterity saving throw
-        """
-
-        return self.dexterity.modifier + self._class.dexterity_proficiency() * self.proficiency_bonus
-
-    @property
-    def constitution_saving_throw(self) -> int:
-        """
-        :return: The character's constitution saving throw
-        """
-
-        return self.constitution.modifier + self._class.constitution_proficiency() * self.proficiency_bonus
-
-    @property
-    def intelligence_saving_throw(self) -> int:
-        """
-        :return: The character's intelligence saving throw
-        """
-
-        return self.intelligence.modifier + self._class.intelligence_proficiency() * self.proficiency_bonus
-
-    @property
-    def wisdom_saving_throw(self) -> int:
-        """
-        :return: The character's wisdom saving throw
-        """
-
-        return self.wisdom.modifier + self._class.wisdom_proficiency() * self.proficiency_bonus
-
-    @property
-    def charisma_saving_throw(self) -> int:
-        """
-        :return: The character's charisma saving throw
-        """
-
-        return self.charisma.modifier + self._class.charisma_proficiency() * self.proficiency_bonus
-
     # TODO: Add properties for dictionary derived values
 
     @property
@@ -320,7 +250,7 @@ class Character:
             self._hit_points = value
 
     @property
-    def max_hit_points(self):
+    def max_hit_points(self) -> int:
         return self._max_hit_points
 
     @property
@@ -358,6 +288,158 @@ class Character:
     @property
     def speed(self) -> int:
         return self._race.get_speed()
+
+    def _initialize_core_fields(
+            self,
+            name: str,
+            player_name: str,
+            class_: Type[Class],
+            race: Type[Race],
+            background: str,
+            age: Natural
+    ):
+        """
+        Initializes the fields of the character that are not derived from any other values
+
+        :param name: The character's name
+        :param player_name: Name of the player playing the character
+        :param class_: The character's class
+        :param race: The character's race
+        :param background: The character's background
+        :param age: The character's age
+        """
+
+        self._state = State.ALIVE
+        self._successful_death_saves = 0
+        self._failed_death_saves = 0
+
+        self._name = name
+        self._player_name = player_name
+        self._class = class_
+        self._race = race
+        self._background = background
+        self._age = age
+
+    def _initialize_exception_raising_fields(self, alignment: Alignment, level: NaturalPlus):
+        """
+        Initializes the fields that may raise exceptions; raises ValueError if the given level is unreachable or the
+        given alignment is inappropriate for a character of the given race
+
+        :param alignment: The character's alignment
+        :param level: The character's level
+        """
+
+        def check(x, check_fn: Callable[[Any], bool], error_msg: str):
+            """
+            Checks x; either returns x's value or raises a ValueError if check_fn(x) returns false
+
+            :param x: The parameter to check
+            :param check_fn: The function that checks x; takes x as its only input and returns true or false
+            :param error_msg: The message to be included with the ValueError that will be raised should check_fn return
+            false
+            :return: x
+            """
+
+            if check_fn(x):
+                return x
+
+            raise ValueError(error_msg)
+
+        def acceptable_racial_alignment(alignment_: Alignment) -> bool:
+            """
+            :param alignment_: The alignment that is checked to see if it acceptable for a character of this race
+            :return: True if alignment is acceptable for a character of this race; otherwise false
+            """
+
+            in_natures = alignment_.nature in self._race.get_acceptable_alignment_natures()
+            in_moralities = alignment_.morality in self._race.get_acceptable_alignment_moralities()
+            return in_natures and in_moralities
+
+        self._alignment = check(
+            alignment,
+            acceptable_racial_alignment,
+            "A character of this race cannot have this alignment."
+        )
+
+        self._exp = Advancements.get_min_exp(
+            check(
+                level.value,
+                Advancements.reachable_level,
+                "No character can reach this level."
+            )
+        )
+
+    def _initialize_abilities(
+            self,
+            strength: DiceRollAbility,
+            dexterity: DiceRollAbility,
+            constitution: DiceRollAbility,
+            intelligence: DiceRollAbility,
+            wisdom: DiceRollAbility,
+            charisma: DiceRollAbility
+    ):
+        """
+        Initializes the character's ability fields
+
+        :param strength: The character's strength ability with its score taken directly from the dice roll
+        :param dexterity: The character's dexterity ability with its score taken directly from the dice roll
+        :param constitution: The character's constitution ability with its score taken directly from the dice roll
+        :param intelligence: The character's intelligence ability with its score taken directly from the dice roll
+        :param wisdom: The character's wisdom ability with its score taken directly from the dice roll
+        :param charisma: The character's charisma ability with its score taken directly from the dice roll
+        """
+
+        pb = NaturalPlus(self.proficiency_bonus)
+
+        self._strength = self.Ability(
+            strength,
+            NaturalPlus(self._race.get_strength_bonus()),
+            self._class.strength_proficiency(),
+            pb
+        )
+
+        self._dexterity = self.Ability(
+            dexterity,
+            NaturalPlus(self._race.get_dexterity_bonus()),
+            self._class.dexterity_proficiency(),
+            pb
+        )
+
+        self._constitution = self.Ability(
+            constitution,
+            NaturalPlus(self._race.get_constitution_bonus()),
+            self._class.constitution_proficiency(),
+            pb
+        )
+
+        self._intelligence = self.Ability(
+            intelligence,
+            NaturalPlus(self._race.get_intelligence_bonus()),
+            self._class.intelligence_proficiency(),
+            pb
+        )
+
+        self._wisdom = self.Ability(
+            wisdom,
+            NaturalPlus(self._race.get_wisdom_bonus()),
+            self._class.wisdom_proficiency(),
+            pb
+        )
+
+        self._charisma = self.Ability(
+            charisma,
+            NaturalPlus(self._race.get_charisma_bonus()),
+            self._class.charisma_proficiency(),
+            pb
+        )
+
+    def _initialize_hit_points(self):
+        """
+        Initializes the character's hit points and max hit points
+        """
+
+        self._max_hit_points = self._class.get_hit_points() + self._constitution.modifier
+        self.hit_points = self._max_hit_points
 
     def _reset_death_saves(self):
         """

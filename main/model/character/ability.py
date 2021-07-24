@@ -17,24 +17,14 @@ class Ability:
         :param score: The ability's score
         """
 
-        self.score = score
+        if score.value > self.MAX_SCORE:
+            raise ValueError("An ability score cannot be above MAX_SCORE.")
+
+        self._score = score
 
     @property
     def score(self) -> int:
         return self._score.value
-
-    @score.setter
-    def score(self, x: NaturalPlus):
-        """
-        Sets ability score; if x is greater than MAX_SCORE, raises ValueError
-
-        :param x: The value of the ability score
-        """
-
-        if x.value > self.MAX_SCORE:
-            raise ValueError("An ability score cannot be above MAX_SCORE")
-
-        self._score = x
 
     @property
     def modifier(self) -> int:
