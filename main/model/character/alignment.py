@@ -47,9 +47,10 @@ class Alignment:
         self._nature = nature
         self._morality = morality
 
+    @property
     def name(self) -> str:
         """
-        Gets the name of the alignment
+        Get the name of the alignment
 
         :return: The name of the alignment; typically is of the form "<nature name> <morality name>"; if both nature
         and morality are NEUTRAL, the name is "True Neutral"
@@ -59,3 +60,11 @@ class Alignment:
             return "True Neutral"
 
         return self._nature_names[self._nature] + " " + self._morality_names[self._morality]
+
+    @property
+    def nature(self) -> Nature:
+        return self._nature
+
+    @property
+    def morality(self) -> Morality:
+        return self._morality

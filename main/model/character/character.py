@@ -1,11 +1,14 @@
-from main.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
-from typing import Type
+from main.model.character.ability import Ability
+from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from typing import Type, Callable, Any
 
 from main.model.character.advancements import Advancements
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
 from main.model.character.class_ import Class
 from main.model.character.state import State
+from main.model.inttypes.natural import Natural
+from main.model.inttypes.natural_plus import NaturalPlus
 
 
 class Character:
@@ -26,57 +29,103 @@ class Character:
             player_name: str,
             class_: Type[Class],
             race: Type[Race],
-            level: int,
+            level: NaturalPlus,
+            strength: Ability,
+            dexterity: Ability,
+            constitution: Ability,
+            intelligence: Ability,
+            wisdom: Ability,
+            charisma: Ability,
             background: str,
-            alignment: Alignment
+            alignment: Alignment,
+            age: Natural
     ):
         """
-        Builds the character in its initial state; raises ValueError if the given level is unreachable
+        Builds the character in its initial state; raises ValueError if the given level is unreachable or the given
+        alignment is inappropriate for a character of the given race
 
         :param name: Name of the character
         :param player_name: Name of the player playing the character
         :param class_: The character's class
         :param race: The character's race
-        :param level: Character's starting level
+        :param level: The character's starting level
+        :param strength: The character's strength ability score, with no bonuses added
+        :param dexterity: The character's dexterity ability score, with no bonuses added
+        :param constitution: The character's constitution ability score, with no bonuses added
+        :param intelligence: The character's intelligence ability score, with no bonuses added
+        :param wisdom: The character's wisdom ability score, with no bonuses added
+        :param charisma: The character's charisma ability score, with no bonuses added
         :param background: Background of the character
         :param alignment: Alignment of the character
+        :param age: Age of the character
         """
 
         # TODO: set new variables based on the character class and character race's static methods
 
+        # TODO: modify tests with ability scores
+
         self._state = State.ALIVE
-
-        self._name = name
-        self._player_name = player_name
-
-        # TODO: add class variables
-        # TODO: add race variables
-
-        self._background = background
-        self._alignment = alignment
-
-        if Advancements.reachable_level(level):
-            self._level = level
-        else:
-            raise ValueError("The given level is not reachable by a character")
-
         self._successful_death_saves = 0
         self._failed_death_saves = 0
 
-        self._exp = Advancements.get_min_exp(self._level)
-        self._proficiency_bonus = Advancements.get_proficiency_bonus(self._level)
+        self._name = name
+        self._player_name = player_name
+        self._age = age
+
+        self._class = class_
+        self._race = race
+        self._background = background
+
+        def check(x, check_fn: Callable[[Any], bool], error_msg: str):
+            """
+            Checks x; either returns x's value or raises a ValueError if check_fn(x) returns false
+
+            :param x: The parameter to check
+            :param check_fn: The function that checks x; takes x as its only input and returns true or false
+            :param error_msg: The message to be included with the ValueError that will be raised should check_fn return
+            false
+            :return: x
+            """
+
+            if check_fn(x):
+                return x
+
+            raise ValueError(error_msg)
+
+        def acceptable_racial_alignment(alignment_: Alignment) -> bool:
+            """
+            :param alignment_: The alignment that is checked to see if it acceptable for a character of this race
+            :return: True if alignment is acceptable for a character of this race; otherwise false
+            """
+
+            in_natures = alignment_.nature in self._race.get_acceptable_alignment_natures()
+            in_moralities = alignment_.morality in self._race.get_acceptable_alignment_moralities()
+            return in_natures and in_moralities
+
+        self._alignment = check(
+            alignment,
+            acceptable_racial_alignment,
+            "A character of this race cannot have this alignment."
+        )
+
+        self._strength = Ability(NaturalPlus(strength.score + self._race.get_strength_bonus()))
+        self._dexterity = Ability(NaturalPlus(dexterity.score + self._race.get_dexterity_bonus()))
+        self._constitution = Ability(NaturalPlus(constitution.score + self._race.get_constitution_bonus()))
+        self._intelligence = Ability(NaturalPlus(intelligence.score + self._race.get_intelligence_bonus()))
+        self._wisdom = Ability(NaturalPlus(wisdom.score + self._race.get_wisdom_bonus()))
+        self._charisma = Ability(NaturalPlus(charisma.score + self._race.get_charisma_bonus()))
+
+        self._hit_points = self._class.get_hit_points() + self._constitution.modifier
+        self._exp = Advancements.get_min_exp(level)
 
     def gain_exp(self, points: int):
         """
-        Give the character experience points; adjust the character's level and proficiency bonus to those which
-        correspond with the new exp amount, as defined in the CharacterAdvancements class
+        Give the character experience points
 
         :param points: The amount of experience points to give the character
         """
 
         self._exp += points
-        self._level = Advancements.get_level(self._exp)
-        self._proficiency_bonus = Advancements.get_proficiency_bonus(self._exp)
 
     def death_save(self, success: bool):
         """
@@ -133,15 +182,74 @@ class Character:
     def player_name(self) -> str:
         return self._player_name
 
-    # TODO: Add properties for dictionary derived values
+    @property
+    def class_name(self) -> str:
+        return self._class.get_name()
 
     @property
-    def level(self) -> int:
-        return self._level
+    def race_name(self) -> str:
+        return self._race.get_name()
+
+    @property
+    def strength(self) -> Ability:
+        return self._strength
+
+    @property
+    def dexterity(self) -> Ability:
+        return self._dexterity
+
+    @property
+    def constitution(self) -> Ability:
+        return self._constitution
+
+    @property
+    def intelligence(self) -> Ability:
+        return self._intelligence
+
+    @property
+    def wisdom(self) -> Ability:
+        return self._wisdom
+
+    @property
+    def charisma(self) -> Ability:
+        return self._charisma
+
+    # TODO: Add properties for dictionary derived values
 
     @property
     def background(self) -> str:
         return self._background
+
+    @property
+    def state(self) -> State:
+        return self._state
+
+    @property
+    def hit_points(self) -> int:
+        """
+        Get the character's hit_points
+
+        :return: The character's hit_points
+        """
+
+        return 0    # TODO: implement
+
+    @hit_points.setter
+    def hit_points(self, value: int):
+        """
+        Set the character's hit_points
+
+        :param value: The value assigned to the character's hit_points; if value > max_hit_points, hit_points =
+        max_hit_points; if value <= 0, hit_points = 0 and the character state is changed to DOWNED; if character state
+        is DOWNED or DEAD, raises IncorrectCharacterStateException
+        """
+
+        # TODO: implement
+        pass
+
+    @property
+    def max_hit_points(self):
+        return 0    # TODO: implement
 
     @property
     def successful_death_saves(self) -> int:
@@ -158,6 +266,26 @@ class Character:
     @property
     def experience_points(self) -> int:
         return self._exp
+
+    @property
+    def level(self) -> int:
+        return Advancements.get_level(self._exp)
+
+    @property
+    def proficiency_bonus(self) -> int:
+        return Advancements.get_proficiency_bonus(self.level)
+
+    @property
+    def age(self) -> int:
+        return self._age.value
+
+    @property
+    def size(self):
+        return self._race.get_size()
+
+    @property
+    def speed(self):
+        return self._race.get_speed()
 
     def _reset_death_saves(self):
         """

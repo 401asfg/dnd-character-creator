@@ -10,10 +10,12 @@ class Race(ABC):
     The abstract representation of a character's race; not to be used, only inherited
     """
 
+    # TODO: refactor this and class into subclasses of new type
+
     # TODO: Add more parameters to account for all aspects of races
     # TODO: Return to dictionary of races?
 
-    _CALL_METHOD_IN_SUBCLASS_MSG = "This method should be called from one of CharacterRace's subclasses."
+    _CALL_METHOD_IN_SUBCLASS_MSG = "This method should be called from one of Race's subclasses."
 
     @classmethod
     @abstractmethod
