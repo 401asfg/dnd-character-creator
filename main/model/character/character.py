@@ -228,6 +228,54 @@ class Character:
     def charisma(self) -> Ability:
         return self._charisma
 
+    @property
+    def strength_saving_throw(self) -> int:
+        """
+        :return: The character's strength saving throw
+        """
+
+        return self.strength.modifier + self._class.strength_proficiency() * self.proficiency_bonus
+
+    @property
+    def dexterity_saving_throw(self) -> int:
+        """
+        :return: The character's dexterity saving throw
+        """
+
+        return self.dexterity.modifier + self._class.dexterity_proficiency() * self.proficiency_bonus
+
+    @property
+    def constitution_saving_throw(self) -> int:
+        """
+        :return: The character's constitution saving throw
+        """
+
+        return self.constitution.modifier + self._class.constitution_proficiency() * self.proficiency_bonus
+
+    @property
+    def intelligence_saving_throw(self) -> int:
+        """
+        :return: The character's intelligence saving throw
+        """
+
+        return self.intelligence.modifier + self._class.intelligence_proficiency() * self.proficiency_bonus
+
+    @property
+    def wisdom_saving_throw(self) -> int:
+        """
+        :return: The character's wisdom saving throw
+        """
+
+        return self.wisdom.modifier + self._class.wisdom_proficiency() * self.proficiency_bonus
+
+    @property
+    def charisma_saving_throw(self) -> int:
+        """
+        :return: The character's charisma saving throw
+        """
+
+        return self.charisma.modifier + self._class.charisma_proficiency() * self.proficiency_bonus
+
     # TODO: Add properties for dictionary derived values
 
     @property

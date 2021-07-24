@@ -244,6 +244,9 @@ class CharacterTest(unittest.TestCase):
         assert_error(34)
         assert_error(0)
 
+    def test_saving_throws(self):
+        # TODO: implement
+
     def _assert_death_save(
             self,
             success: bool,
