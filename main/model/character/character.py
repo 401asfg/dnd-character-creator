@@ -1,4 +1,5 @@
 from main.model.character.ability import Ability
+from main.model.character.size import Size
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
 
@@ -15,6 +16,8 @@ class Character:
     """
     A 5th edition D&D character, with stats, skills, and info
     """
+
+    # TODO: all tests have actual and expected backwards?
 
     MAX_SUCCESSFUL_DEATH_SAVES = 3
     MAX_FAILED_DEATH_SAVES = 3
@@ -108,6 +111,14 @@ class Character:
             "A character of this race cannot have this alignment."
         )
 
+        self._exp = Advancements.get_min_exp(
+            check(
+                level.value,
+                Advancements.reachable_level,
+                "No character can reach this level."
+            )
+        )
+
         self._strength = Ability(NaturalPlus(strength.score + self._race.get_strength_bonus()))
         self._dexterity = Ability(NaturalPlus(dexterity.score + self._race.get_dexterity_bonus()))
         self._constitution = Ability(NaturalPlus(constitution.score + self._race.get_constitution_bonus()))
@@ -115,8 +126,8 @@ class Character:
         self._wisdom = Ability(NaturalPlus(wisdom.score + self._race.get_wisdom_bonus()))
         self._charisma = Ability(NaturalPlus(charisma.score + self._race.get_charisma_bonus()))
 
-        self._hit_points = self._class.get_hit_points() + self._constitution.modifier
-        self._exp = Advancements.get_min_exp(level)
+        self._max_hit_points = self._class.get_hit_points() + self._constitution.modifier
+        self.hit_points = self._max_hit_points
 
     def gain_exp(self, points: int):
         """
@@ -130,9 +141,9 @@ class Character:
     def death_save(self, success: bool):
         """
         Make a death save; increments the successful or failed death save counter depending on success; if the success
-        counter reaches MAX_SUCCESSFUL_DEATH_SAVES, character's state is changed to ALIVE; if the fail counter reaches
-        MAX_FAILED_DEATH_SAVES, character's state is changed to DEAD; if either max is reached, resets death saves;
-        raises IncorrectCharacterState if the character is not downed
+        counter reaches MAX_SUCCESSFUL_DEATH_SAVES, character's state is changed to ALIVE and the character gains 1
+        hit_point; if the fail counter reaches MAX_FAILED_DEATH_SAVES, character's state is changed to DEAD; if either
+        max is reached, resets death saves; raises IncorrectCharacterState if the character is not downed
 
         :param success: Whether or not the death save was successful; if true increments the successful death save
         counter; otherwise, increments the failed death save counter
@@ -173,6 +184,9 @@ class Character:
                 self.MAX_FAILED_DEATH_SAVES,
                 State.DEAD
             )
+
+        if self.state == State.ALIVE:
+            self.hit_points = 1
 
     @property
     def name(self) -> str:
@@ -232,24 +246,34 @@ class Character:
         :return: The character's hit_points
         """
 
-        return 0    # TODO: implement
+        return self._hit_points
 
     @hit_points.setter
     def hit_points(self, value: int):
         """
         Set the character's hit_points
 
-        :param value: The value assigned to the character's hit_points; if value > max_hit_points, hit_points =
+        :param value: The amount of hit_points the character has; if value > max_hit_points, hit_points =
         max_hit_points; if value <= 0, hit_points = 0 and the character state is changed to DOWNED; if character state
         is DOWNED or DEAD, raises IncorrectCharacterStateException
         """
 
-        # TODO: implement
-        pass
+        if self._state == State.DOWNED or self._state == State.DEAD:
+            raise IncorrectCharacterStateException(
+                "Character's hit_points cannot be changed when not in the ALIVE state."
+            )
+
+        if value <= 0:
+            self._hit_points = 0
+            self._state = State.DOWNED
+        elif value > self._max_hit_points:
+            self._hit_points = self._max_hit_points
+        else:
+            self._hit_points = value
 
     @property
     def max_hit_points(self):
-        return 0    # TODO: implement
+        return self._max_hit_points
 
     @property
     def successful_death_saves(self) -> int:
@@ -257,7 +281,7 @@ class Character:
 
     @property
     def failed_death_saves(self) -> int:
-        return self.failed_death_saves
+        return self._failed_death_saves
 
     @property
     def alignment(self) -> Alignment:
@@ -280,11 +304,11 @@ class Character:
         return self._age.value
 
     @property
-    def size(self):
+    def size(self) -> Size:
         return self._race.get_size()
 
     @property
-    def speed(self):
+    def speed(self) -> int:
         return self._race.get_speed()
 
     def _reset_death_saves(self):

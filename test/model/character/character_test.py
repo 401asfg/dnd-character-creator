@@ -1,5 +1,7 @@
 import unittest
 
+from main.model.character.ability import Ability
+from main.model.character.classes.wizard import Wizard
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
@@ -7,6 +9,8 @@ from main.model.character.races.elf import Elf
 from main.model.character.races.human import Human
 from main.model.character.size import Size
 from main.model.character.state import State
+from main.model.inttypes.natural import Natural
+from main.model.inttypes.natural_plus import NaturalPlus
 
 
 class CharacterTest(unittest.TestCase):
@@ -16,13 +20,19 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            2,
+            NaturalPlus(2),
+            Ability(NaturalPlus(13)),
+            Ability(NaturalPlus(8)),
+            Ability(NaturalPlus(18)),
+            Ability(NaturalPlus(12)),
+            Ability(NaturalPlus(15)),
+            Ability(NaturalPlus(15)),
             "Background",
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.EVIL
             ),
-            22
+            Natural(22)
         )
 
     def test_init_no_error(self):
@@ -30,16 +40,24 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.player_name, "Player Name")
         self.assertEqual(self.character.class_name, "Wizard")
         self.assertEqual(self.character.race_name, "Human")
+
+        self.assertEqual(self.character.strength.score, 14)
+        self.assertEqual(self.character.dexterity.score, 9)
+        self.assertEqual(self.character.constitution.score, 19)
+        self.assertEqual(self.character.intelligence.score, 13)
+        self.assertEqual(self.character.wisdom.score, 16)
+        self.assertEqual(self.character.charisma.score, 16)
+
         self.assertEqual(self.character.background, "Background")
         self.assertEqual(self.character.state, State.ALIVE)
-        self.assertEqual(self.character.hit_points, None)   # TODO: implement
+        self.assertEqual(self.character.hit_points, 10)
+        self.assertEqual(self.character.max_hit_points, 10)
         self.assertEqual(self.character.successful_death_saves, 0)
         self.assertEqual(self.character.failed_death_saves, 0)
 
         nature = self.character.alignment.nature
-        morality = self.character.alignment.morality
-
         self.assertEqual(nature, Alignment.Nature.LAWFUL)
+        morality = self.character.alignment.morality
         self.assertEqual(morality, Alignment.Morality.EVIL)
 
         self.assertEqual(self.character.experience_points, 300)
@@ -57,13 +75,19 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Human,
-                22,
+                NaturalPlus(22),
+                Ability(NaturalPlus(13)),
+                Ability(NaturalPlus(8)),
+                Ability(NaturalPlus(18)),
+                Ability(NaturalPlus(12)),
+                Ability(NaturalPlus(15)),
+                Ability(NaturalPlus(15)),
                 "Background",
                 Alignment(
                     Alignment.Nature.LAWFUL,
                     Alignment.Morality.EVIL
                 ),
-                22
+                Natural(22)
             )
         except ValueError:
             pass
@@ -75,13 +99,19 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Elf,
-                2,
+                NaturalPlus(22),
+                Ability(NaturalPlus(13)),
+                Ability(NaturalPlus(8)),
+                Ability(NaturalPlus(18)),
+                Ability(NaturalPlus(12)),
+                Ability(NaturalPlus(15)),
+                Ability(NaturalPlus(15)),
                 "Background",
                 Alignment(
                     Alignment.Nature.LAWFUL,
                     Alignment.Morality.GOOD
                 ),
-                22
+                Natural(22)
             )
         except ValueError:
             pass
@@ -107,37 +137,6 @@ class CharacterTest(unittest.TestCase):
         assert_gain_exp(5600, 6500, 5, 3)
         assert_gain_exp(103500, 110000, 12, 4)
 
-    def test_hit_points_over_max_and_to_zero(self):
-        hp = self.character.hit_points
-        self.character.hit_points -= 1
-        self.assertEqual(self.character.hit_points, hp - 1)
-        self.assertEqual(self.character.state, State.ALIVE)
-
-        self.character.hit_points = self.character.max_hit_points + 4
-        self.assertEqual(self.character.hit_points, self.character.max_hit_points)
-        self.assertEqual(self.character.state, State.ALIVE)
-
-        self.character.hit_points = 0
-        self.assertEqual(self.character.hit_points, 0)
-        self.assertEqual(self.character.state, State.DOWNED)
-
-        try:
-            self.character.hit_points += 1
-            self.fail("Shouldn't be able to change hit_points at 0")
-        except IncorrectCharacterStateException:
-            pass
-
-    def test_hit_points_past_zero(self):
-        self.character.hit_points = -3
-        self.assertEqual(self.character.hit_points, 0)
-        self.assertEqual(self.character.state, State.DOWNED)
-
-        try:
-            self.character.hit_points += 1
-            self.fail("Shouldn't be able to change hit_points at 0")
-        except IncorrectCharacterStateException:
-            pass
-
     def test_death_save_success(self):
         self.character.hit_points = 0
         downed = State.DOWNED
@@ -147,6 +146,7 @@ class CharacterTest(unittest.TestCase):
         self._assert_death_save(False, 2, 1, downed)
         self._assert_death_save(False, 2, 2, downed)
         self._assert_death_save(True, 0, 0, State.ALIVE)
+        self.assertEqual(self.character.hit_points, 1)
 
     def test_death_save_fail(self):
         self.character.hit_points = 0
@@ -156,6 +156,7 @@ class CharacterTest(unittest.TestCase):
         self._assert_death_save(False, 1, 1, downed)
         self._assert_death_save(False, 1, 2, downed)
         self._assert_death_save(False, 0, 0, State.DEAD)
+        self.assertEqual(self.character.hit_points, 0)
 
     def test_death_save_error(self):
         def assert_death_save_error(success: bool, character_state: str):
@@ -191,6 +192,57 @@ class CharacterTest(unittest.TestCase):
 
         assert_death_save_error(True, "dead")
         assert_death_save_error(False, "dead")
+
+    def test_hit_points_setter(self):
+        def assert_hit_points(delta: int, expected: int):
+            """
+            Asserts that after changing the character hit points by the given delta, the character has the expected hp
+            """
+
+            self.character.hit_points += delta
+            self.assertEqual(self.character.hit_points, expected)
+
+        assert_hit_points(-5, 5)
+        assert_hit_points(1, 6)
+        assert_hit_points(10, self.character.max_hit_points)
+        assert_hit_points(-1000, 0)
+        self.assertEqual(self.character.state, State.DOWNED)
+
+        def assert_error(hp: int):
+            """
+            Asserts that attempting to change the character's hp to the given value raises an error
+            """
+
+            try:
+                self.character.hit_points = hp
+                self.fail("Should not be able to change character hp while it is downed.")
+            except IncorrectCharacterStateException:
+                self.assertEqual(self.character.hit_points, 0)
+
+        assert_error(5)
+        assert_error(0)
+
+        def make_death_saves(success: bool, num: int):
+            """
+            Make num death saves to either kill or save the character
+
+            :param success: Whether the death save was a success or not
+            :param num: The number of death saves to make; should be equal to the max successful if success is true, or
+            max failure if success is false
+            """
+
+            for _ in range(num):
+                self.character.death_save(success)
+
+        make_death_saves(True, self.character.MAX_SUCCESSFUL_DEATH_SAVES)
+
+        assert_hit_points(0, 1)
+        assert_hit_points(-1, 0)
+
+        make_death_saves(False, self.character.MAX_FAILED_DEATH_SAVES)
+
+        assert_error(34)
+        assert_error(0)
 
     def _assert_death_save(
             self,
