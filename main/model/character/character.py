@@ -1,4 +1,3 @@
-from main.model.character.ability import Ability
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp, reachable_level
 from main.model.character.size import Size
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
@@ -26,287 +25,6 @@ class Character:
     # TODO: add rest of functions
     # TODO: add exceptions to ctor (note all exceptions)
 
-    class _Abilities:
-        """
-        The character's abilities
-        """
-
-        class _Ability(Ability):
-            """
-            An ability in the context of it belonging to the character
-            """
-
-            def __init__(
-                    self,
-                    dice_roll_ability: Ability,
-                    racial_ability_bonus: NaturalPlus,
-                    class_proficient: bool,
-                    proficiency_bonus: NaturalPlus
-            ):
-                """
-                Initializes the class; sets the ability score to the dice roll score plus the racial bonus for this
-                ability
-
-                :param dice_roll_ability: An ability with its score taken directly from the dice roll
-                :param racial_ability_bonus: The racial bonus to add to the ability's score
-                :param class_proficient: Whether or not the character's class is proficient in this ability
-                :param proficiency_bonus: The character's proficiency bonus
-                """
-
-                super().__init__(NaturalPlus(dice_roll_ability.score + racial_ability_bonus.value))
-                self._proficiency = class_proficient
-                self._proficiency_bonus = proficiency_bonus
-
-            @property
-            def saving_throw(self) -> int:
-                """
-                :return: The saving throw modifier: ability modifier, plus proficiency_bonus if class is proficient in
-                this ability
-                """
-
-                return self.modifier + self._proficiency * self._proficiency_bonus.value
-
-        def __init__(
-                self,
-                character: "Character",
-                strength: Ability,
-                dexterity: Ability,
-                constitution: Ability,
-                intelligence: Ability,
-                wisdom: Ability,
-                charisma: Ability
-        ):
-            """
-            Initializes this class
-
-            :param character: The character to whom these abilities belong
-            :param strength: The character's strength ability with its score taken directly from the dice roll
-            :param dexterity: The character's dexterity ability with its score taken directly from the dice roll
-            :param constitution: The character's constitution ability with its score taken directly from the dice roll
-            :param intelligence: The character's intelligence ability with its score taken directly from the dice roll
-            :param wisdom: The character's wisdom ability with its score taken directly from the dice roll
-            :param charisma: The character's charisma ability with its score taken directly from the dice roll
-            """
-
-            race = character._race
-            class_ = character._class
-            pb = NaturalPlus(character.proficiency_bonus)
-
-            self._strength = self._Ability(
-                strength,
-                NaturalPlus(race.get_strength_bonus()),
-                class_.strength_proficiency(),
-                pb
-            )
-
-            self._dexterity = self._Ability(
-                dexterity,
-                NaturalPlus(race.get_dexterity_bonus()),
-                class_.dexterity_proficiency(),
-                pb
-            )
-
-            self._constitution = self._Ability(
-                constitution,
-                NaturalPlus(race.get_constitution_bonus()),
-                class_.constitution_proficiency(),
-                pb
-            )
-
-            self._intelligence = self._Ability(
-                intelligence,
-                NaturalPlus(race.get_intelligence_bonus()),
-                class_.intelligence_proficiency(),
-                pb
-            )
-
-            self._wisdom = self._Ability(
-                wisdom,
-                NaturalPlus(race.get_wisdom_bonus()),
-                class_.wisdom_proficiency(),
-                pb
-            )
-
-            self._charisma = self._Ability(
-                charisma,
-                NaturalPlus(race.get_charisma_bonus()),
-                class_.charisma_proficiency(),
-                pb
-            )
-
-        @property
-        def strength(self) -> _Ability:
-            return self._strength
-
-        @property
-        def dexterity(self) -> _Ability:
-            return self._dexterity
-
-        @property
-        def constitution(self) -> _Ability:
-            return self._constitution
-
-        @property
-        def intelligence(self) -> _Ability:
-            return self._intelligence
-
-        @property
-        def wisdom(self) -> _Ability:
-            return self._wisdom
-
-        @property
-        def charisma(self) -> _Ability:
-            return self._charisma
-
-    # TODO: test skills
-
-    class _Skills:
-        """
-        The character's skills
-        """
-
-        class _Skill:
-            """
-            One of the character's skills
-            """
-
-            def __init__(self, ability: Ability, proficient: bool, proficiency_bonus: NaturalPlus):
-                """
-                Initializes the class
-
-                :param ability: The ability that this skill is bound to
-                :param proficient: Whether or not the character is proficient in this skill
-                :param proficiency_bonus: The character's proficiency bonus
-                """
-
-                self._ability = ability
-                self._proficient = proficient
-                self._proficiency_bonus = proficiency_bonus
-
-            @property
-            def modifier(self) -> int:
-                """
-                :return: The skill's modifier: ability modifier, plus proficiency_bonus if character is proficient in
-                this skill
-                """
-
-                return self._ability.modifier + self._proficient * self._proficiency_bonus.value
-
-            @property
-            def proficient(self) -> bool:
-                """
-                :return: True if character is proficient in this skill; otherwise, false
-                """
-
-                return self._proficient
-
-        def __init__(self, character: "Character"):
-            """
-            Initializes this class
-
-            :param character: The character to whom these skills belong
-            """
-
-            strength = character.abilities.strength
-            dexterity = character.abilities.dexterity
-            constitution = character.abilities.constitution
-            intelligence = character.abilities.intelligence
-            wisdom = character.abilities.wisdom
-            charisma = character.abilities.charisma
-
-            pb = NaturalPlus(character.proficiency_bonus)
-
-            self._acrobatics = self._Skill(dexterity, , pb)
-            self._animal_handling = self._Skill(wisdom, , pb)
-            self._arcana = self._Skill(intelligence, , pb)
-            self._athletics = self._Skill(strength, , pb)
-            self._deception = self._Skill(charisma, , pb)
-            self._history = self._Skill(intelligence, , pb)
-            self._insight = self._Skill(wisdom, , pb)
-            self._intimidation = self._Skill(charisma, , pb)
-            self._investigation = self._Skill(intelligence, , pb)
-            self._medicine = self._Skill(wisdom, , pb)
-            self._nature = self._Skill(intelligence, , pb)
-            self._perception = self._Skill(wisdom, , pb)
-            self._performance = self._Skill(charisma, , pb)
-            self._persuasion = self._Skill(charisma, , pb)
-            self._religion = self._Skill(intelligence, , pb)
-            self._sleight_of_hand = self._Skill(dexterity, , pb)
-            self._stealth = self._Skill(dexterity, , pb)
-            self._survival = self._Skill(wisdom, , pb)
-
-        @property
-        def acrobatics(self) -> _Skill:
-            return self._acrobatics
-
-        @property
-        def animal_handling(self) -> _Skill:
-            return self._animal_handling
-
-        @property
-        def arcana(self) -> _Skill:
-            return self._arcana
-
-        @property
-        def athletics(self) -> _Skill:
-            return self._athletics
-
-        @property
-        def deception(self) -> _Skill:
-            return self._deception
-
-        @property
-        def history(self) -> _Skill:
-            return self._history
-
-        @property
-        def insight(self) -> _Skill:
-            return self._insight
-
-        @property
-        def intimidation(self) -> _Skill:
-            return self._intimidation
-
-        @property
-        def investigation(self) -> _Skill:
-            return self._investigation
-
-        @property
-        def medicine(self) -> _Skill:
-            return self._medicine
-
-        @property
-        def nature(self) -> _Skill:
-            return self._nature
-
-        @property
-        def perception(self) -> _Skill:
-            return self._perception
-
-        @property
-        def performance(self) -> _Skill:
-            return self._performance
-
-        @property
-        def persuasion(self) -> _Skill:
-            return self._persuasion
-
-        @property
-        def religion(self) -> _Skill:
-            return self._religion
-
-        @property
-        def sleight_of_hand(self) -> _Skill:
-            return self._sleight_of_hand
-
-        @property
-        def stealth(self) -> _Skill:
-            return self._stealth
-
-        @property
-        def survival(self) -> _Skill:
-            return self._survival
-
     def __init__(
             self,
             name: str,
@@ -314,12 +32,8 @@ class Character:
             class_: Type[Class],
             race: Type[Race],
             level: NaturalPlus,
-            strength: Ability,
-            dexterity: Ability,
-            constitution: Ability,
-            intelligence: Ability,
-            wisdom: Ability,
-            charisma: Ability,
+            abilities: Type["Abilities"],
+            skills: Type["Skills"],
             background: str,
             alignment: Alignment,
             age: Natural
@@ -333,12 +47,8 @@ class Character:
         :param class_: The character's class
         :param race: The character's race
         :param level: The character's starting level
-        :param strength: The character's strength ability with its score taken directly from the dice roll
-        :param dexterity: The character's dexterity ability with its score taken directly from the dice roll
-        :param constitution: The character's constitution ability with its score taken directly from the dice roll
-        :param intelligence: The character's intelligence ability with its score taken directly from the dice roll
-        :param wisdom: The character's wisdom ability with its score taken directly from the dice roll
-        :param charisma: The character's charisma ability with its score taken directly from the dice roll
+        :param abilities: The character's abilities
+        :param skills: The character's skills
         :param background: The character's background
         :param alignment: The character's alignment
         :param age: The character's age
@@ -350,8 +60,8 @@ class Character:
 
         self._initialize_core_fields(name, player_name, class_, race, background, age)
         self._initialize_exception_raising_fields(alignment, level)
-        self._abilities = self._Abilities(self, strength, dexterity, constitution, intelligence, wisdom, charisma)
-        self._skills = self._Skills(self, )
+        self._abilities = abilities(race, class_, NaturalPlus(self.proficiency_bonus))
+        self._skills = skills(self)
         self._initialize_hit_points()
 
     def gain_exp(self, points: int):
@@ -430,11 +140,11 @@ class Character:
         return self._race.get_name()
 
     @property
-    def abilities(self) -> _Abilities:
+    def abilities(self) -> "Abilities":
         return self._abilities
 
     @property
-    def skills(self) -> _Skills:
+    def skills(self) -> "Skills":
         return self._skills
 
     # TODO: Add properties for dictionary derived values

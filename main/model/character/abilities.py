@@ -1,20 +1,22 @@
 from typing import Type
 
 from main.model.character.ability import Ability
-from main.model.character.character import Character
+from main.model.character.class_ import Class
+from main.model.character.race import Race
 from main.model.inttypes.natural_plus import NaturalPlus
 
-# TODO: test
+# TODO: test abilities
+# TODO: fix not being recognized by autocomplete or typing
 
 
-def get_character_abilities(
+def generate_character_abilities(
         strength_dice_roll: Ability,
         dexterity_dice_roll: Ability,
         constitution_dice_roll: Ability,
         intelligence_dice_roll: Ability,
         wisdom_dice_roll: Ability,
         charisma_dice_roll: Ability
-) -> Type["_Abilities"]:
+) -> Type["Abilities"]:
     """
     Get the abilities for a character
 
@@ -27,12 +29,12 @@ def get_character_abilities(
     :return: The abilities of a character
     """
 
-    class _Abilities:
+    class Abilities:
         """
         The character's abilities
         """
 
-        class _Ability(Ability):
+        class Ability(Ability):
             """
             An ability in the context of it belonging to the character
             """
@@ -69,82 +71,82 @@ def get_character_abilities(
 
         def __init__(
                 self,
-                character: Character
+                race: Type[Race],
+                class_: Type[Class],
+                proficiency_bonus: NaturalPlus
         ):
             """
             Initializes this class
 
-            :param character: The character to whom these abilities belong
+            :param race: The race of the character to whom these abilities belong
+            :param class_: The class of the character to whom these abilities belong
+            :param proficiency_bonus: The proficiency bonus of the character to whom these abilities belong
             """
 
-            race = character._race
-            class_ = character._class
-            pb = NaturalPlus(character.proficiency_bonus)
-
-            self._strength = self._Ability(
+            self._strength = self.Ability(
                 strength_dice_roll,
                 NaturalPlus(race.get_strength_bonus()),
                 class_.strength_proficiency(),
-                pb
+                proficiency_bonus
             )
 
-            self._dexterity = self._Ability(
+            self._dexterity = self.Ability(
                 dexterity_dice_roll,
                 NaturalPlus(race.get_dexterity_bonus()),
                 class_.dexterity_proficiency(),
-                pb
+                proficiency_bonus
             )
 
-            self._constitution = self._Ability(
+            self._constitution = self.Ability(
                 constitution_dice_roll,
                 NaturalPlus(race.get_constitution_bonus()),
                 class_.constitution_proficiency(),
-                pb
+                proficiency_bonus
             )
 
-            self._intelligence = self._Ability(
+            self._intelligence = self.Ability(
                 intelligence_dice_roll,
                 NaturalPlus(race.get_intelligence_bonus()),
                 class_.intelligence_proficiency(),
-                pb
+                proficiency_bonus
             )
 
-            self._wisdom = self._Ability(
+            self._wisdom = self.Ability(
                 wisdom_dice_roll,
                 NaturalPlus(race.get_wisdom_bonus()),
                 class_.wisdom_proficiency(),
-                pb
+                proficiency_bonus
             )
 
-            self._charisma = self._Ability(
+            self._charisma = self.Ability(
                 charisma_dice_roll,
                 NaturalPlus(race.get_charisma_bonus()),
                 class_.charisma_proficiency(),
-                pb
+                proficiency_bonus
             )
 
         @property
-        def strength(self) -> _Ability:
+        def strength(self) -> Ability:
             return self._strength
 
         @property
-        def dexterity(self) -> _Ability:
+        def dexterity(self) -> Ability:
             return self._dexterity
 
         @property
-        def constitution(self) -> _Ability:
+        def constitution(self) -> Ability:
             return self._constitution
 
         @property
-        def intelligence(self) -> _Ability:
+        def intelligence(self) -> Ability:
             return self._intelligence
 
         @property
-        def wisdom(self) -> _Ability:
+        def wisdom(self) -> Ability:
             return self._wisdom
 
         @property
-        def charisma(self) -> _Ability:
+        def charisma(self) -> Ability:
             return self._charisma
 
-    return _Abilities
+    return Abilities

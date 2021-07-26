@@ -1,7 +1,9 @@
 import unittest
 
+from main.model.character.abilities import generate_character_abilities
 from main.model.character.ability import Ability
 from main.model.character.classes.wizard import Wizard
+from main.model.character.skills import generate_character_skills
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
@@ -15,18 +17,44 @@ from main.model.inttypes.natural_plus import NaturalPlus
 
 class CharacterTest(unittest.TestCase):
     def setUp(self):
+        self.abilities = generate_character_abilities(
+            strength_dice_roll=Ability(NaturalPlus(13)),
+            dexterity_dice_roll=Ability(NaturalPlus(8)),
+            constitution_dice_roll=Ability(NaturalPlus(18)),
+            intelligence_dice_roll=Ability(NaturalPlus(12)),
+            wisdom_dice_roll=Ability(NaturalPlus(15)),
+            charisma_dice_roll=Ability(NaturalPlus(15))
+        )
+
+        self.skills = generate_character_skills(
+            acrobatics_proficiency=True,
+            animal_handling_proficiency=False,
+            athletics_proficiency=False,
+            arcana_proficiency=False,
+            deception_proficiency=False,
+            history_proficiency=True,
+            insight_proficiency=False,
+            intimidation_proficiency=False,
+            investigation_proficiency=False,
+            medicine_proficiency=False,
+            nature_proficiency=True,
+            perception_proficiency=True,
+            performance_proficiency=False,
+            persuasion_proficiency=False,
+            religion_proficiency=False,
+            sleight_of_hand_proficiency=False,
+            stealth_proficiency=False,
+            survival_proficiency=True
+        )
+
         self.character = Character(
             "Name",
             "Player Name",
             Wizard,
             Human,
             NaturalPlus(2),
-            Ability(NaturalPlus(13)),
-            Ability(NaturalPlus(8)),
-            Ability(NaturalPlus(18)),
-            Ability(NaturalPlus(12)),
-            Ability(NaturalPlus(15)),
-            Ability(NaturalPlus(15)),
+            self.abilities,
+            self.skills,
             "Background",
             Alignment(
                 Alignment.Nature.LAWFUL,
@@ -54,6 +82,25 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.abilities.intelligence.saving_throw, 3)
         self.assertEqual(self.character.abilities.wisdom.saving_throw, 5)
         self.assertEqual(self.character.abilities.charisma.saving_throw, 3)
+
+        self.assertEqual(self.character.skills.acrobatics.modifier, 1)
+        self.assertEqual(self.character.skills.animal_handling.modifier, 3)
+        self.assertEqual(self.character.skills.arcana.modifier, 1)
+        self.assertEqual(self.character.skills.athletics.modifier, 2)
+        self.assertEqual(self.character.skills.deception.modifier, 3)
+        self.assertEqual(self.character.skills.history.modifier, 3)
+        self.assertEqual(self.character.skills.insight.modifier, 3)
+        self.assertEqual(self.character.skills.intimidation.modifier, 3)
+        self.assertEqual(self.character.skills.investigation.modifier, 1)
+        self.assertEqual(self.character.skills.medicine.modifier, 3)
+        self.assertEqual(self.character.skills.nature.modifier, 3)
+        self.assertEqual(self.character.skills.perception.modifier, 5)
+        self.assertEqual(self.character.skills.performance.modifier, 3)
+        self.assertEqual(self.character.skills.persuasion.modifier, 3)
+        self.assertEqual(self.character.skills.religion.modifier, 1)
+        self.assertEqual(self.character.skills.sleight_of_hand.modifier, -1)
+        self.assertEqual(self.character.skills.stealth.modifier, -1)
+        self.assertEqual(self.character.skills.survival.modifier, 5)
 
         self.assertEqual(self.character.background, "Background")
         self.assertEqual(self.character.state, State.ALIVE)
@@ -83,12 +130,8 @@ class CharacterTest(unittest.TestCase):
                 Wizard,
                 Human,
                 NaturalPlus(22),
-                Ability(NaturalPlus(13)),
-                Ability(NaturalPlus(8)),
-                Ability(NaturalPlus(18)),
-                Ability(NaturalPlus(12)),
-                Ability(NaturalPlus(15)),
-                Ability(NaturalPlus(15)),
+                self.abilities,
+                self.skills,
                 "Background",
                 Alignment(
                     Alignment.Nature.LAWFUL,
@@ -107,12 +150,8 @@ class CharacterTest(unittest.TestCase):
                 Wizard,
                 Elf,
                 NaturalPlus(22),
-                Ability(NaturalPlus(13)),
-                Ability(NaturalPlus(8)),
-                Ability(NaturalPlus(18)),
-                Ability(NaturalPlus(12)),
-                Ability(NaturalPlus(15)),
-                Ability(NaturalPlus(15)),
+                self.abilities,
+                self.skills,
                 "Background",
                 Alignment(
                     Alignment.Nature.LAWFUL,

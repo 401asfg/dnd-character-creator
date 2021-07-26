@@ -2,6 +2,8 @@ from math import floor
 
 from main.model.inttypes.natural_plus import NaturalPlus
 
+# TODO: rename and rework to DiceRollAbility?
+
 
 class Ability:
     """
