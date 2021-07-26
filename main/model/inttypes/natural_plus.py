@@ -1,7 +1,4 @@
-from main.model.inttypes.natural import Natural
-
-
-class NaturalPlus(Natural):
+class NaturalPlus:
     """
     An integer that is not negative or zero
     """
@@ -13,7 +10,11 @@ class NaturalPlus(Natural):
         :param value: The value of the natural+ number
         """
 
-        if value == 0:
+        if value < 1:
             raise ValueError("A natural+ cannot be equal to 0.")
 
-        super().__init__(value)
+        self._value = value
+
+    @property
+    def value(self) -> int:
+        return self._value
