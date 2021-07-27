@@ -1,7 +1,7 @@
 import unittest
 
 from main.model.character.abilities import generate_character_abilities
-from main.model.character.ability import Ability
+from main.model.character.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
 from main.model.character.skills import generate_character_skills
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
@@ -9,21 +9,21 @@ from main.model.character.alignment import Alignment
 from main.model.character.character import Character
 from main.model.character.races.elf import Elf
 from main.model.character.races.human import Human
-from main.model.character.size import Size
-from main.model.character.state import State
-from main.model.inttypes.natural import Natural
-from main.model.inttypes.natural_plus import NaturalPlus
+from main.model.character.enumerators.size import Size
+from main.model.character.enumerators.state import State
+from main.model.int_types.natural import Natural
+from main.model.int_types.posint import Posint
 
 
 class CharacterTest(unittest.TestCase):
     def setUp(self):
         self.abilities = generate_character_abilities(
-            strength_dice_roll=Ability(NaturalPlus(13)),
-            dexterity_dice_roll=Ability(NaturalPlus(8)),
-            constitution_dice_roll=Ability(NaturalPlus(18)),
-            intelligence_dice_roll=Ability(NaturalPlus(12)),
-            wisdom_dice_roll=Ability(NaturalPlus(15)),
-            charisma_dice_roll=Ability(NaturalPlus(15))
+            strength=AbilityScore(13),
+            dexterity=AbilityScore(8),
+            constitution=AbilityScore(18),
+            intelligence=AbilityScore(12),
+            wisdom=AbilityScore(15),
+            charisma=AbilityScore(15)
         )
 
         self.skills = generate_character_skills(
@@ -52,7 +52,7 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            NaturalPlus(2),
+            Posint(2),
             self.abilities,
             self.skills,
             "Background",
@@ -129,7 +129,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Human,
-                NaturalPlus(22),
+                Posint(22),
                 self.abilities,
                 self.skills,
                 "Background",
@@ -149,7 +149,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Elf,
-                NaturalPlus(22),
+                Posint(22),
                 self.abilities,
                 self.skills,
                 "Background",

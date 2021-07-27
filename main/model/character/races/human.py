@@ -2,7 +2,7 @@ from typing import List
 
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
-from main.model.character.size import Size
+from main.model.character.enumerators.size import Size
 
 
 class Human(Race):

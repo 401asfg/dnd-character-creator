@@ -1,17 +1,18 @@
 import unittest
 
-from main.model.inttypes.natural_plus import NaturalPlus
+from main.model.int_types.natural import Natural
 
 
-class NaturalPlusTest(unittest.TestCase):
+class NaturalTest(unittest.TestCase):
     def test_init(self):
         def assert_same_value(x: int):
             """
-            Asserts that x and NaturalPlus(x).value are equal
+            Asserts that x and Natural(x).value are equal
             """
 
-            self.assertEqual(NaturalPlus(x).value, x)
+            self.assertEqual(Natural(x).value, x)
 
+        assert_same_value(0)
         assert_same_value(1)
         assert_same_value(2)
         assert_same_value(3)
@@ -22,16 +23,15 @@ class NaturalPlusTest(unittest.TestCase):
 
         def assert_error(x: int):
             """
-            Asserts that NaturalPlus(x) raises an error
+            Asserts that Natural(x) raises an error
             """
 
             try:
-                NaturalPlus(x)
-                self.fail("The non-positive value should have caused NaturalPlus to raise an error.")
+                Natural(x)
+                self.fail("The non-natural value should have caused Natural to raise an error.")
             except ValueError:
                 pass
 
-        assert_error(0)
         assert_error(-1)
         assert_error(-2)
         assert_error(-3)

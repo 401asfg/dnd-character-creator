@@ -1,11 +1,169 @@
+from abc import ABC, abstractmethod
 from typing import Type
 
-from main.model.character.ability import Ability
-from main.model.character.character import Character
-from main.model.inttypes.natural_plus import NaturalPlus
+from main.model.character.abilities import Abilities
+from main.model.int_types.posint import Posint
 
 # TODO: test skills
 # TODO: fix not being recognized by autocomplete or typing
+
+
+_NOT_IMPLEMENTED_MSG = 'Method implemented in subclass, call "generate_character_skills" to access.'
+
+
+class Skills(ABC):
+    """
+    The character's skills
+    """
+
+    class Skill(ABC):
+        """
+        One of the character's skills
+        """
+
+        @abstractmethod
+        def __init__(self, ability: Abilities.Ability, proficiency: bool, proficiency_bonus: Posint):
+            """
+            Initializes the class
+
+            :param ability: The ability that this skill is bound to
+            :param proficiency: Whether or not the character is proficient in this skill
+            :param proficiency_bonus: The character's proficiency bonus
+            """
+
+            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+        @property
+        @abstractmethod
+        def modifier(self) -> int:
+            """
+            :return: The skill's modifier: ability modifier, plus proficiency_bonus if character is proficient in
+            this skill
+            """
+
+            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+        @property
+        @abstractmethod
+        def proficient(self) -> bool:
+            """
+            :return: True if character is proficient in this skill; otherwise, false
+            """
+
+            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @abstractmethod
+    def __init__(
+            self,
+            strength: Abilities.Ability,
+            dexterity: Abilities.Ability,
+            intelligence: Abilities.Ability,
+            wisdom: Abilities.Ability,
+            charisma: Abilities.Ability,
+            proficiency_bonus: Posint
+    ):
+        """
+        Initializes this class
+
+        :param strength: The strength ability of the character to whom these skills belong
+        :param dexterity: The dexterity ability of the character to whom these skills belong
+        :param intelligence: The intelligence ability of the character to whom these skills belong
+        :param wisdom: The wisdom ability of the character to whom these skills belong
+        :param charisma: The charisma ability of the character to whom these skills belong
+        :param proficiency_bonus: The proficiency bonus of the character to whom these skills belong
+        """
+
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def acrobatics(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def animal_handling(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def arcana(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def athletics(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def deception(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def history(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def insight(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def intimidation(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def investigation(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def medicine(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def nature(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def perception(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def performance(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def persuasion(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def religion(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def sleight_of_hand(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def stealth(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+
+    @property
+    @abstractmethod
+    def survival(self) -> Skill:
+        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
 
 
 def generate_character_skills(
@@ -27,7 +185,7 @@ def generate_character_skills(
         sleight_of_hand_proficiency: bool,
         stealth_proficiency: bool,
         survival_proficiency: bool
-) -> Type["Skills"]:
+) -> Type[Skills]:
     """
     Get the skills for a character
 
@@ -54,150 +212,119 @@ def generate_character_skills(
     :return: The skills of a character
     """
 
-    class Skills:
-        """
-        The character's skills
-        """
-
-        class Skill:
-            """
-            One of the character's skills
-            """
-
-            def __init__(self, ability: Ability, proficiency: bool, proficiency_bonus: NaturalPlus):
-                """
-                Initializes the class
-
-                :param ability: The ability that this skill is bound to
-                :param proficiency: Whether or not the character is proficient in this skill
-                :param proficiency_bonus: The character's proficiency bonus
-                """
-
+    class _Skills(Skills):
+        class _Skill(Skills.Skill):
+            def __init__(self, ability: Abilities.Ability, proficiency: bool, proficiency_bonus: Posint):
                 self._ability = ability
                 self._proficiency = proficiency
                 self._proficiency_bonus = proficiency_bonus
 
             @property
             def modifier(self) -> int:
-                """
-                :return: The skill's modifier: ability modifier, plus proficiency_bonus if character is proficient in
-                this skill
-                """
-
                 return self._ability.modifier + self._proficiency * self._proficiency_bonus.value
 
             @property
             def proficient(self) -> bool:
-                """
-                :return: True if character is proficient in this skill; otherwise, false
-                """
-
                 return self._proficiency
 
-        def __init__(self, character: Character):
-            """
-            Initializes this class
-
-            :param character: The character to whom these skills belong
-            """
-
-            strength = character.abilities.strength
-            dexterity = character.abilities.dexterity
-            intelligence = character.abilities.intelligence
-            wisdom = character.abilities.wisdom
-            charisma = character.abilities.charisma
-
-            pb = NaturalPlus(character.proficiency_bonus)
-
-            self._acrobatics = self.Skill(dexterity, acrobatics_proficiency, pb)
-            self._animal_handling = self.Skill(wisdom, animal_handling_proficiency, pb)
-            self._arcana = self.Skill(intelligence, arcana_proficiency, pb)
-            self._athletics = self.Skill(strength, athletics_proficiency, pb)
-            self._deception = self.Skill(charisma, deception_proficiency, pb)
-            self._history = self.Skill(intelligence, history_proficiency, pb)
-            self._insight = self.Skill(wisdom, insight_proficiency, pb)
-            self._intimidation = self.Skill(charisma, intimidation_proficiency, pb)
-            self._investigation = self.Skill(intelligence, investigation_proficiency, pb)
-            self._medicine = self.Skill(wisdom, medicine_proficiency, pb)
-            self._nature = self.Skill(intelligence, nature_proficiency, pb)
-            self._perception = self.Skill(wisdom, perception_proficiency, pb)
-            self._performance = self.Skill(charisma, performance_proficiency, pb)
-            self._persuasion = self.Skill(charisma, persuasion_proficiency, pb)
-            self._religion = self.Skill(intelligence, religion_proficiency, pb)
-            self._sleight_of_hand = self.Skill(dexterity, sleight_of_hand_proficiency, pb)
-            self._stealth = self.Skill(dexterity, stealth_proficiency, pb)
-            self._survival = self.Skill(wisdom, survival_proficiency, pb)
+        def __init__(
+                self,
+                strength: Abilities.Ability,
+                dexterity: Abilities.Ability,
+                intelligence: Abilities.Ability,
+                wisdom: Abilities.Ability,
+                charisma: Abilities.Ability,
+                proficiency_bonus: Posint
+        ):
+            self._acrobatics = self._Skill(dexterity, acrobatics_proficiency, proficiency_bonus)
+            self._animal_handling = self._Skill(wisdom, animal_handling_proficiency, proficiency_bonus)
+            self._arcana = self._Skill(intelligence, arcana_proficiency, proficiency_bonus)
+            self._athletics = self._Skill(strength, athletics_proficiency, proficiency_bonus)
+            self._deception = self._Skill(charisma, deception_proficiency, proficiency_bonus)
+            self._history = self._Skill(intelligence, history_proficiency, proficiency_bonus)
+            self._insight = self._Skill(wisdom, insight_proficiency, proficiency_bonus)
+            self._intimidation = self._Skill(charisma, intimidation_proficiency, proficiency_bonus)
+            self._investigation = self._Skill(intelligence, investigation_proficiency, proficiency_bonus)
+            self._medicine = self._Skill(wisdom, medicine_proficiency, proficiency_bonus)
+            self._nature = self._Skill(intelligence, nature_proficiency, proficiency_bonus)
+            self._perception = self._Skill(wisdom, perception_proficiency, proficiency_bonus)
+            self._performance = self._Skill(charisma, performance_proficiency, proficiency_bonus)
+            self._persuasion = self._Skill(charisma, persuasion_proficiency, proficiency_bonus)
+            self._religion = self._Skill(intelligence, religion_proficiency, proficiency_bonus)
+            self._sleight_of_hand = self._Skill(dexterity, sleight_of_hand_proficiency, proficiency_bonus)
+            self._stealth = self._Skill(dexterity, stealth_proficiency, proficiency_bonus)
+            self._survival = self._Skill(wisdom, survival_proficiency, proficiency_bonus)
 
         @property
-        def acrobatics(self) -> Skill:
+        def acrobatics(self) -> Skills.Skill:
             return self._acrobatics
 
         @property
-        def animal_handling(self) -> Skill:
+        def animal_handling(self) -> Skills.Skill:
             return self._animal_handling
 
         @property
-        def arcana(self) -> Skill:
+        def arcana(self) -> Skills.Skill:
             return self._arcana
 
         @property
-        def athletics(self) -> Skill:
+        def athletics(self) -> Skills.Skill:
             return self._athletics
 
         @property
-        def deception(self) -> Skill:
+        def deception(self) -> Skills.Skill:
             return self._deception
 
         @property
-        def history(self) -> Skill:
+        def history(self) -> Skills.Skill:
             return self._history
 
         @property
-        def insight(self) -> Skill:
+        def insight(self) -> Skills.Skill:
             return self._insight
 
         @property
-        def intimidation(self) -> Skill:
+        def intimidation(self) -> Skills.Skill:
             return self._intimidation
 
         @property
-        def investigation(self) -> Skill:
+        def investigation(self) -> Skills.Skill:
             return self._investigation
 
         @property
-        def medicine(self) -> Skill:
+        def medicine(self) -> Skills.Skill:
             return self._medicine
 
         @property
-        def nature(self) -> Skill:
+        def nature(self) -> Skills.Skill:
             return self._nature
 
         @property
-        def perception(self) -> Skill:
+        def perception(self) -> Skills.Skill:
             return self._perception
 
         @property
-        def performance(self) -> Skill:
+        def performance(self) -> Skills.Skill:
             return self._performance
 
         @property
-        def persuasion(self) -> Skill:
+        def persuasion(self) -> Skills.Skill:
             return self._persuasion
 
         @property
-        def religion(self) -> Skill:
+        def religion(self) -> Skills.Skill:
             return self._religion
 
         @property
-        def sleight_of_hand(self) -> Skill:
+        def sleight_of_hand(self) -> Skills.Skill:
             return self._sleight_of_hand
 
         @property
-        def stealth(self) -> Skill:
+        def stealth(self) -> Skills.Skill:
             return self._stealth
 
         @property
-        def survival(self) -> Skill:
+        def survival(self) -> Skills.Skill:
             return self._survival
 
-    return Skills
+    return _Skills

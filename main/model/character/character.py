@@ -1,14 +1,16 @@
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp, reachable_level
-from main.model.character.size import Size
+from main.model.character.enumerators.size import Size
 from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
 
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
 from main.model.character.class_ import Class
-from main.model.character.state import State
-from main.model.inttypes.natural import Natural
-from main.model.inttypes.natural_plus import NaturalPlus
+from main.model.character.enumerators.state import State
+from main.model.int_types.natural import Natural
+from main.model.int_types.posint import Posint
+from main.model.character.abilities import Abilities
+from main.model.character.skills import Skills
 
 
 class Character:
@@ -31,9 +33,9 @@ class Character:
             player_name: str,
             class_: Type[Class],
             race: Type[Race],
-            level: NaturalPlus,
-            abilities: Type["Abilities"],
-            skills: Type["Skills"],
+            level: Posint,
+            abilities: Type[Abilities],
+            skills: Type[Skills],
             background: str,
             alignment: Alignment,
             age: Natural
@@ -60,8 +62,17 @@ class Character:
 
         self._initialize_core_fields(name, player_name, class_, race, background, age)
         self._initialize_exception_raising_fields(alignment, level)
-        self._abilities = abilities(race, class_, NaturalPlus(self.proficiency_bonus))
-        self._skills = skills(self)
+        self._abilities = abilities(race, class_, Posint(self.proficiency_bonus))
+
+        self._skills = skills(
+            strength=self.abilities.strength,
+            dexterity=self.abilities.dexterity,
+            intelligence=self.abilities.intelligence,
+            wisdom=self.abilities.wisdom,
+            charisma=self.abilities.charisma,
+            proficiency_bonus=Posint(self.proficiency_bonus)
+        )
+
         self._initialize_hit_points()
 
     def gain_exp(self, points: int):
@@ -140,11 +151,11 @@ class Character:
         return self._race.get_name()
 
     @property
-    def abilities(self) -> "Abilities":
+    def abilities(self) -> Abilities:
         return self._abilities
 
     @property
-    def skills(self) -> "Skills":
+    def skills(self) -> Skills:
         return self._skills
 
     # TODO: Add properties for dictionary derived values
@@ -260,7 +271,7 @@ class Character:
         self._background = background
         self._age = age
 
-    def _initialize_exception_raising_fields(self, alignment: Alignment, level: NaturalPlus):
+    def _initialize_exception_raising_fields(self, alignment: Alignment, level: Posint):
         """
         Initializes the fields that may raise exceptions; raises ValueError if the given level is unreachable or the
         given alignment is inappropriate for a character of the given race

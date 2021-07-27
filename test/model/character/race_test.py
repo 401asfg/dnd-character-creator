@@ -8,7 +8,7 @@ from main.model.character.races.dwarf import Dwarf
 from main.model.character.races.elf import Elf
 from main.model.character.races.gnome import Gnome
 from main.model.character.races.human import Human
-from main.model.character.size import Size
+from main.model.character.enumerators.size import Size
 
 
 class RaceTest(unittest.TestCase):

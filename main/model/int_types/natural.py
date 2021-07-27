@@ -1,4 +1,7 @@
-class Natural:
+from main.model.int_types.posint import Posint
+
+
+class Natural(Posint):
     """
     An integer that is not negative
     """
@@ -10,11 +13,5 @@ class Natural:
         :param value: The value of the natural number
         """
 
-        if value < 0:
-            raise ValueError("A natural cannot be less than 0.")
-
-        self._value = value
-
-    @property
-    def value(self) -> int:
-        return self._value
+        self._min_value = 0
+        super().__init__(value)
