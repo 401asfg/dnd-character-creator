@@ -1,6 +1,6 @@
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp, reachable_level
 from main.model.character.enumerators.size import Size
-from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from main.model.character.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
 
 from main.model.character.alignment import Alignment
@@ -62,7 +62,7 @@ class Character:
 
         self._initialize_core_fields(name, player_name, class_, race, background, age)
         self._initialize_exception_raising_fields(alignment, level)
-        self._abilities = abilities(race, class_, Posint(self.proficiency_bonus))
+        self._abilities = abilities(self._race, self._class, Posint(self.proficiency_bonus))
 
         self._skills = skills(
             strength=self.abilities.strength,
@@ -133,6 +133,21 @@ class Character:
 
         if self.state == State.ALIVE:
             self.hit_points = 1
+
+    def gain_inspiration(self):
+        """
+        Increment the character's inspiration by 1
+        """
+
+        self._add_inspiration(1)
+
+    def spend_inspiration(self):
+        """
+        Decrement the character's inspiration by 1; raises ValueError if spending an inspiration point would make
+        inspiration negative
+        """
+
+        self._add_inspiration(-1)
 
     @property
     def name(self) -> str:
@@ -226,6 +241,10 @@ class Character:
         return get_level(self._exp)
 
     @property
+    def inspiration(self) -> int:
+        return self._inspiration.value
+
+    @property
     def proficiency_bonus(self) -> int:
         return get_proficiency_bonus(self.level)
 
@@ -263,6 +282,7 @@ class Character:
 
         self._state = State.ALIVE
         self._reset_death_saves()
+        self._inspiration = Natural(0)
 
         self._name = name
         self._player_name = player_name
@@ -327,6 +347,15 @@ class Character:
 
         self._max_hit_points = self._class.get_hit_points() + self.abilities.constitution.modifier
         self.hit_points = self._max_hit_points
+
+    def _add_inspiration(self, inspiration_delta: int):
+        """
+        Adds inspiration_delta to the inspiration; raises ValueError if inspiration + inspiration_delta < 0
+
+        :param inspiration_delta: The amount to add to the inspiration
+        """
+
+        self._inspiration = Natural(self._inspiration.value + inspiration_delta)
 
     def _reset_death_saves(self):
         """

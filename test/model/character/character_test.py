@@ -4,7 +4,7 @@ from main.model.character.abilities import generate_character_abilities
 from main.model.character.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
 from main.model.character.skills import generate_character_skills
-from main.model.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from main.model.character.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
 from main.model.character.races.elf import Elf
@@ -104,6 +104,7 @@ class CharacterTest(unittest.TestCase):
 
         self.assertEqual(self.character.background, "Background")
         self.assertEqual(self.character.state, State.ALIVE)
+        self.assertEqual(self.character.inspiration, 0)
         self.assertEqual(self.character.hit_points, 10)
         self.assertEqual(self.character.max_hit_points, 10)
         self.assertEqual(self.character.successful_death_saves, 0)
@@ -238,6 +239,67 @@ class CharacterTest(unittest.TestCase):
 
         assert_death_save_error(True, "dead")
         assert_death_save_error(False, "dead")
+
+    def test_gain_inspiration(self):
+        def assert_gain_inspiration(expected_inspiration: int):
+            """
+            Asserts that after the character calls gain_inspiration, the character has the given expected_inspiration
+
+            :param expected_inspiration: The amount of inspiration the character is expected to have
+            """
+
+            self.character.gain_inspiration()
+            self.assertEqual(expected_inspiration, self.character.inspiration)
+
+        assert_gain_inspiration(1)
+        assert_gain_inspiration(2)
+        assert_gain_inspiration(3)
+        assert_gain_inspiration(4)
+        assert_gain_inspiration(5)
+        assert_gain_inspiration(6)
+        assert_gain_inspiration(7)
+
+    def test_spend_inspiration(self):
+        def assert_spend_inspiration(expected_inspiration: int):
+            """
+            Asserts that after the character calls spend_inspiration, the character has the given expected_inspiration
+
+            :param expected_inspiration: The amount of inspiration the character is expected to have
+            """
+
+            self.character.spend_inspiration()
+            self.assertEqual(expected_inspiration, self.character.inspiration)
+
+        def assert_spend_error():
+            """
+            Asserts that calling spend_inspiration causes an error to be raised
+            """
+
+            try:
+                self.character.spend_inspiration()
+                self.fail("Spending inspiration with no inspiration left should have resulted in a ValueError.")
+            except ValueError:
+                pass
+
+        assert_spend_error()
+        self.character.gain_inspiration()
+        self.character.gain_inspiration()
+        self.character.gain_inspiration()
+        self.character.gain_inspiration()
+        self.character.gain_inspiration()
+
+        assert_spend_inspiration(4)
+        assert_spend_inspiration(3)
+        assert_spend_inspiration(2)
+        assert_spend_inspiration(1)
+        assert_spend_inspiration(0)
+
+        assert_spend_error()
+        self.character.gain_inspiration()
+        self.character.gain_inspiration()
+        assert_spend_inspiration(1)
+        assert_spend_inspiration(0)
+        assert_spend_error()
 
     def test_hit_points_setter(self):
         def assert_hit_points(delta: int, expected: int):
