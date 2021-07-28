@@ -22,6 +22,7 @@ class Character:
 
     MAX_SUCCESSFUL_DEATH_SAVES = 3
     MAX_FAILED_DEATH_SAVES = 3
+    _BASE_PASSIVE_WISDOM = 10
 
     # TODO: add rest of parameters
     # TODO: add rest of functions
@@ -238,7 +239,19 @@ class Character:
 
     @property
     def level(self) -> int:
+        """
+        :return: The character's level for the given amount of experience points the character has
+        """
+
         return get_level(self._exp)
+
+    @property
+    def passive_wisdom(self) -> int:
+        """
+        :return: The character's passive wisdom
+        """
+
+        return self._BASE_PASSIVE_WISDOM + self.skills.perception.modifier
 
     @property
     def inspiration(self) -> int:
@@ -246,6 +259,10 @@ class Character:
 
     @property
     def proficiency_bonus(self) -> int:
+        """
+        :return: The character's proficiency bonus for the given level of the character
+        """
+
         return get_proficiency_bonus(self.level)
 
     @property
@@ -254,10 +271,18 @@ class Character:
 
     @property
     def size(self) -> Size:
+        """
+        :return: The character's size, determined by the character's race
+        """
+
         return self._race.get_size()
 
     @property
     def speed(self) -> int:
+        """
+        :return: The character's speed, determined by the character's race
+        """
+
         return self._race.get_speed()
 
     def _initialize_core_fields(

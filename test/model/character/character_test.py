@@ -1,8 +1,13 @@
 import unittest
+from typing import Type
 
 from main.model.character.abilities import generate_character_abilities
 from main.model.character.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
+from main.model.character.race import Race
+from main.model.character.races.dragonborn import Dragonborn
+from main.model.character.races.dwarf import Dwarf
+from main.model.character.races.gnome import Gnome
 from main.model.character.skills import generate_character_skills
 from main.model.character.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
@@ -104,6 +109,7 @@ class CharacterTest(unittest.TestCase):
 
         self.assertEqual(self.character.background, "Background")
         self.assertEqual(self.character.state, State.ALIVE)
+        self.assertEqual(self.character.passive_wisdom, 15)
         self.assertEqual(self.character.inspiration, 0)
         self.assertEqual(self.character.hit_points, 10)
         self.assertEqual(self.character.max_hit_points, 10)
@@ -351,6 +357,351 @@ class CharacterTest(unittest.TestCase):
 
         assert_error(34)
         assert_error(0)
+
+    def test_level(self):
+        def assert_level(exp_delta: int, expected_level: int):
+            """
+            Asserts that the adding the given exp_delta to the character results in the given expected_level
+
+            :param exp_delta: The exp to give to the character
+            :param expected_level: The expected level of the character after giving him the exp_delta
+            """
+
+        self.assertEqual(self.character.level, 2)
+        assert_level(150, 2)
+        assert_level(450, 3)
+        assert_level(100, 3)
+        assert_level(1800, 4)
+        assert_level(3700, 5)
+
+    def test_passive_wisdom(self):
+        self.assertEqual(self.character.passive_wisdom, 15)
+
+        abilitiesB = generate_character_abilities(
+            strength=AbilityScore(13),
+            dexterity=AbilityScore(8),
+            constitution=AbilityScore(18),
+            intelligence=AbilityScore(12),
+            wisdom=AbilityScore(10),
+            charisma=AbilityScore(15)
+        )
+
+        skillsB = generate_character_skills(
+            acrobatics_proficiency=True,
+            animal_handling_proficiency=False,
+            athletics_proficiency=False,
+            arcana_proficiency=False,
+            deception_proficiency=False,
+            history_proficiency=True,
+            insight_proficiency=False,
+            intimidation_proficiency=False,
+            investigation_proficiency=False,
+            medicine_proficiency=False,
+            nature_proficiency=True,
+            perception_proficiency=False,
+            performance_proficiency=False,
+            persuasion_proficiency=False,
+            religion_proficiency=False,
+            sleight_of_hand_proficiency=False,
+            stealth_proficiency=False,
+            survival_proficiency=True
+        )
+
+        characterB = Character(
+            "Name",
+            "Player Name",
+            Wizard,
+            Human,
+            Posint(2),
+            abilitiesB,
+            skillsB,
+            "Background",
+            Alignment(
+                Alignment.Nature.LAWFUL,
+                Alignment.Morality.EVIL
+            ),
+            Natural(22)
+        )
+
+        self.assertEqual(characterB.passive_wisdom, 10)
+
+    def test_proficiency_bonus(self):
+        def assert_proficiency_bonus(level: int, expected_pb: int):
+            """
+            Asserts that a character of the given level has the expected_pb
+
+            :param level: The level of the character
+            :param expected_pb: The expected proficiency bonus of the character
+            """
+
+            abilitiesB = generate_character_abilities(
+                strength=AbilityScore(13),
+                dexterity=AbilityScore(8),
+                constitution=AbilityScore(18),
+                intelligence=AbilityScore(12),
+                wisdom=AbilityScore(10),
+                charisma=AbilityScore(15)
+            )
+
+            skillsB = generate_character_skills(
+                acrobatics_proficiency=True,
+                animal_handling_proficiency=False,
+                athletics_proficiency=False,
+                arcana_proficiency=False,
+                deception_proficiency=False,
+                history_proficiency=True,
+                insight_proficiency=False,
+                intimidation_proficiency=False,
+                investigation_proficiency=False,
+                medicine_proficiency=False,
+                nature_proficiency=True,
+                perception_proficiency=False,
+                performance_proficiency=False,
+                persuasion_proficiency=False,
+                religion_proficiency=False,
+                sleight_of_hand_proficiency=False,
+                stealth_proficiency=False,
+                survival_proficiency=True
+            )
+
+            characterB = Character(
+                "Name",
+                "Player Name",
+                Wizard,
+                Human,
+                Posint(level),
+                abilitiesB,
+                skillsB,
+                "Background",
+                Alignment(
+                    Alignment.Nature.LAWFUL,
+                    Alignment.Morality.EVIL
+                ),
+                Natural(22)
+            )
+
+            self.assertEqual(characterB.proficiency_bonus, expected_pb)
+
+        assert_proficiency_bonus(1, 2)
+        assert_proficiency_bonus(2, 2)
+        assert_proficiency_bonus(3, 2)
+        assert_proficiency_bonus(4, 2)
+        assert_proficiency_bonus(5, 3)
+        assert_proficiency_bonus(6, 3)
+        assert_proficiency_bonus(7, 3)
+        assert_proficiency_bonus(8, 3)
+        assert_proficiency_bonus(9, 4)
+        assert_proficiency_bonus(10, 4)
+        assert_proficiency_bonus(11, 4)
+        assert_proficiency_bonus(12, 4)
+        assert_proficiency_bonus(13, 5)
+        assert_proficiency_bonus(14, 5)
+        assert_proficiency_bonus(15, 5)
+        assert_proficiency_bonus(16, 5)
+        assert_proficiency_bonus(17, 6)
+        assert_proficiency_bonus(18, 6)
+        assert_proficiency_bonus(19, 6)
+        assert_proficiency_bonus(20, 6)
+
+    def test_size(self):
+        def assert_size(race: Type[Race], alignment: Alignment, expected_size: Size):
+            """
+            Asserts that a character of the given race has the size
+
+            :param race: The race of the character
+            :param alignment: The alignment of the character
+            :param expected_size: The expected size of the character
+            """
+
+            abilitiesB = generate_character_abilities(
+                strength=AbilityScore(13),
+                dexterity=AbilityScore(8),
+                constitution=AbilityScore(18),
+                intelligence=AbilityScore(12),
+                wisdom=AbilityScore(10),
+                charisma=AbilityScore(15)
+            )
+
+            skillsB = generate_character_skills(
+                acrobatics_proficiency=True,
+                animal_handling_proficiency=False,
+                athletics_proficiency=False,
+                arcana_proficiency=False,
+                deception_proficiency=False,
+                history_proficiency=True,
+                insight_proficiency=False,
+                intimidation_proficiency=False,
+                investigation_proficiency=False,
+                medicine_proficiency=False,
+                nature_proficiency=True,
+                perception_proficiency=False,
+                performance_proficiency=False,
+                persuasion_proficiency=False,
+                religion_proficiency=False,
+                sleight_of_hand_proficiency=False,
+                stealth_proficiency=False,
+                survival_proficiency=True
+            )
+
+            characterB = Character(
+                "Name",
+                "Player Name",
+                Wizard,
+                race,
+                Posint(2),
+                abilitiesB,
+                skillsB,
+                "Background",
+                alignment,
+                Natural(22)
+            )
+
+            self.assertEqual(characterB.size, expected_size)
+
+        assert_size(
+            Dragonborn,
+            Alignment(
+                Alignment.Nature.CHAOTIC,
+                Alignment.Morality.EVIL
+            ),
+            Size.MEDIUM
+        )
+
+        assert_size(
+            Dwarf,
+            Alignment(
+                Alignment.Nature.LAWFUL,
+                Alignment.Morality.GOOD
+            ),
+            Size.MEDIUM
+        )
+
+        assert_size(
+            Elf,
+            Alignment(
+                Alignment.Nature.CHAOTIC,
+                Alignment.Morality.GOOD
+            ),
+            Size.MEDIUM
+        )
+
+        assert_size(
+            Gnome,
+            Alignment(
+                Alignment.Nature.LAWFUL,
+                Alignment.Morality.NEUTRAL
+            ),
+            Size.SMALL
+        )
+
+        assert_size(
+            Human,
+            Alignment(
+                Alignment.Nature.CHAOTIC,
+                Alignment.Morality.EVIL
+            ),
+            Size.MEDIUM
+        )
+
+    def test_speed(self):
+        def assert_speed(race: Type[Race], alignment: Alignment, expected_speed: int):
+            """
+            Asserts that a character of the given race has the speed
+
+            :param race: The race of the character
+            :param alignment: The alignment of the character
+            :param expected_speed: The expected speed of the character
+            """
+
+            abilitiesB = generate_character_abilities(
+                strength=AbilityScore(13),
+                dexterity=AbilityScore(8),
+                constitution=AbilityScore(18),
+                intelligence=AbilityScore(12),
+                wisdom=AbilityScore(10),
+                charisma=AbilityScore(15)
+            )
+
+            skillsB = generate_character_skills(
+                acrobatics_proficiency=True,
+                animal_handling_proficiency=False,
+                athletics_proficiency=False,
+                arcana_proficiency=False,
+                deception_proficiency=False,
+                history_proficiency=True,
+                insight_proficiency=False,
+                intimidation_proficiency=False,
+                investigation_proficiency=False,
+                medicine_proficiency=False,
+                nature_proficiency=True,
+                perception_proficiency=False,
+                performance_proficiency=False,
+                persuasion_proficiency=False,
+                religion_proficiency=False,
+                sleight_of_hand_proficiency=False,
+                stealth_proficiency=False,
+                survival_proficiency=True
+            )
+
+            characterB = Character(
+                "Name",
+                "Player Name",
+                Wizard,
+                race,
+                Posint(2),
+                abilitiesB,
+                skillsB,
+                "Background",
+                alignment,
+                Natural(22)
+            )
+
+            self.assertEqual(characterB.speed, expected_speed)
+
+        assert_speed(
+            Dragonborn,
+            Alignment(
+                Alignment.Nature.CHAOTIC,
+                Alignment.Morality.EVIL
+            ),
+            30
+        )
+
+        assert_speed(
+            Dwarf,
+            Alignment(
+                Alignment.Nature.LAWFUL,
+                Alignment.Morality.GOOD
+            ),
+            30
+        )
+
+        assert_speed(
+            Elf,
+            Alignment(
+                Alignment.Nature.CHAOTIC,
+                Alignment.Morality.GOOD
+            ),
+            30
+        )
+
+        assert_speed(
+            Gnome,
+            Alignment(
+                Alignment.Nature.LAWFUL,
+                Alignment.Morality.NEUTRAL
+            ),
+            25
+        )
+
+        assert_speed(
+            Human,
+            Alignment(
+                Alignment.Nature.CHAOTIC,
+                Alignment.Morality.EVIL
+            ),
+            30
+        )
 
     def _assert_death_save(
             self,
