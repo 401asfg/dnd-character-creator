@@ -170,42 +170,42 @@ def generate_character_abilities(
             self._strength = self._Ability(
                 strength,
                 Natural(race.get_strength_bonus()),
-                class_.strength_proficiency(),
+                class_.get_strength_proficiency(),
                 proficiency_bonus
             )
 
             self._dexterity = self._Ability(
                 dexterity,
                 Natural(race.get_dexterity_bonus()),
-                class_.dexterity_proficiency(),
+                class_.get_dexterity_proficiency(),
                 proficiency_bonus
             )
 
             self._constitution = self._Ability(
                 constitution,
                 Natural(race.get_constitution_bonus()),
-                class_.constitution_proficiency(),
+                class_.get_constitution_proficiency(),
                 proficiency_bonus
             )
 
             self._intelligence = self._Ability(
                 intelligence,
                 Natural(race.get_intelligence_bonus()),
-                class_.intelligence_proficiency(),
+                class_.get_intelligence_proficiency(),
                 proficiency_bonus
             )
 
             self._wisdom = self._Ability(
                 wisdom,
                 Natural(race.get_wisdom_bonus()),
-                class_.wisdom_proficiency(),
+                class_.get_wisdom_proficiency(),
                 proficiency_bonus
             )
 
             self._charisma = self._Ability(
                 charisma,
                 Natural(race.get_charisma_bonus()),
-                class_.charisma_proficiency(),
+                class_.get_charisma_proficiency(),
                 proficiency_bonus
             )
 

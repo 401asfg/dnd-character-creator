@@ -1,10 +1,15 @@
+from main.model.dice.dice import Dice
+from main.model.int_types.posint import Posint
+
+
 class AbilityScore:
     """
     An unmodified score to give to one of the character's main stats (STR, DEX, CON, INT, WIS, CHA)
     """
 
-    MIN_SCORE = 3
-    MAX_SCORE = 18
+    _dice = Dice(Posint(3), Dice.Sides.SIX)
+    MIN_SCORE = _dice.min_possible_score
+    MAX_SCORE = _dice.max_possible_score
 
     def __init__(self, value: int):
         """

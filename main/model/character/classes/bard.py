@@ -15,25 +15,25 @@ class Bard(Class):
         return 8
 
     @classmethod
-    def strength_proficiency(cls) -> bool:
+    def get_strength_proficiency(cls) -> bool:
         return False
 
     @classmethod
-    def dexterity_proficiency(cls) -> bool:
+    def get_dexterity_proficiency(cls) -> bool:
         return True
 
     @classmethod
-    def constitution_proficiency(cls) -> bool:
+    def get_constitution_proficiency(cls) -> bool:
         return False
 
     @classmethod
-    def intelligence_proficiency(cls) -> bool:
+    def get_intelligence_proficiency(cls) -> bool:
         return False
 
     @classmethod
-    def wisdom_proficiency(cls) -> bool:
+    def get_wisdom_proficiency(cls) -> bool:
         return False
 
     @classmethod
-    def charisma_proficiency(cls) -> bool:
+    def get_charisma_proficiency(cls) -> bool:
         return True

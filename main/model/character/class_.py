@@ -32,7 +32,7 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def strength_proficiency(cls) -> bool:
+    def get_strength_proficiency(cls) -> bool:
         """
         :return: True if class is proficient in strength; otherwise, false
         """
@@ -41,7 +41,7 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def dexterity_proficiency(cls) -> bool:
+    def get_dexterity_proficiency(cls) -> bool:
         """
         :return: True if class is proficient in dexterity; otherwise, false
         """
@@ -50,7 +50,7 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def constitution_proficiency(cls) -> bool:
+    def get_constitution_proficiency(cls) -> bool:
         """
         :return: True if class is proficient in constitution; otherwise, false
         """
@@ -59,7 +59,7 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def intelligence_proficiency(cls) -> bool:
+    def get_intelligence_proficiency(cls) -> bool:
         """
         :return: True if class is proficient in intelligence; otherwise, false
         """
@@ -68,7 +68,7 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def wisdom_proficiency(cls) -> bool:
+    def get_wisdom_proficiency(cls) -> bool:
         """
         :return: True if class is proficient in wisdom; otherwise, false
         """
@@ -77,7 +77,7 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def charisma_proficiency(cls) -> bool:
+    def get_charisma_proficiency(cls) -> bool:
         """
         :return: True if class is proficient in charisma; otherwise, false
         """
