@@ -1,4 +1,5 @@
 from main.model.character.class_ import Class
+from main.model.dice.die import Die
 
 
 class Bard(Class):
@@ -11,8 +12,8 @@ class Bard(Class):
         return "Bard"
 
     @classmethod
-    def get_hit_points(cls) -> int:
-        return 8
+    def get_hit_die(cls) -> Die:
+        return Die(Die.Sides.EIGHT)
 
     @classmethod
     def get_strength_proficiency(cls) -> bool:

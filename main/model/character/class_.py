@@ -1,5 +1,7 @@
 from abc import abstractmethod, ABC
 
+from main.model.dice.die import Die
+
 
 class Class(ABC):
     """
@@ -23,9 +25,9 @@ class Class(ABC):
 
     @classmethod
     @abstractmethod
-    def get_hit_points(cls) -> int:
+    def get_hit_die(cls) -> Die:
         """
-        :return: The hit points that this class gives to a character
+        :return: The hit die that this class gives to a character
         """
 
         raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)

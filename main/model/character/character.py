@@ -365,7 +365,7 @@ class Character:
         Initializes the character's hit points and max hit points
         """
 
-        self._max_hit_points = self._class.get_hit_points() + self.abilities.constitution.modifier
+        self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier
         self.hit_points = self._max_hit_points
 
     def _add_inspiration(self, inspiration_delta: int):

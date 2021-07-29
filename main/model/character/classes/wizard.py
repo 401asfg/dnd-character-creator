@@ -1,4 +1,5 @@
 from main.model.character.class_ import Class
+from main.model.dice.die import Die
 
 
 class Wizard(Class):
@@ -11,8 +12,8 @@ class Wizard(Class):
         return "Wizard"
 
     @classmethod
-    def get_hit_points(cls) -> int:
-        return 6
+    def get_hit_die(cls) -> Die:
+        return Die(Die.Sides.SIX)
 
     @classmethod
     def get_strength_proficiency(cls) -> bool:

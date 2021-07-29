@@ -12,9 +12,9 @@ class ClassTest(unittest.TestCase):
         self.assertEqual(Wizard.get_name(), "Wizard")
 
     def test_get_hit_die(self):
-        self.assertEqual(Bard.get_hit_points(), 8)
-        self.assertEqual(Ranger.get_hit_points(), 10)
-        self.assertEqual(Wizard.get_hit_points(), 6)
+        self.assertEqual(Bard.get_hit_die().name, "1d8")
+        self.assertEqual(Ranger.get_hit_die().name, "1d10")
+        self.assertEqual(Wizard.get_hit_die().name, "1d6")
 
     def test_get_strength_proficiency(self):
         self.assertEqual(Bard.get_strength_proficiency(), False)
