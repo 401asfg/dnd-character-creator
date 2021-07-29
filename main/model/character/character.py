@@ -195,6 +195,8 @@ class Character:
 
         return self._hit_points
 
+    # TODO: replace setter with "take_damage" and "heal" to facilitate temporary hit points
+
     @hit_points.setter
     def hit_points(self, value: int):
         """
@@ -202,10 +204,10 @@ class Character:
 
         :param value: The amount of hit_points the character has; if value > max_hit_points, hit_points =
         max_hit_points; if value <= 0, hit_points = 0 and the character state is changed to DOWNED; if character state
-        is DOWNED or DEAD, raises IncorrectCharacterStateException
+        is not ALIVE, raises IncorrectCharacterStateException
         """
 
-        if self._state == State.DOWNED or self._state == State.DEAD:
+        if self._state != State.ALIVE:
             raise IncorrectCharacterStateException(
                 "Character's hit_points cannot be changed when not in the ALIVE state."
             )
