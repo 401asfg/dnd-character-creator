@@ -1,9 +1,10 @@
-from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp, reachable_level
+from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp
 from main.model.character.enumerators.size import Size
 from main.model.character.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
 
 from main.model.character.alignment import Alignment
+from main.model.character.level import Level
 from main.model.character.race import Race
 from main.model.character.class_ import Class
 from main.model.character.enumerators.state import State
@@ -34,7 +35,7 @@ class Character:
             player_name: str,
             class_: Type[Class],
             race: Type[Race],
-            level: Posint,
+            level: Level,
             abilities: Type[Abilities],
             skills: Type[Skills],
             background: str,
@@ -61,8 +62,8 @@ class Character:
 
         # TODO: modify tests with ability scores
 
-        self._initialize_core_fields(name, player_name, class_, race, background, age)
-        self._initialize_exception_raising_fields(alignment, level)
+        self._initialize_core_fields(name, player_name, class_, race, level, background, age)
+        self._initialize_exception_raising_fields(alignment)
         self._abilities = abilities(self._race, self._class, Posint(self.proficiency_bonus))
 
         self._skills = skills(
@@ -291,6 +292,7 @@ class Character:
             player_name: str,
             class_: Type[Class],
             race: Type[Race],
+            level: Level,
             background: str,
             age: Natural
     ):
@@ -301,6 +303,7 @@ class Character:
         :param player_name: Name of the player playing the character
         :param class_: The character's class
         :param race: The character's race
+        :param level: The character's level
         :param background: The character's background
         :param age: The character's age
         """
@@ -313,16 +316,16 @@ class Character:
         self._player_name = player_name
         self._class = class_
         self._race = race
+        self._exp = get_min_exp(level.value)
         self._background = background
         self._age = age
 
-    def _initialize_exception_raising_fields(self, alignment: Alignment, level: Posint):
+    def _initialize_exception_raising_fields(self, alignment: Alignment):
         """
         Initializes the fields that may raise exceptions; raises ValueError if the given level is unreachable or the
         given alignment is inappropriate for a character of the given race
 
         :param alignment: The character's alignment
-        :param level: The character's level
         """
 
         def check(x, check_fn: Callable[[Any], bool], error_msg: str):
@@ -355,14 +358,6 @@ class Character:
             alignment,
             acceptable_racial_alignment,
             "A character of this race cannot have this alignment."
-        )
-
-        self._exp = get_min_exp(
-            check(
-                level.value,
-                reachable_level,
-                "No character can reach this level."
-            )
         )
 
     def _initialize_hit_points(self):

@@ -4,6 +4,7 @@ from typing import Type
 from main.model.character.abilities import generate_character_abilities
 from main.model.character.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
+from main.model.character.level import Level
 from main.model.character.race import Race
 from main.model.character.races.dragonborn import Dragonborn
 from main.model.character.races.dwarf import Dwarf
@@ -57,7 +58,7 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            Posint(2),
+            Level(Posint(2)),
             self.abilities,
             self.skills,
             "Background",
@@ -129,34 +130,13 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.speed, 30)
 
     def test_init_errors(self):
-        # Level is Unreachable
-        try:
-            Character(
-                "Name",
-                "Player Name",
-                Wizard,
-                Human,
-                Posint(22),
-                self.abilities,
-                self.skills,
-                "Background",
-                Alignment(
-                    Alignment.Nature.LAWFUL,
-                    Alignment.Morality.EVIL
-                ),
-                Natural(22)
-            )
-        except ValueError:
-            pass
-
-        # Inappropriate alignment
         try:
             Character(
                 "Name",
                 "Player Name",
                 Wizard,
                 Elf,
-                Posint(22),
+                Level(Posint(22)),
                 self.abilities,
                 self.skills,
                 "Background",
@@ -412,7 +392,7 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            Posint(2),
+            Level(Posint(2)),
             abilitiesB,
             skillsB,
             "Background",
@@ -469,7 +449,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Human,
-                Posint(level),
+                Level(Posint(level)),
                 abilitiesB,
                 skillsB,
                 "Background",
@@ -548,7 +528,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 race,
-                Posint(2),
+                Level(Posint(2)),
                 abilitiesB,
                 skillsB,
                 "Background",
@@ -648,7 +628,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 race,
-                Posint(2),
+                Level(Posint(2)),
                 abilitiesB,
                 skillsB,
                 "Background",

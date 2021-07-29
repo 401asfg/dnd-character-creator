@@ -62,17 +62,6 @@ def get_proficiency_bonus(level: int) -> int:
     return floor((level - 1) * _RATE_PB_INCR) + _MIN_PB
 
 
-def reachable_level(level: int) -> bool:
-    """
-    Checks that the level can be reached by a character
-
-    :param level: The level to check
-    :return: Returns true if the given level is in the advancement database, otherwise returns false
-    """
-
-    return 1 <= level <= len(_exp_list)
-
-
 def _get_exp_index(exp: int) -> int:
     """
     Gets the exp list index for the given experience points

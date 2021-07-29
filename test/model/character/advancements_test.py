@@ -1,6 +1,6 @@
 import unittest
 
-from main.model.character.advancements import get_level, get_min_exp, get_proficiency_bonus, reachable_level
+from main.model.character.advancements import get_level, get_min_exp, get_proficiency_bonus
 
 
 class AdvancementsTest(unittest.TestCase):
@@ -71,15 +71,3 @@ class AdvancementsTest(unittest.TestCase):
         self.assertEqual(get_proficiency_bonus(18), 6)
         self.assertEqual(get_proficiency_bonus(19), 6)
         self.assertEqual(get_proficiency_bonus(20), 6)
-
-    def test_reachable_level(self):
-        self.assertEqual(reachable_level(-10), False)
-        self.assertEqual(reachable_level(-1), False)
-        self.assertEqual(reachable_level(0), False)
-        self.assertEqual(reachable_level(4), True)
-        self.assertEqual(reachable_level(11), True)
-        self.assertEqual(reachable_level(19), True)
-        self.assertEqual(reachable_level(20), True)
-        self.assertEqual(reachable_level(21), False)
-        self.assertEqual(reachable_level(29), False)
-        self.assertEqual(reachable_level(32), False)
