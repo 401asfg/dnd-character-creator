@@ -113,6 +113,7 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.passive_wisdom, 15)
         self.assertEqual(self.character.inspiration, 0)
         self.assertEqual(self.character.hit_points, 10)
+        self.assertEqual(self.character.temporary_hp, 0)
         self.assertEqual(self.character.max_hit_points, 10)
         self.assertEqual(self.character.successful_death_saves, 0)
         self.assertEqual(self.character.failed_death_saves, 0)
@@ -378,6 +379,68 @@ class CharacterTest(unittest.TestCase):
         assert_take_damage_error(9)
         assert_take_damage_error(65)
 
+    def test_set_temporary_hp(self):
+        self.character.set_temporary_hp(Natural(3))
+        self.assertEqual(3, self.character.temporary_hp)
+
+        self.character.set_temporary_hp(Natural(21))
+        self.assertEqual(21, self.character.temporary_hp)
+
+        self.character.set_temporary_hp(Natural(342))
+        self.assertEqual(342, self.character.temporary_hp)
+
+        self.character.set_temporary_hp(Natural(1))
+        self.assertEqual(1, self.character.temporary_hp)
+
+        self.character.set_temporary_hp(Natural(83))
+        self.assertEqual(83, self.character.temporary_hp)
+
+    def test_take_temporary_hp_damage(self):
+        def set_temp_hp(temp_hp: int, expected_hp: int):
+            """
+            Sets the character's temp hp and asserts that the character's temp hp equals the set value, and that the
+            character's hp equals the expected_hp
+
+            :param temp_hp: The value to set the temp hp to and the expected temp hp
+            :param expected_hp: The expected hp after the temp hp is set
+            """
+
+            self.character.set_temporary_hp(Natural(temp_hp))
+            self.assertEqual(expected_hp, self.character.hit_points)
+            self.assertEqual(temp_hp, self.character.temporary_hp)
+
+        def assert_hp_after_damage(dmg: int, expected_hp: int, expected_temp_hp: int):
+            """
+            Asserts that after the character takes the given dmg, the character has the expected_hp and the
+            expected_temp_hp
+
+            :param dmg: The damage the character takes
+            :param expected_hp: The expected hp of the character after it takes damage
+            :param expected_temp_hp: The expected temporary hp of the character after it takes damage
+            """
+
+            self.character.take_damage(Posint(dmg))
+            self.assertEqual(expected_hp, self.character.hit_points)
+            self.assertEqual(expected_temp_hp, self.character.temporary_hp)
+
+        set_temp_hp(15, 10)
+        assert_hp_after_damage(5, 10, 10)
+        assert_hp_after_damage(8, 10, 2)
+        set_temp_hp(7, 10)
+        assert_hp_after_damage(4, 10, 3)
+        assert_hp_after_damage(3, 10, 0)
+        set_temp_hp(3, 10)
+        assert_hp_after_damage(6, 7, 0)
+        assert_hp_after_damage(2, 5, 0)
+
+        self.character.heal(Posint(self.character.max_hit_points))
+        set_temp_hp(6, 10)
+        assert_hp_after_damage(6, 10, 0)
+        assert_hp_after_damage(4, 6, 0)
+        set_temp_hp(3, 6)
+        assert_hp_after_damage(1, 6, 2)
+        assert_hp_after_damage(3, 5, 0)
+
     def test_level(self):
         def assert_level(exp_delta: int, expected_level: int):
             """
@@ -386,6 +449,9 @@ class CharacterTest(unittest.TestCase):
             :param exp_delta: The exp to give to the character
             :param expected_level: The expected level of the character after giving him the exp_delta
             """
+
+            self.character.gain_exp(exp_delta)
+            self.assertEqual(expected_level, self.character.level)
 
         self.assertEqual(self.character.level, 2)
         assert_level(150, 2)

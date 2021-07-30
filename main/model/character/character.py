@@ -81,20 +81,26 @@ class Character:
 
     def take_damage(self, hit_points: Posint):
         """
-        The character loses hit points equal to the given hit_points; if hit points after damage <= 0, hit points = 0
-        and the character state is changed to DOWNED; if character state is not ALIVE, raises
-        IncorrectCharacterStateException
+        The character loses hit points equal to the given hit_points; if the character has temporary hit points, those
+        are lost in place of normal hit points; if hit points after damage <= 0, hit points = 0 and the character state
+        is changed to DOWNED; if character state is not ALIVE, raises IncorrectCharacterStateException
 
         :param hit_points: The amount of damage the character takes
         """
 
         self._check_change_hit_points_exception()
+        hp = hit_points.value
 
-        if self.hit_points - hit_points.value <= 0:
-            self._hit_points = 0
-            self._state = State.DOWNED
+        if self._temporary_hp - hp >= 0:
+            self._temporary_hp -= hp
         else:
-            self._hit_points -= hit_points.value
+            hp -= self._temporary_hp
+            self._temporary_hp = 0
+            if self.hit_points - hp <= 0:
+                self._hit_points = 0
+                self._state = State.DOWNED
+            else:
+                self._hit_points -= hp
 
     def heal(self, hit_points: Posint):
         """
@@ -110,6 +116,15 @@ class Character:
             self._hit_points = self._max_hit_points
         else:
             self._hit_points += hit_points.value
+
+    def set_temporary_hp(self, hit_points: Natural):
+        """
+        Set the character's temporary hit points to the given hit_points
+
+        :param hit_points: The value that the character's temporary hit points is set to
+        """
+
+        self._temporary_hp = hit_points.value
 
     def gain_exp(self, points: int):
         """
@@ -219,13 +234,11 @@ class Character:
 
     @property
     def hit_points(self) -> int:
-        """
-        Get the character's hit_points
-
-        :return: The character's hit_points
-        """
-
         return self._hit_points
+
+    @property
+    def temporary_hp(self) -> int:
+        return self._temporary_hp
 
     @property
     def max_hit_points(self) -> int:
@@ -277,7 +290,7 @@ class Character:
 
     @property
     def age(self) -> int:
-        return self._age.value
+        return self._age
 
     @property
     def size(self) -> Size:
@@ -320,6 +333,7 @@ class Character:
         self._state = State.ALIVE
         self._reset_death_saves()
         self._inspiration = Natural(0)
+        self._temporary_hp = 0
 
         self._name = name
         self._player_name = player_name
@@ -327,7 +341,7 @@ class Character:
         self._race = race
         self._exp = get_min_exp(level.value)
         self._background = background
-        self._age = age
+        self._age = age.value
 
     def _initialize_exception_raising_fields(self, alignment: Alignment):
         """
