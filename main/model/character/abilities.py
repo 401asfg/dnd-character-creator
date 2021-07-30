@@ -11,7 +11,13 @@ from main.model.int_types.posint import Posint
 # TODO: test abilities
 # TODO: fix not being recognized by autocomplete or typing
 
-_NOT_IMPLEMENTED_MSG = 'Method implemented in subclass, call "generate_character_abilities" to access.'
+
+def _error():
+    """
+    Raises a NotImplementedError
+    """
+
+    raise NotImplementedError('Method implemented in subclass, call "generate_character_abilities" to access.')
 
 
 class Abilities(ABC):
@@ -42,12 +48,12 @@ class Abilities(ABC):
             :param proficiency_bonus: The character's proficiency bonus
             """
 
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
         @property
         @abstractmethod
         def score(self) -> int:
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
         @property
         @abstractmethod
@@ -56,7 +62,7 @@ class Abilities(ABC):
             :return: The ability modifier for the current ability score
             """
 
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
         @property
         @abstractmethod
@@ -66,7 +72,7 @@ class Abilities(ABC):
             this ability
             """
 
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
     @abstractmethod
     def __init__(
@@ -83,37 +89,37 @@ class Abilities(ABC):
         :param proficiency_bonus: The proficiency bonus of the character to whom these abilities belong
         """
 
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def strength(self) -> Ability:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def dexterity(self) -> Ability:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def constitution(self) -> Ability:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def intelligence(self) -> Ability:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def wisdom(self) -> Ability:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def charisma(self) -> Ability:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
 
 def generate_character_abilities(

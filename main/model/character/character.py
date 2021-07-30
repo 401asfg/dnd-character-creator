@@ -77,6 +77,40 @@ class Character:
 
         self._initialize_hit_points()
 
+    # TODO: make sure all aspects are tested
+
+    def take_damage(self, hit_points: Posint):
+        """
+        The character loses hit points equal to the given hit_points; if hit points after damage <= 0, hit points = 0
+        and the character state is changed to DOWNED; if character state is not ALIVE, raises
+        IncorrectCharacterStateException
+
+        :param hit_points: The amount of damage the character takes
+        """
+
+        self._check_change_hit_points_exception()
+
+        if self.hit_points - hit_points.value <= 0:
+            self._hit_points = 0
+            self._state = State.DOWNED
+        else:
+            self._hit_points -= hit_points.value
+
+    def heal(self, hit_points: Posint):
+        """
+        The character gains hit points equal to the given hit_points; if hit points after healing > max_hit_points,
+        hit_points = max_hit_points; if character state is not ALIVE, raises IncorrectCharacterStateException
+
+        :param hit_points: The amount by which the character is healed
+        """
+
+        self._check_change_hit_points_exception()
+
+        if self.hit_points + hit_points.value > self._max_hit_points:
+            self._hit_points = self._max_hit_points
+        else:
+            self._hit_points += hit_points.value
+
     def gain_exp(self, points: int):
         """
         Give the character experience points
@@ -134,7 +168,7 @@ class Character:
             )
 
         if self.state == State.ALIVE:
-            self.hit_points = 1
+            self.heal(Posint(1))
 
     def gain_inspiration(self):
         """
@@ -175,8 +209,6 @@ class Character:
     def skills(self) -> Skills:
         return self._skills
 
-    # TODO: Add properties for dictionary derived values
-
     @property
     def background(self) -> str:
         return self._background
@@ -194,31 +226,6 @@ class Character:
         """
 
         return self._hit_points
-
-    # TODO: replace setter with "take_damage" and "heal" to facilitate temporary hit points
-
-    @hit_points.setter
-    def hit_points(self, value: int):
-        """
-        Set the character's hit_points
-
-        :param value: The amount of hit_points the character has; if value > max_hit_points, hit_points =
-        max_hit_points; if value <= 0, hit_points = 0 and the character state is changed to DOWNED; if character state
-        is not ALIVE, raises IncorrectCharacterStateException
-        """
-
-        if self._state != State.ALIVE:
-            raise IncorrectCharacterStateException(
-                "Character's hit_points cannot be changed when not in the ALIVE state."
-            )
-
-        if value <= 0:
-            self._hit_points = 0
-            self._state = State.DOWNED
-        elif value > self._max_hit_points:
-            self._hit_points = self._max_hit_points
-        else:
-            self._hit_points = value
 
     @property
     def max_hit_points(self) -> int:
@@ -368,7 +375,17 @@ class Character:
         """
 
         self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier
-        self.hit_points = self._max_hit_points
+        self._hit_points = self._max_hit_points
+
+    def _check_change_hit_points_exception(self):
+        """
+        If character state is not ALIVE, raises IncorrectCharacterStateException
+        """
+
+        if self._state != State.ALIVE:
+            raise IncorrectCharacterStateException(
+                "Character's hit_points cannot be changed when not in the ALIVE state."
+            )
 
     def _add_inspiration(self, inspiration_delta: int):
         """

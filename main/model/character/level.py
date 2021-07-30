@@ -18,8 +18,8 @@ class Level:
         if value.value > self.MAX_LEVEL:
             raise ValueError("A level cannot be greater than " + str(self.MAX_LEVEL) + ".")
 
-        self._value = value
+        self._value = value.value
 
     @property
     def value(self) -> int:
-        return self._value.value
+        return self._value

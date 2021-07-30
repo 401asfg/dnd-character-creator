@@ -8,7 +8,12 @@ from main.model.int_types.posint import Posint
 # TODO: fix not being recognized by autocomplete or typing
 
 
-_NOT_IMPLEMENTED_MSG = 'Method implemented in subclass, call "generate_character_skills" to access.'
+def _error():
+    """
+    Raises a NotImplementedError
+    """
+
+    raise NotImplementedError('Method implemented in subclass, call "generate_character_skills" to access.')
 
 
 class Skills(ABC):
@@ -31,7 +36,7 @@ class Skills(ABC):
             :param proficiency_bonus: The character's proficiency bonus
             """
 
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
         @property
         @abstractmethod
@@ -41,7 +46,7 @@ class Skills(ABC):
             this skill
             """
 
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
         @property
         @abstractmethod
@@ -50,7 +55,7 @@ class Skills(ABC):
             :return: True if character is proficient in this skill; otherwise, false
             """
 
-            raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+            _error()
 
     @abstractmethod
     def __init__(
@@ -73,97 +78,97 @@ class Skills(ABC):
         :param proficiency_bonus: The proficiency bonus of the character to whom these skills belong
         """
 
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def acrobatics(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def animal_handling(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def arcana(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def athletics(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def deception(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def history(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def insight(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def intimidation(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def investigation(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def medicine(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def nature(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def perception(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def performance(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def persuasion(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def religion(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def sleight_of_hand(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def stealth(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
     @property
     @abstractmethod
     def survival(self) -> Skill:
-        raise NotImplementedError(_NOT_IMPLEMENTED_MSG)
+        _error()
 
 
 def generate_character_skills(

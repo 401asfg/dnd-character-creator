@@ -171,7 +171,7 @@ class CharacterTest(unittest.TestCase):
         assert_gain_exp(103500, 110000, 12, 4)
 
     def test_death_save_success(self):
-        self.character.hit_points = 0
+        self.character.take_damage(Posint(self.character.max_hit_points))
         downed = State.DOWNED
 
         self._assert_death_save(True, 1, 0, downed)
@@ -182,7 +182,7 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.hit_points, 1)
 
     def test_death_save_fail(self):
-        self.character.hit_points = 0
+        self.character.take_damage(Posint(self.character.max_hit_points))
         downed = State.DOWNED
 
         self._assert_death_save(True, 1, 0, downed)
@@ -218,7 +218,7 @@ class CharacterTest(unittest.TestCase):
         assert_death_save_error(True, "alive")
         assert_death_save_error(False, "alive")
 
-        self.character.hit_points = 0
+        self.character.take_damage(Posint(self.character.max_hit_points))
 
         for _ in range(self.character.MAX_FAILED_DEATH_SAVES):
             self.character.death_save(False)
@@ -287,34 +287,66 @@ class CharacterTest(unittest.TestCase):
         assert_spend_inspiration(0)
         assert_spend_error()
 
-    def test_hit_points_setter(self):
-        def assert_hit_points(delta: int, expected: int):
+    def test_take_damage_and_heal(self):
+        def assert_heal(delta: int, expected: int):
             """
-            Asserts that after changing the character hit points by the given delta, the character has the expected hp
+            Asserts that after healing the character by the given delta, the character has the expected hp
             """
 
-            self.character.hit_points += delta
+            self.character.heal(Posint(delta))
             self.assertEqual(self.character.hit_points, expected)
 
-        assert_hit_points(-5, 5)
-        assert_hit_points(1, 6)
-        assert_hit_points(10, self.character.max_hit_points)
-        assert_hit_points(-1000, 0)
+        def assert_take_damage(delta: int, expected: int):
+            """
+            Asserts that after hurting the character by the given delta, the character has the expected hp
+            """
+
+            self.character.take_damage(Posint(delta))
+            self.assertEqual(self.character.hit_points, expected)
+
+        assert_take_damage(5, 5)
+        self.assertEqual(self.character.state, State.ALIVE)
+        assert_heal(1, 6)
+        assert_heal(10, self.character.max_hit_points)
+        assert_take_damage(2, self.character.max_hit_points - 2)
+        assert_heal(100, self.character.max_hit_points)
+        assert_take_damage(3, self.character.max_hit_points - 3)
+        assert_heal(3, self.character.max_hit_points)
+        assert_take_damage(2, self.character.max_hit_points - 2)
+        self.assertEqual(self.character.state, State.ALIVE)
+        assert_take_damage(1000, 0)
         self.assertEqual(self.character.state, State.DOWNED)
 
-        def assert_error(hp: int):
+        def assert_take_damage_error(hp: int):
             """
-            Asserts that attempting to change the character's hp to the given value raises an error
+            Asserts that attempting to hurt the character raises an error
             """
 
             try:
-                self.character.hit_points = hp
+                self.character.take_damage(Posint(hp))
                 self.fail("Should not be able to change character hp while it is downed.")
             except IncorrectCharacterStateException:
                 self.assertEqual(self.character.hit_points, 0)
 
-        assert_error(5)
-        assert_error(0)
+        def assert_heal_error(hp: int):
+            """
+            Asserts that attempting to heal the character raises an error
+            """
+
+            try:
+                self.character.heal(Posint(hp))
+                self.fail("Should not be able to change character hp while it is downed.")
+            except IncorrectCharacterStateException:
+                self.assertEqual(self.character.hit_points, 0)
+
+        assert_take_damage_error(5)
+        assert_heal_error(65)
+        assert_take_damage_error(6)
+        assert_take_damage_error(1)
+        assert_heal_error(9)
+        assert_take_damage_error(23)
+        assert_heal_error(1)
+        assert_heal_error(32)
 
         def make_death_saves(success: bool, num: int):
             """
@@ -330,13 +362,21 @@ class CharacterTest(unittest.TestCase):
 
         make_death_saves(True, self.character.MAX_SUCCESSFUL_DEATH_SAVES)
 
-        assert_hit_points(0, 1)
-        assert_hit_points(-1, 0)
+        self.assertEqual(1, self.character.hit_points)
+        assert_take_damage(1, 0)
+        self.assertEqual(self.character.state, State.DOWNED)
 
         make_death_saves(False, self.character.MAX_FAILED_DEATH_SAVES)
 
-        assert_error(34)
-        assert_error(0)
+        assert_heal_error(34)
+        assert_heal_error(3)
+
+        assert_take_damage_error(5)
+        assert_heal_error(84)
+        assert_heal_error(4)
+
+        assert_take_damage_error(9)
+        assert_take_damage_error(65)
 
     def test_level(self):
         def assert_level(exp_delta: int, expected_level: int):
