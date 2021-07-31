@@ -1,7 +1,7 @@
 import unittest
 
 from main.model.character.abilities import generate_character_abilities
-from main.model.character.ability_score import AbilityScore
+from main.model.character.utility.posint_types.ability_score import AbilityScore
 from main.model.character.classes.bard import Bard
 from main.model.character.classes.ranger import Ranger
 from main.model.character.races.dragonborn import Dragonborn

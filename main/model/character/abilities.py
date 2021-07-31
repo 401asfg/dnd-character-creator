@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from math import floor
 from typing import Type
 
-from main.model.character.ability_score import AbilityScore
+from main.model.character.utility.posint_types.ability_score import AbilityScore
 from main.model.character.class_ import Class
 from main.model.character.race import Race
 from main.model.int_types.natural import Natural

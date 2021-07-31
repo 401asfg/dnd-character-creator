@@ -2,21 +2,21 @@ import unittest
 from typing import Type
 
 from main.model.character.abilities import generate_character_abilities
-from main.model.character.ability_score import AbilityScore
+from main.model.character.utility.posint_types.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
-from main.model.character.level import Level
+from main.model.character.utility.posint_types.level import Level
 from main.model.character.race import Race
 from main.model.character.races.dragonborn import Dragonborn
 from main.model.character.races.dwarf import Dwarf
 from main.model.character.races.gnome import Gnome
 from main.model.character.skills import generate_character_skills
-from main.model.character.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
 from main.model.character.races.elf import Elf
 from main.model.character.races.human import Human
-from main.model.character.enumerators.size import Size
-from main.model.character.enumerators.state import State
+from main.model.character.utility.enumerators.size import Size
+from main.model.character.utility.enumerators.state import State
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 
@@ -58,7 +58,7 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            Level(Posint(2)),
+            Level(2),
             self.abilities,
             self.skills,
             "Background",
@@ -137,7 +137,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Elf,
-                Level(Posint(22)),
+                Level(22),
                 self.abilities,
                 self.skills,
                 "Background",
@@ -498,7 +498,7 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            Level(Posint(2)),
+            Level(2),
             abilitiesB,
             skillsB,
             "Background",
@@ -555,7 +555,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Human,
-                Level(Posint(level)),
+                Level(level),
                 abilitiesB,
                 skillsB,
                 "Background",
@@ -634,7 +634,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 race,
-                Level(Posint(2)),
+                Level(2),
                 abilitiesB,
                 skillsB,
                 "Background",
@@ -734,7 +734,7 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 race,
-                Level(Posint(2)),
+                Level(2),
                 abilitiesB,
                 skillsB,
                 "Background",

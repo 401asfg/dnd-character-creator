@@ -1,13 +1,13 @@
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp
-from main.model.character.enumerators.size import Size
-from main.model.character.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from main.model.character.utility.enumerators.size import Size
+from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
 
 from main.model.character.alignment import Alignment
-from main.model.character.level import Level
+from main.model.character.utility.posint_types.level import Level
 from main.model.character.race import Race
 from main.model.character.class_ import Class
-from main.model.character.enumerators.state import State
+from main.model.character.utility.enumerators.state import State
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 from main.model.character.abilities import Abilities

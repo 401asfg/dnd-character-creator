@@ -1,9 +1,10 @@
-class Posint:
+from main.model.int_types.natural import Natural
+
+
+class Posint(Natural):
     """
     A positive integer (cannot be zero or negative)
     """
-
-    _min_value = 1
 
     def __init__(self, value: int):
         """
@@ -12,11 +13,7 @@ class Posint:
         :param value: The value of the positive integer
         """
 
-        if value < self._min_value:
-            raise ValueError("A " + self.__class__.__name__ + " cannot be less than " + str(self._min_value) + ".")
+        if value == 0:
+            raise ValueError("A posint cannot be less than 1.")
 
-        self._value = value
-
-    @property
-    def value(self) -> int:
-        return self._value
+        super().__init__(value)

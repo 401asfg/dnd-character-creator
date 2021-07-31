@@ -2,7 +2,7 @@ from main.model.dice.dice import Dice
 from main.model.int_types.posint import Posint
 
 
-class AbilityScore:
+class AbilityScore(Posint):
     """
     An unmodified score to give to one of the character's main stats (STR, DEX, CON, INT, WIS, CHA)
     """
@@ -21,8 +21,4 @@ class AbilityScore:
         if value < self.MIN_SCORE or value > self.MAX_SCORE:
             raise ValueError("An unmodified ability score cannot have the value " + str(value) + ".")
 
-        self._value = value
-
-    @property
-    def value(self) -> int:
-        return self._value
+        super().__init__(value)

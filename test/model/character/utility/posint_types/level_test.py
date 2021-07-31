@@ -1,13 +1,12 @@
 import unittest
 
-from main.model.character.level import Level
-from main.model.int_types.posint import Posint
+from main.model.character.utility.posint_types.level import Level
 
 
 class LevelTest(unittest.TestCase):
     def test_init(self):
         for i in range(1, Level.MAX_LEVEL + 1):
-            self.assertEqual(i, Level(Posint(i)).value)
+            self.assertEqual(i, Level(i).value)
 
         def assert_error(value: int):
             """
@@ -17,10 +16,13 @@ class LevelTest(unittest.TestCase):
             """
 
             try:
-                Level(Posint(value))
+                Level(value)
                 self.fail("The value should have produced an error when given to level.")
             except ValueError:
                 pass
 
         for i in range(Level.MAX_LEVEL + 1, 400):
+            assert_error(i)
+
+        for i in range(-300, 1):
             assert_error(i)
