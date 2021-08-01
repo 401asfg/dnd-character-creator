@@ -108,6 +108,12 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.skills.stealth.modifier, -1)
         self.assertEqual(self.character.skills.survival.modifier, 5)
 
+        self.assertEqual(self.character.purse.copper_coins, 0)
+        self.assertEqual(self.character.purse.silver_coins, 0)
+        self.assertEqual(self.character.purse.electrum_coins, 0)
+        self.assertEqual(self.character.purse.gold_coins, 0)
+        self.assertEqual(self.character.purse.platinum_coins, 0)
+
         self.assertEqual(self.character.background, "Background")
         self.assertEqual(self.character.state, State.ALIVE)
         self.assertEqual(self.character.passive_wisdom, 15)

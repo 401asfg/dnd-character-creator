@@ -1,4 +1,5 @@
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp
+from main.model.character.purse import Purse
 from main.model.character.utility.enumerators.size import Size
 from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
@@ -289,6 +290,10 @@ class Character:
         return get_proficiency_bonus(self.level)
 
     @property
+    def purse(self) -> Purse:
+        return self._purse
+
+    @property
     def age(self) -> int:
         return self._age
 
@@ -334,6 +339,7 @@ class Character:
         self._reset_death_saves()
         self._inspiration = Natural(0)
         self._temporary_hp = 0
+        self._purse = Purse()
 
         self._name = name
         self._player_name = player_name
