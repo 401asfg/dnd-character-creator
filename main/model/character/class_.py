@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-
 from main.model.dice.die import Die
 
 
@@ -12,7 +11,13 @@ class Class(ABC):
 
     # TODO: create tests
 
-    _CALL_METHOD_IN_SUBCLASS_MSG = "This method should be called from one of Class' subclasses."
+    @staticmethod
+    def _error():
+        """
+        Raises NotImplementedError
+        """
+
+        raise NotImplementedError("This method should be called from one of Class' subclasses.")
 
     @classmethod
     @abstractmethod
@@ -21,7 +26,7 @@ class Class(ABC):
         :return: The class' name
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -30,7 +35,7 @@ class Class(ABC):
         :return: The hit die that this class gives to a character
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -39,7 +44,7 @@ class Class(ABC):
         :return: True if class is proficient in strength; otherwise, false
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -48,7 +53,7 @@ class Class(ABC):
         :return: True if class is proficient in dexterity; otherwise, false
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -57,7 +62,7 @@ class Class(ABC):
         :return: True if class is proficient in constitution; otherwise, false
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -66,7 +71,7 @@ class Class(ABC):
         :return: True if class is proficient in intelligence; otherwise, false
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -75,7 +80,7 @@ class Class(ABC):
         :return: True if class is proficient in wisdom; otherwise, false
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -84,4 +89,4 @@ class Class(ABC):
         :return: True if class is proficient in charisma; otherwise, false
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()

@@ -1,5 +1,6 @@
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp
-from main.model.character.collections.inventory.inventory import Inventory
+from main.model.character.inventory.inventory import Inventory
+from main.model.character.personality import Personality
 from main.model.character.purse import Purse
 from main.model.character.utility.enumerators.size import Size
 from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
@@ -10,6 +11,7 @@ from main.model.character.utility.posint_types.level import Level
 from main.model.character.race import Race
 from main.model.character.class_ import Class
 from main.model.character.utility.enumerators.state import State
+from main.model.collection.collection import Collection
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 from main.model.character.abilities import Abilities
@@ -42,6 +44,7 @@ class Character:
             abilities: Type[Abilities],
             skills: Type[Skills],
             background: str,
+            personality: Personality,
             alignment: Alignment,
             age: Natural
     ):
@@ -57,6 +60,7 @@ class Character:
         :param abilities: The character's abilities
         :param skills: The character's skills
         :param background: The character's background
+        :param personality: The character's personality
         :param alignment: The character's alignment
         :param age: The character's age
         """
@@ -65,7 +69,7 @@ class Character:
 
         # TODO: modify tests with ability scores
 
-        self._initialize_core_fields(name, player_name, class_, race, level, background, age)
+        self._initialize_core_fields(name, player_name, class_, race, level, background, personality, age)
         self._initialize_exception_raising_fields(alignment)
         self._abilities = abilities(self._race, self._class, Posint(self.proficiency_bonus))
 
@@ -232,8 +236,16 @@ class Character:
         return self._inventory
 
     @property
+    def features(self) -> Collection:
+        return self._features
+
+    @property
     def background(self) -> str:
         return self._background
+
+    @property
+    def personality(self) -> Personality:
+        return self._personality
 
     @property
     def state(self) -> State:
@@ -327,6 +339,7 @@ class Character:
             race: Type[Race],
             level: Level,
             background: str,
+            personality: Personality,
             age: Natural
     ):
         """
@@ -338,6 +351,7 @@ class Character:
         :param race: The character's race
         :param level: The character's level
         :param background: The character's background
+        :param personality: The character's personality
         :param age: The character's age
         """
 
@@ -353,6 +367,7 @@ class Character:
         self._race = race
         self._exp = get_min_exp(level.value)
         self._background = background
+        self._personality = personality
         self._age = age.value
 
     def _initialize_exception_raising_fields(self, alignment: Alignment):
@@ -397,13 +412,16 @@ class Character:
 
     def _initialize_derived_fields(self):
         """
-        Initializes fields derived from the values of the core fields, abilities, and skills
+        Initializes fields derived from the values of previously defined fields
         """
 
         self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier
         self._hit_points = self._max_hit_points
+
         inventory_max_weight = self.abilities.strength.score * self._INVENTORY_MAX_WEIGHT_MOD
         self._inventory = Inventory(Natural(inventory_max_weight))
+
+        self._features = Collection()
 
     def _check_change_hit_points_exception(self):
         """

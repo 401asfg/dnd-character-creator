@@ -1,5 +1,5 @@
-from main.model.character.collections.inventory.inventory_item import InventoryItem
-from main.model.character.collections.inventory.inventory_max_weight_exceeded_exception import InventoryMaxWeightExceededException
+from main.model.character.inventory.inventory_item import InventoryItem
+from main.model.character.inventory.inventory_max_weight_exceeded_exception import InventoryMaxWeightExceededException
 from main.model.collection.collection import Collection
 from main.model.int_types.natural import Natural
 

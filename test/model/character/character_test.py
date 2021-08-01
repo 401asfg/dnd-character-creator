@@ -2,6 +2,7 @@ import unittest
 from typing import Type
 
 from main.model.character.abilities import generate_character_abilities
+from main.model.character.personality import Personality
 from main.model.character.utility.posint_types.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
 from main.model.character.utility.posint_types.level import Level
@@ -53,6 +54,14 @@ class CharacterTest(unittest.TestCase):
             survival_proficiency=True
         )
 
+        self.personality = Personality(
+            trait_one="Angry",
+            trait_two="Cowardly",
+            ideal="Hit gym.",
+            bond="The gym is good",
+            flaw="Afraid to go to the gym"
+        )
+
         self.character = Character(
             "Name",
             "Player Name",
@@ -62,6 +71,7 @@ class CharacterTest(unittest.TestCase):
             self.abilities,
             self.skills,
             "Background",
+            self.personality,
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.EVIL
@@ -140,6 +150,14 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(0, self.character.inventory.weight)
         self.assertEqual(0, len(self.character.inventory))
 
+        self.assertEqual(0, len(self.character.features))
+
+        self.assertEqual("Angry", self.character.personality.trait_one)
+        self.assertEqual("Cowardly", self.character.personality.trait_two)
+        self.assertEqual("Hit gym.", self.character.personality.ideal)
+        self.assertEqual("The gym is good", self.character.personality.bond)
+        self.assertEqual("Afraid to go to the gym", self.character.personality.flaw)
+
     def test_init_errors(self):
         try:
             Character(
@@ -151,6 +169,7 @@ class CharacterTest(unittest.TestCase):
                 self.abilities,
                 self.skills,
                 "Background",
+                self.personality,
                 Alignment(
                     Alignment.Nature.LAWFUL,
                     Alignment.Morality.GOOD
@@ -512,6 +531,7 @@ class CharacterTest(unittest.TestCase):
             abilitiesB,
             skillsB,
             "Background",
+            self.personality,
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.EVIL
@@ -569,6 +589,7 @@ class CharacterTest(unittest.TestCase):
                 abilitiesB,
                 skillsB,
                 "Background",
+                self.personality,
                 Alignment(
                     Alignment.Nature.LAWFUL,
                     Alignment.Morality.EVIL
@@ -648,6 +669,7 @@ class CharacterTest(unittest.TestCase):
                 abilitiesB,
                 skillsB,
                 "Background",
+                self.personality,
                 alignment,
                 Natural(22)
             )
@@ -748,6 +770,7 @@ class CharacterTest(unittest.TestCase):
                 abilitiesB,
                 skillsB,
                 "Background",
+                self.personality,
                 alignment,
                 Natural(22)
             )

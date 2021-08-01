@@ -15,7 +15,13 @@ class Race(ABC):
     # TODO: Add more parameters to account for all aspects of races
     # TODO: Return to dictionary of races?
 
-    _CALL_METHOD_IN_SUBCLASS_MSG = "This method should be called from one of Race's subclasses."
+    @staticmethod
+    def _error():
+        """
+        Raises NotImplementedError
+        """
+
+        raise NotImplementedError("This method should be called from one of Race's subclasses.")
 
     @classmethod
     @abstractmethod
@@ -24,7 +30,7 @@ class Race(ABC):
         :return: The race's name
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -33,7 +39,7 @@ class Race(ABC):
         :return: The racial bonus given to a character's strength stat
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -42,7 +48,7 @@ class Race(ABC):
         :return: The racial bonus given to a character's dexterity stat
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -51,7 +57,7 @@ class Race(ABC):
         :return: The racial bonus given to a character's constitution stat
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -60,7 +66,7 @@ class Race(ABC):
         :return: The racial bonus given to a character's intelligence stat
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -69,7 +75,7 @@ class Race(ABC):
         :return: The racial bonus given to a character's wisdom stat
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -78,7 +84,7 @@ class Race(ABC):
         :return: The racial bonus given to a character's charisma stat
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -87,7 +93,7 @@ class Race(ABC):
         :return: The alignment natures that a character can have
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -96,7 +102,7 @@ class Race(ABC):
         :return: The alignment moralities that a character can have
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -105,7 +111,7 @@ class Race(ABC):
         :return: The age at which a character of this race becomes an adult
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -114,7 +120,7 @@ class Race(ABC):
         :return: The age at which a character of this race is expected to die by
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -123,7 +129,7 @@ class Race(ABC):
         :return: The size of a character of this race
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
 
     @classmethod
     @abstractmethod
@@ -132,4 +138,4 @@ class Race(ABC):
         :return: The speed of a character of this race
         """
 
-        raise NotImplementedError(cls._CALL_METHOD_IN_SUBCLASS_MSG)
+        cls._error()
