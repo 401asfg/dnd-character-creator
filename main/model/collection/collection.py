@@ -57,7 +57,7 @@ class Collection:
 
         if item in self._collection:
             raise ItemInCollectionException(
-                "Cannot add an item to a collection that already has an item of that name"
+                "Cannot add an item to a collection that already contains that item"
             )
 
         self._collection.append(item)
