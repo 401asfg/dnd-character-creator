@@ -1,6 +1,6 @@
 import unittest
 
-from main.model.character.inventory.inventory_item import InventoryItem
+from main.model.character.collections.inventory.inventory_item import InventoryItem
 from main.model.int_types.natural import Natural
 
 

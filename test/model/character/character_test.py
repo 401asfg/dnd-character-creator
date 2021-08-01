@@ -136,6 +136,10 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(self.character.size, Size.MEDIUM)
         self.assertEqual(self.character.speed, 30)
 
+        self.assertEqual(210, self.character.inventory.max_weight)
+        self.assertEqual(0, self.character.inventory.weight)
+        self.assertEqual(0, len(self.character.inventory))
+
     def test_init_errors(self):
         try:
             Character(

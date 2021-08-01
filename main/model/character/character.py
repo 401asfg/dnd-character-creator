@@ -1,4 +1,5 @@
 from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp
+from main.model.character.collections.inventory.inventory import Inventory
 from main.model.character.purse import Purse
 from main.model.character.utility.enumerators.size import Size
 from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
@@ -25,6 +26,7 @@ class Character:
     MAX_SUCCESSFUL_DEATH_SAVES = 3
     MAX_FAILED_DEATH_SAVES = 3
     _BASE_PASSIVE_WISDOM = 10
+    _INVENTORY_MAX_WEIGHT_MOD = 15
 
     # TODO: add rest of parameters
     # TODO: add rest of functions
@@ -76,7 +78,7 @@ class Character:
             proficiency_bonus=Posint(self.proficiency_bonus)
         )
 
-        self._initialize_hit_points()
+        self._initialize_derived_fields()
 
     # TODO: make sure all aspects are tested
 
@@ -224,6 +226,10 @@ class Character:
     @property
     def skills(self) -> Skills:
         return self._skills
+
+    @property
+    def inventory(self) -> Inventory:
+        return self._inventory
 
     @property
     def background(self) -> str:
@@ -389,13 +395,15 @@ class Character:
             "A character of this race cannot have this alignment."
         )
 
-    def _initialize_hit_points(self):
+    def _initialize_derived_fields(self):
         """
-        Initializes the character's hit points and max hit points
+        Initializes fields derived from the values of the core fields, abilities, and skills
         """
 
         self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier
         self._hit_points = self._max_hit_points
+        inventory_max_weight = self.abilities.strength.score * self._INVENTORY_MAX_WEIGHT_MOD
+        self._inventory = Inventory(Natural(inventory_max_weight))
 
     def _check_change_hit_points_exception(self):
         """
