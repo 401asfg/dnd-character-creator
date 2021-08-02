@@ -150,8 +150,6 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(0, self.character.inventory.weight)
         self.assertEqual(0, len(self.character.inventory))
 
-        self.assertEqual(0, len(self.character.features))
-
         self.assertEqual("Angry", self.character.personality.trait_one)
         self.assertEqual("Cowardly", self.character.personality.trait_two)
         self.assertEqual("Hit gym.", self.character.personality.ideal)

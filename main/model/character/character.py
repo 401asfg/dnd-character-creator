@@ -11,7 +11,6 @@ from main.model.character.utility.posint_types.level import Level
 from main.model.character.race import Race
 from main.model.character.class_ import Class
 from main.model.character.utility.enumerators.state import State
-from main.model.collection.collection import Collection
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 from main.model.character.abilities import Abilities
@@ -86,6 +85,8 @@ class Character:
 
     # TODO: make sure all aspects are tested
 
+    ###### PUBLIC HIT POINT METHODS ######
+
     def take_damage(self, hit_points: Posint):
         """
         The character loses hit points equal to the given hit_points; if the character has temporary hit points, those
@@ -133,14 +134,7 @@ class Character:
 
         self._temporary_hp = hit_points.value
 
-    def gain_exp(self, points: int):
-        """
-        Give the character experience points
-
-        :param points: The amount of experience points to give the character
-        """
-
-        self._exp += points
+    ###### PUBLIC DEATH SAVE METHODS ######
 
     def death_save(self, success: bool):
         """
@@ -192,6 +186,17 @@ class Character:
         if self.state == State.ALIVE:
             self.heal(Posint(1))
 
+    ###### PUBLIC GENERAL STAT METHODS ######
+
+    def gain_exp(self, points: int):
+        """
+        Give the character experience points
+
+        :param points: The amount of experience points to give the character
+        """
+
+        self._exp += points
+
     def gain_inspiration(self):
         """
         Increment the character's inspiration by 1
@@ -206,6 +211,8 @@ class Character:
         """
 
         self._add_inspiration(-1)
+
+    ###### NAME PROPERTIES ######
 
     @property
     def name(self) -> str:
@@ -223,6 +230,44 @@ class Character:
     def race_name(self) -> str:
         return self._race.get_name()
 
+    ###### ROLE-PLAY PROPERTIES ######
+
+    @property
+    def background(self) -> str:
+        return self._background
+
+    @property
+    def alignment(self) -> Alignment:
+        return self._alignment
+
+    @property
+    def age(self) -> int:
+        return self._age
+
+    @property
+    def personality(self) -> Personality:
+        return self._personality
+
+    ###### RACE DERIVED PROPERTIES ######
+
+    @property
+    def size(self) -> Size:
+        """
+        :return: The character's size, determined by the character's race
+        """
+
+        return self._race.get_size()
+
+    @property
+    def speed(self) -> int:
+        """
+        :return: The character's speed, determined by the character's race
+        """
+
+        return self._race.get_speed()
+
+    ###### MAJOR STAT PROPERTIES ######
+
     @property
     def abilities(self) -> Abilities:
         return self._abilities
@@ -231,25 +276,17 @@ class Character:
     def skills(self) -> Skills:
         return self._skills
 
+    ###### DATA STRUCTURE PROPERTIES ######
+
     @property
     def inventory(self) -> Inventory:
         return self._inventory
 
     @property
-    def features(self) -> Collection:
-        return self._features
+    def purse(self) -> Purse:
+        return self._purse
 
-    @property
-    def background(self) -> str:
-        return self._background
-
-    @property
-    def personality(self) -> Personality:
-        return self._personality
-
-    @property
-    def state(self) -> State:
-        return self._state
+    ###### HIT POINT PROPERTIES ######
 
     @property
     def hit_points(self) -> int:
@@ -263,6 +300,8 @@ class Character:
     def max_hit_points(self) -> int:
         return self._max_hit_points
 
+    ###### DEATH SAVE PROPERTIES ######
+
     @property
     def successful_death_saves(self) -> int:
         return self._successful_death_saves
@@ -271,9 +310,7 @@ class Character:
     def failed_death_saves(self) -> int:
         return self._failed_death_saves
 
-    @property
-    def alignment(self) -> Alignment:
-        return self._alignment
+    ###### GENERAL STAT PROPERTIES ######
 
     @property
     def experience_points(self) -> int:
@@ -307,29 +344,13 @@ class Character:
 
         return get_proficiency_bonus(self.level)
 
-    @property
-    def purse(self) -> Purse:
-        return self._purse
+    ###### CHARACTER FUNCTIONALITY PROPERTIES ######
 
     @property
-    def age(self) -> int:
-        return self._age
+    def state(self) -> State:
+        return self._state
 
-    @property
-    def size(self) -> Size:
-        """
-        :return: The character's size, determined by the character's race
-        """
-
-        return self._race.get_size()
-
-    @property
-    def speed(self) -> int:
-        """
-        :return: The character's speed, determined by the character's race
-        """
-
-        return self._race.get_speed()
+    ###### PRIVATE INITIALIZATION METHODS ######
 
     def _initialize_core_fields(
             self,
@@ -418,10 +439,9 @@ class Character:
         self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier
         self._hit_points = self._max_hit_points
 
-        inventory_max_weight = self.abilities.strength.score * self._INVENTORY_MAX_WEIGHT_MOD
-        self._inventory = Inventory(Natural(inventory_max_weight))
+        self._inventory = Inventory(self._get_inventory_max_weight())
 
-        self._features = Collection()
+    ###### PRIVATE HELPER METHODS ######
 
     def _check_change_hit_points_exception(self):
         """
@@ -432,6 +452,17 @@ class Character:
             raise IncorrectCharacterStateException(
                 "Character's hit_points cannot be changed when not in the ALIVE state."
             )
+
+    def _get_inventory_max_weight(self) -> Natural:
+        """
+        Gets the max weight that the character's inventory should be able to carry; raises ValueError if the max weight
+        is negative
+
+        :return: The max weight that the character's inventory should be able to carry: strength * inventory max weight
+        mod
+        """
+
+        return Natural(self.abilities.strength.score * self._INVENTORY_MAX_WEIGHT_MOD)
 
     def _add_inspiration(self, inspiration_delta: int):
         """

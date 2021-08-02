@@ -33,11 +33,19 @@ class Inventory(Collection):
             raise InventoryMaxWeightExceededException
 
         super().add(item)
-        self._weight += item.weight
 
     @property
     def weight(self) -> int:
-        return self._weight
+        """
+        :return: The combined weight of all the items in the inventory
+        """
+
+        weight = 0
+
+        for item in self._collection:
+            weight += item.weight
+
+        return weight
 
     @property
     def max_weight(self) -> int:
