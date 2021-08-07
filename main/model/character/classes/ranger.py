@@ -7,34 +7,34 @@ class Ranger(Class):
     The class information for a ranger character
     """
 
-    @classmethod
-    def get_name(cls) -> str:
+    @staticmethod
+    def get_name() -> str:
         return "Ranger"
 
-    @classmethod
-    def get_hit_die(cls) -> Die:
+    @staticmethod
+    def get_hit_die() -> Die:
         return Die(Die.Sides.TEN)
 
-    @classmethod
-    def get_strength_proficiency(cls) -> bool:
+    @staticmethod
+    def get_strength_proficiency() -> bool:
         return True
 
-    @classmethod
-    def get_dexterity_proficiency(cls) -> bool:
+    @staticmethod
+    def get_dexterity_proficiency() -> bool:
         return True
 
-    @classmethod
-    def get_constitution_proficiency(cls) -> bool:
+    @staticmethod
+    def get_constitution_proficiency() -> bool:
         return False
 
-    @classmethod
-    def get_intelligence_proficiency(cls) -> bool:
+    @staticmethod
+    def get_intelligence_proficiency() -> bool:
         return False
 
-    @classmethod
-    def get_wisdom_proficiency(cls) -> bool:
+    @staticmethod
+    def get_wisdom_proficiency() -> bool:
         return False
 
-    @classmethod
-    def get_charisma_proficiency(cls) -> bool:
+    @staticmethod
+    def get_charisma_proficiency() -> bool:
         return False

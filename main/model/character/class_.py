@@ -12,81 +12,81 @@ class Class(ABC):
     # TODO: create tests
 
     @staticmethod
-    def _error():
-        """
-        Raises NotImplementedError
-        """
-
-        raise NotImplementedError("This method should be called from one of Class' subclasses.")
-
-    @classmethod
     @abstractmethod
-    def get_name(cls) -> str:
+    def get_name() -> str:
         """
         :return: The class' name
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_hit_die(cls) -> Die:
+    def get_hit_die() -> Die:
         """
         :return: The hit die that this class gives to a character
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_strength_proficiency(cls) -> bool:
+    def get_strength_proficiency() -> bool:
         """
         :return: True if class is proficient in strength; otherwise, false
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_dexterity_proficiency(cls) -> bool:
+    def get_dexterity_proficiency() -> bool:
         """
         :return: True if class is proficient in dexterity; otherwise, false
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_constitution_proficiency(cls) -> bool:
+    def get_constitution_proficiency() -> bool:
         """
         :return: True if class is proficient in constitution; otherwise, false
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_intelligence_proficiency(cls) -> bool:
+    def get_intelligence_proficiency() -> bool:
         """
         :return: True if class is proficient in intelligence; otherwise, false
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_wisdom_proficiency(cls) -> bool:
+    def get_wisdom_proficiency() -> bool:
         """
         :return: True if class is proficient in wisdom; otherwise, false
         """
 
-        cls._error()
+        _error()
 
-    @classmethod
+    @staticmethod
     @abstractmethod
-    def get_charisma_proficiency(cls) -> bool:
+    def get_charisma_proficiency() -> bool:
         """
         :return: True if class is proficient in charisma; otherwise, false
         """
 
-        cls._error()
+        _error()
+
+
+def _error():
+    """
+    Raises NotImplementedError
+    """
+
+    raise NotImplementedError("This method should be called from one of Class' subclasses.")

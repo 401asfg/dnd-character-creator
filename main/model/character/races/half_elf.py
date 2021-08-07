@@ -5,47 +5,46 @@ from main.model.character.race import Race
 from main.model.character.utility.enumerators.size import Size
 
 
-class Human(Race):
+class HalfElf(Race):
     """
-    The racial information for a human character
+    The racial information for a half-elf character
     """
 
     @staticmethod
     def get_name() -> str:
-        return "Human"
+        return "Half-Elf"
 
     @staticmethod
     def get_strength_bonus() -> int:
-        return 1
+        return 0
 
     @staticmethod
     def get_dexterity_bonus() -> int:
-        return 1
+        return 0
 
     @staticmethod
     def get_constitution_bonus() -> int:
-        return 1
+        return 0
 
     @staticmethod
     def get_intelligence_bonus() -> int:
-        return 1
+        return 0
 
     @staticmethod
     def get_wisdom_bonus() -> int:
-        return 1
+        return 0
 
     @staticmethod
     def get_charisma_bonus() -> int:
-        return 1
+        return 2
 
     @staticmethod
     def get_additional_ability_bonus() -> int:
-        return 0
+        return 1
 
     @staticmethod
     def get_acceptable_alignment_natures() -> List[Alignment.Nature]:
         return [
-            Alignment.Nature.LAWFUL,
             Alignment.Nature.NEUTRAL,
             Alignment.Nature.CHAOTIC
         ]
@@ -60,11 +59,11 @@ class Human(Race):
 
     @staticmethod
     def get_min_adult_age() -> int:
-        return 18
+        return 20
 
     @staticmethod
     def get_life_expectancy() -> int:
-        return 99
+        return 180
 
     @staticmethod
     def get_size() -> Size:

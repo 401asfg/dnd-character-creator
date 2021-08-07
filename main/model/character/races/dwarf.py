@@ -10,60 +10,64 @@ class Dwarf(Race):
     The racial information for a dwarf character
     """
 
-    @classmethod
-    def get_name(cls) -> str:
+    @staticmethod
+    def get_name() -> str:
         return "Dwarf"
 
-    @classmethod
-    def get_strength_bonus(cls) -> int:
+    @staticmethod
+    def get_strength_bonus() -> int:
         return 0
 
-    @classmethod
-    def get_dexterity_bonus(cls) -> int:
+    @staticmethod
+    def get_dexterity_bonus() -> int:
         return 0
 
-    @classmethod
-    def get_constitution_bonus(cls) -> int:
+    @staticmethod
+    def get_constitution_bonus() -> int:
         return 2
 
-    @classmethod
-    def get_intelligence_bonus(cls) -> int:
+    @staticmethod
+    def get_intelligence_bonus() -> int:
         return 0
 
-    @classmethod
-    def get_wisdom_bonus(cls) -> int:
+    @staticmethod
+    def get_wisdom_bonus() -> int:
         return 0
 
-    @classmethod
-    def get_charisma_bonus(cls) -> int:
+    @staticmethod
+    def get_charisma_bonus() -> int:
         return 0
 
-    @classmethod
-    def get_acceptable_alignment_natures(cls) -> List[Alignment.Nature]:
+    @staticmethod
+    def get_additional_ability_bonus() -> int:
+        return 0
+
+    @staticmethod
+    def get_acceptable_alignment_natures() -> List[Alignment.Nature]:
         return [
             Alignment.Nature.LAWFUL,
             Alignment.Nature.NEUTRAL
         ]
 
-    @classmethod
-    def get_acceptable_alignment_moralities(cls) -> List[Alignment.Morality]:
+    @staticmethod
+    def get_acceptable_alignment_moralities() -> List[Alignment.Morality]:
         return [
             Alignment.Morality.GOOD,
             Alignment.Morality.NEUTRAL
         ]
 
-    @classmethod
-    def get_min_adult_age(cls) -> int:
+    @staticmethod
+    def get_min_adult_age() -> int:
         return 50
 
-    @classmethod
-    def get_life_expectancy(cls) -> int:
+    @staticmethod
+    def get_life_expectancy() -> int:
         return 350
 
-    @classmethod
-    def get_size(cls) -> Size:
+    @staticmethod
+    def get_size() -> Size:
         return Size.MEDIUM
 
-    @classmethod
-    def get_speed(cls) -> int:
+    @staticmethod
+    def get_speed() -> int:
         return 30
