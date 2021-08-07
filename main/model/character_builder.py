@@ -100,7 +100,7 @@ class CharacterBuilder:
 
                         self._next_feedback = "The response: " + fn_value + " was accepted."
                         self._next_prompt = next_prompt
-                        self._next_operation = next_operation
+                        self._next_parameter_setter = next_operation
                     except exception_types:
                         self._next_feedback = error_feedback
 
@@ -167,7 +167,7 @@ class CharacterBuilder:
             self._name = value
 
         self._next_prompt: str = "Enter the character's name:"
-        self._next_operation: Callable[[str], None] = set_name
+        self._next_parameter_setter: Callable[[str], None] = set_name
         self._next_feedback: str = ""
 
     @property
@@ -175,8 +175,8 @@ class CharacterBuilder:
         return self._next_prompt
 
     @property
-    def next_operation(self) -> Callable[[str], None]:
-        return self._next_operation
+    def next_parameter_setter(self) -> Callable[[str], None]:
+        return self._next_parameter_setter
 
     @property
     def next_feedback(self) -> str:
