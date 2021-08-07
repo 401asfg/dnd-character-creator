@@ -1,6 +1,5 @@
 from typing import Callable, Type, Tuple, Union, List
 
-from main.model.character.character import Character
 from main.model.character.class_ import Class
 from main.model.character.classes.bard import Bard
 from main.model.character.classes.ranger import Ranger
@@ -11,7 +10,6 @@ from main.model.character.races.dwarf import Dwarf
 from main.model.character.races.elf import Elf
 from main.model.character.races.gnome import Gnome
 from main.model.character.races.human import Human
-from main.model.character.utility.posint_types.level import Level
 from main.model.int_types.natural import Natural
 
 _races = [
@@ -56,7 +54,6 @@ class CharacterBuilder:
         class_setter_prompt += "Enter the character's class index:"
 
         self._name: str
-        self._level: Level
         self._age: Natural
         self._race: Race
         self._class: Class
@@ -159,23 +156,7 @@ class CharacterBuilder:
 
             self._age = Natural(int(value))
 
-        @parameter_setter(
-            (ValueError,),
-            "The entered level was not within acceptable bounds.",
-            "Enter the character's age (can be a positive number):",
-            set_age
-        )
-        def set_level(value: str):
-            """
-            Set the level to the given value; raises ValueError if value is not an integer, is less than 1, or is
-            greater than 20
-
-            :param value: The value to set the level to
-            """
-
-            self._level = Level(int(value))
-
-        @parameter_setter((), "", "Enter the character's level (can be a number from 1 to 20):", set_level)
+        @parameter_setter((), "", "Enter the character's age (can be a positive number):", set_age)
         def set_name(value: str):
             """
             Set the name to the given value

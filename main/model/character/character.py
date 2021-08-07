@@ -7,7 +7,6 @@ from main.model.character.utility.exceptions.incorrect_character_state_exception
 from typing import Type, Callable, Any
 
 from main.model.character.alignment import Alignment
-from main.model.character.utility.posint_types.level import Level
 from main.model.character.race import Race
 from main.model.character.class_ import Class
 from main.model.character.utility.enumerators.state import State
@@ -39,7 +38,6 @@ class Character:
             player_name: str,
             class_: Type[Class],
             race: Type[Race],
-            level: Level,
             abilities: Type[Abilities],
             skills: Type[Skills],
             background: str,
@@ -55,7 +53,6 @@ class Character:
         :param player_name: Name of the player playing the character
         :param class_: The character's class
         :param race: The character's race
-        :param level: The character's starting level
         :param abilities: The character's abilities
         :param skills: The character's skills
         :param background: The character's background
@@ -68,7 +65,7 @@ class Character:
 
         # TODO: modify tests with ability scores
 
-        self._initialize_core_fields(name, player_name, class_, race, level, background, personality, age)
+        self._initialize_core_fields(name, player_name, class_, race, background, personality, age)
         self._initialize_exception_raising_fields(alignment)
         self._abilities = abilities(self._race, self._class, Posint(self.proficiency_bonus))
 
@@ -358,7 +355,6 @@ class Character:
             player_name: str,
             class_: Type[Class],
             race: Type[Race],
-            level: Level,
             background: str,
             personality: Personality,
             age: Natural
@@ -370,7 +366,6 @@ class Character:
         :param player_name: Name of the player playing the character
         :param class_: The character's class
         :param race: The character's race
-        :param level: The character's level
         :param background: The character's background
         :param personality: The character's personality
         :param age: The character's age
@@ -380,13 +375,13 @@ class Character:
         self._reset_death_saves()
         self._inspiration = Natural(0)
         self._temporary_hp = 0
+        self._exp = 0
         self._purse = Purse()
 
         self._name = name
         self._player_name = player_name
         self._class = class_
         self._race = race
-        self._exp = get_min_exp(level.value)
         self._background = background
         self._personality = personality
         self._age = age.value

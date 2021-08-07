@@ -3,9 +3,8 @@ from typing import Type
 
 from main.model.character.abilities import generate_character_abilities
 from main.model.character.personality import Personality
-from main.model.character.utility.posint_types.ability_score import AbilityScore
+from main.model.character.utility.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
-from main.model.character.utility.posint_types.level import Level
 from main.model.character.race import Race
 from main.model.character.races.dragonborn import Dragonborn
 from main.model.character.races.dwarf import Dwarf
@@ -67,7 +66,6 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            Level(2),
             self.abilities,
             self.skills,
             "Background",
@@ -139,8 +137,8 @@ class CharacterTest(unittest.TestCase):
         morality = self.character.alignment.morality
         self.assertEqual(morality, Alignment.Morality.EVIL)
 
-        self.assertEqual(self.character.experience_points, 300)
-        self.assertEqual(self.character.level, 2)
+        self.assertEqual(self.character.experience_points, 0)
+        self.assertEqual(self.character.level, 1)
         self.assertEqual(self.character.proficiency_bonus, 2)
         self.assertEqual(self.character.age, 22)
         self.assertEqual(self.character.size, Size.MEDIUM)
@@ -163,7 +161,6 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 Elf,
-                Level(22),
                 self.abilities,
                 self.skills,
                 "Background",
@@ -193,6 +190,7 @@ class CharacterTest(unittest.TestCase):
             self.assertEqual(self.character.level, expected_level)
             self.assertEqual(self.character.proficiency_bonus, expected_pb)
 
+        assert_gain_exp(300, 300, 2, 2)
         assert_gain_exp(100, 400, 2, 2)
         assert_gain_exp(500, 900, 3, 2)
         assert_gain_exp(5600, 6500, 5, 3)
@@ -480,7 +478,8 @@ class CharacterTest(unittest.TestCase):
             self.character.gain_exp(exp_delta)
             self.assertEqual(expected_level, self.character.level)
 
-        self.assertEqual(self.character.level, 2)
+        self.assertEqual(1, self.character.level)
+        assert_level(300, 2)
         assert_level(150, 2)
         assert_level(450, 3)
         assert_level(100, 3)
@@ -525,7 +524,6 @@ class CharacterTest(unittest.TestCase):
             "Player Name",
             Wizard,
             Human,
-            Level(2),
             abilitiesB,
             skillsB,
             "Background",
@@ -540,83 +538,86 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(characterB.passive_wisdom, 10)
 
     def test_proficiency_bonus(self):
-        def assert_proficiency_bonus(level: int, expected_pb: int):
-            """
-            Asserts that a character of the given level has the expected_pb
+        abilitiesB = generate_character_abilities(
+            strength=AbilityScore(13),
+            dexterity=AbilityScore(8),
+            constitution=AbilityScore(18),
+            intelligence=AbilityScore(12),
+            wisdom=AbilityScore(10),
+            charisma=AbilityScore(15)
+        )
 
-            :param level: The level of the character
+        skillsB = generate_character_skills(
+            acrobatics_proficiency=True,
+            animal_handling_proficiency=False,
+            athletics_proficiency=False,
+            arcana_proficiency=False,
+            deception_proficiency=False,
+            history_proficiency=True,
+            insight_proficiency=False,
+            intimidation_proficiency=False,
+            investigation_proficiency=False,
+            medicine_proficiency=False,
+            nature_proficiency=True,
+            perception_proficiency=False,
+            performance_proficiency=False,
+            persuasion_proficiency=False,
+            religion_proficiency=False,
+            sleight_of_hand_proficiency=False,
+            stealth_proficiency=False,
+            survival_proficiency=True
+        )
+
+        characterB = Character(
+            "Name",
+            "Player Name",
+            Wizard,
+            Human,
+            abilitiesB,
+            skillsB,
+            "Background",
+            self.personality,
+            Alignment(
+                Alignment.Nature.LAWFUL,
+                Alignment.Morality.EVIL
+            ),
+            Natural(22)
+        )
+
+        def assert_proficiency_bonus(exp_delta: int, expected_level: int, expected_pb: int):
+            """
+            Asserts that a character with the amount of exp after it gained the given exp_delta has the expected_pb and
+            expected_lvel
+
+            :param exp_delta: The exp to give to the character
+            :param expected_level: The expected level of the character
             :param expected_pb: The expected proficiency bonus of the character
             """
 
-            abilitiesB = generate_character_abilities(
-                strength=AbilityScore(13),
-                dexterity=AbilityScore(8),
-                constitution=AbilityScore(18),
-                intelligence=AbilityScore(12),
-                wisdom=AbilityScore(10),
-                charisma=AbilityScore(15)
-            )
-
-            skillsB = generate_character_skills(
-                acrobatics_proficiency=True,
-                animal_handling_proficiency=False,
-                athletics_proficiency=False,
-                arcana_proficiency=False,
-                deception_proficiency=False,
-                history_proficiency=True,
-                insight_proficiency=False,
-                intimidation_proficiency=False,
-                investigation_proficiency=False,
-                medicine_proficiency=False,
-                nature_proficiency=True,
-                perception_proficiency=False,
-                performance_proficiency=False,
-                persuasion_proficiency=False,
-                religion_proficiency=False,
-                sleight_of_hand_proficiency=False,
-                stealth_proficiency=False,
-                survival_proficiency=True
-            )
-
-            characterB = Character(
-                "Name",
-                "Player Name",
-                Wizard,
-                Human,
-                Level(level),
-                abilitiesB,
-                skillsB,
-                "Background",
-                self.personality,
-                Alignment(
-                    Alignment.Nature.LAWFUL,
-                    Alignment.Morality.EVIL
-                ),
-                Natural(22)
-            )
-
+            characterB.gain_exp(exp_delta)
+            self.assertEqual(expected_level, characterB.level)
             self.assertEqual(characterB.proficiency_bonus, expected_pb)
 
-        assert_proficiency_bonus(1, 2)
-        assert_proficiency_bonus(2, 2)
-        assert_proficiency_bonus(3, 2)
-        assert_proficiency_bonus(4, 2)
-        assert_proficiency_bonus(5, 3)
-        assert_proficiency_bonus(6, 3)
-        assert_proficiency_bonus(7, 3)
-        assert_proficiency_bonus(8, 3)
-        assert_proficiency_bonus(9, 4)
-        assert_proficiency_bonus(10, 4)
-        assert_proficiency_bonus(11, 4)
-        assert_proficiency_bonus(12, 4)
-        assert_proficiency_bonus(13, 5)
-        assert_proficiency_bonus(14, 5)
-        assert_proficiency_bonus(15, 5)
-        assert_proficiency_bonus(16, 5)
-        assert_proficiency_bonus(17, 6)
-        assert_proficiency_bonus(18, 6)
-        assert_proficiency_bonus(19, 6)
-        assert_proficiency_bonus(20, 6)
+        assert_proficiency_bonus(0, 1, 2)
+        assert_proficiency_bonus(300, 2, 2)
+        assert_proficiency_bonus(600, 3, 2)
+        assert_proficiency_bonus(1800, 4, 2)
+        assert_proficiency_bonus(3800, 5, 3)
+        assert_proficiency_bonus(7500, 6, 3)
+        assert_proficiency_bonus(9000, 7, 3)
+        assert_proficiency_bonus(11000, 8, 3)
+        assert_proficiency_bonus(14000, 9, 4)
+        assert_proficiency_bonus(16000, 10, 4)
+        assert_proficiency_bonus(21000, 11, 4)
+        assert_proficiency_bonus(15000, 12, 4)
+        assert_proficiency_bonus(20000, 13, 5)
+        assert_proficiency_bonus(20000, 14, 5)
+        assert_proficiency_bonus(25000, 15, 5)
+        assert_proficiency_bonus(30000, 16, 5)
+        assert_proficiency_bonus(30000, 17, 6)
+        assert_proficiency_bonus(40000, 18, 6)
+        assert_proficiency_bonus(40000, 19, 6)
+        assert_proficiency_bonus(50000, 20, 6)
 
     def test_size(self):
         def assert_size(race: Type[Race], alignment: Alignment, expected_size: Size):
@@ -663,7 +664,6 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 race,
-                Level(2),
                 abilitiesB,
                 skillsB,
                 "Background",
@@ -764,7 +764,6 @@ class CharacterTest(unittest.TestCase):
                 "Player Name",
                 Wizard,
                 race,
-                Level(2),
                 abilitiesB,
                 skillsB,
                 "Background",

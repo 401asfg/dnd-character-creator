@@ -1,6 +1,6 @@
 import unittest
 
-from main.model.character.utility.posint_types.ability_score import AbilityScore
+from main.model.character.utility.ability_score import AbilityScore
 
 
 class AbilityScoreTest(unittest.TestCase):

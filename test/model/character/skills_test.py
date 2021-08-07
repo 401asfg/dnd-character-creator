@@ -1,14 +1,14 @@
 import unittest
 
 from main.model.character.abilities import generate_character_abilities
-from main.model.character.utility.posint_types.ability_score import AbilityScore
+from main.model.character.personality import Personality
+from main.model.character.utility.ability_score import AbilityScore
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
 from main.model.character.classes.wizard import Wizard
 from main.model.character.races.elf import Elf
 from main.model.character.skills import generate_character_skills
 from main.model.int_types.natural import Natural
-from main.model.int_types.posint import Posint
 
 
 class SkillsTest(unittest.TestCase):
@@ -48,10 +48,10 @@ class SkillsTest(unittest.TestCase):
             player_name="Mike",
             class_=Wizard,
             race=Elf,
-            level=Posint(1),
             abilities=abilities,
             skills=skills,
             background="Beggar",
+            personality=Personality("", "", "", "", ""),
             alignment=Alignment(
                 Alignment.Nature.NEUTRAL,
                 Alignment.Morality.NEUTRAL
