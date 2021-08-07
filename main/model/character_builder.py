@@ -60,14 +60,14 @@ class CharacterBuilder:
 
         # TODO: make sure documentation is correct
 
-        def parameter_setter(
+        def operation(
                 exception_types: Union[Tuple[Type[Exception]], Tuple],
                 error_feedback: str,
                 next_prompt: str,
                 next_operation: Callable[[], None]
         ):
             """
-            Convert a function to be a parameter setter
+            Convert a function to be one of the builder's operations
 
             :param exception_types: The exceptions that, if raised by the function, cause the next feedback to be set to
             the error_feedback and prevents both the next prompt and next operation from being set to the given values
@@ -100,7 +100,7 @@ class CharacterBuilder:
 
                         self._next_feedback = "The response: " + fn_value + " was accepted."
                         self._next_prompt = next_prompt
-                        self._next_parameter_setter = next_operation
+                        self._next_operation = next_operation
                     except exception_types:
                         self._next_feedback = error_feedback
 
@@ -108,7 +108,7 @@ class CharacterBuilder:
 
             return get_caller
 
-        @parameter_setter(
+        @operation(
             (ValueError, IndexError),
             "The entered class index was not within acceptable bounds.",
             None,
@@ -124,7 +124,7 @@ class CharacterBuilder:
             """
             self._class = _classes[int(value) - 1]
 
-        @parameter_setter(
+        @operation(
             (ValueError, IndexError),
             "The entered race index was not within acceptable bounds.",
             class_setter_prompt,
@@ -141,7 +141,7 @@ class CharacterBuilder:
 
             self._race = _races[int(value) - 1]
 
-        @parameter_setter(
+        @operation(
             (ValueError,),
             "The entered age was not within acceptable bounds.",
             race_setter_prompt,
@@ -156,7 +156,7 @@ class CharacterBuilder:
 
             self._age = Natural(int(value))
 
-        @parameter_setter((), "", "Enter the character's age (can be a positive number):", set_age)
+        @operation((), "", "Enter the character's age (can be a positive number):", set_age)
         def set_name(value: str):
             """
             Set the name to the given value
@@ -167,7 +167,7 @@ class CharacterBuilder:
             self._name = value
 
         self._next_prompt: str = "Enter the character's name:"
-        self._next_parameter_setter: Callable[[str], None] = set_name
+        self._next_operation: Callable[[str], None] = set_name
         self._next_feedback: str = ""
 
     @property
@@ -175,8 +175,8 @@ class CharacterBuilder:
         return self._next_prompt
 
     @property
-    def next_parameter_setter(self) -> Callable[[str], None]:
-        return self._next_parameter_setter
+    def next_operation(self) -> Callable[[str], None]:
+        return self._next_operation
 
     @property
     def next_feedback(self) -> str:

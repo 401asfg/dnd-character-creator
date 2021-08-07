@@ -1,15 +1,16 @@
-from main.model.character.advancements import get_level, get_proficiency_bonus, get_min_exp
+from main.model.character.advancements import get_level, get_proficiency_bonus
 from main.model.character.inventory.inventory import Inventory
 from main.model.character.personality import Personality
 from main.model.character.purse import Purse
 from main.model.character.utility.enumerators.size import Size
-from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from main.model.character.utility.incorrect_character_state_exception import IncorrectCharacterStateException
 from typing import Type, Callable, Any
 
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
 from main.model.character.class_ import Class
 from main.model.character.utility.enumerators.state import State
+from main.model.collection.collection import Collection
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 from main.model.character.abilities import Abilities
@@ -283,6 +284,14 @@ class Character:
     def purse(self) -> Purse:
         return self._purse
 
+    @property
+    def proficiencies(self) -> Collection:
+        return self._proficiencies
+
+    @property
+    def features(self) -> Collection:
+        return self._features
+
     ###### HIT POINT PROPERTIES ######
 
     @property
@@ -376,7 +385,6 @@ class Character:
         self._inspiration = Natural(0)
         self._temporary_hp = 0
         self._exp = 0
-        self._purse = Purse()
 
         self._name = name
         self._player_name = player_name
@@ -435,6 +443,9 @@ class Character:
         self._hit_points = self._max_hit_points
 
         self._inventory = Inventory(self._get_inventory_max_weight())
+        self._purse = Purse()
+        self._proficiencies = Collection()
+        self._features = Collection()
 
     ###### PRIVATE HELPER METHODS ######
 

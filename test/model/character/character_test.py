@@ -10,7 +10,7 @@ from main.model.character.races.dragonborn import Dragonborn
 from main.model.character.races.dwarf import Dwarf
 from main.model.character.races.gnome import Gnome
 from main.model.character.skills import generate_character_skills
-from main.model.character.utility.exceptions.incorrect_character_state_exception import IncorrectCharacterStateException
+from main.model.character.utility.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
 from main.model.character.races.elf import Elf
@@ -147,6 +147,9 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(210, self.character.inventory.max_weight)
         self.assertEqual(0, self.character.inventory.weight)
         self.assertEqual(0, len(self.character.inventory))
+
+        self.assertEqual(0, len(self.character.proficiencies))
+        self.assertEqual(0, len(self.character.features))
 
         self.assertEqual("Angry", self.character.personality.trait_one)
         self.assertEqual("Cowardly", self.character.personality.trait_two)
