@@ -209,7 +209,7 @@ def generate_character_skills(
             def proficient(skill_proficiency: SkillProficiency) -> bool:
                 """
                 :param skill_proficiency: The skill proficiency
-                :return: True if the given skill_proficiency is in the set skill proficiencies that the character has;
+                :return: True if the given skill_proficiency is in the skill proficiencies set that the character has;
                 otherwise, false
                 """
 

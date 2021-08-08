@@ -1,4 +1,7 @@
 from abc import abstractmethod, ABC
+from typing import Tuple
+
+from main.model.character.utility.enumerators.ability_proficiency import AbilityProficiency
 from main.model.dice.die import Die
 
 
@@ -7,9 +10,7 @@ class Class(ABC):
     The abstract representation of a class that a character can be; not to be used, only inherited
     """
 
-    # TODO: refactor this and race into subclasses of new type
-
-    # TODO: create tests
+    # TODO: test all classes and all their aspects
 
     @staticmethod
     @abstractmethod
@@ -29,56 +30,20 @@ class Class(ABC):
 
         _error()
 
-    @staticmethod
-    @abstractmethod
-    def get_strength_proficiency() -> bool:
+    @classmethod
+    def proficient(cls, ability_proficiency: AbilityProficiency) -> bool:
         """
-        :return: True if class is proficient in strength; otherwise, false
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_dexterity_proficiency() -> bool:
-        """
-        :return: True if class is proficient in dexterity; otherwise, false
+        :param ability_proficiency: The ability proficiency
+        :return: True if the given ability_proficiency is in class' ability proficiencies set; otherwise, false
         """
 
-        _error()
+        return ability_proficiency in cls._get_ability_proficiencies()
 
     @staticmethod
     @abstractmethod
-    def get_constitution_proficiency() -> bool:
+    def _get_ability_proficiencies() -> Tuple[AbilityProficiency, ...]:
         """
-        :return: True if class is proficient in constitution; otherwise, false
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_intelligence_proficiency() -> bool:
-        """
-        :return: True if class is proficient in intelligence; otherwise, false
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_wisdom_proficiency() -> bool:
-        """
-        :return: True if class is proficient in wisdom; otherwise, false
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_charisma_proficiency() -> bool:
-        """
-        :return: True if class is proficient in charisma; otherwise, false
+        :return: The abilities that a character of this class is proficient in
         """
 
         _error()

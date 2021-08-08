@@ -5,6 +5,7 @@ from typing import Type
 from main.model.character.utility.ability_score import AbilityScore
 from main.model.character.class_ import Class
 from main.model.character.race import Race
+from main.model.character.utility.enumerators.ability_proficiency import AbilityProficiency
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 
@@ -176,42 +177,42 @@ def generate_character_abilities(
             self._strength = self._Ability(
                 strength,
                 Natural(race.get_strength_bonus()),
-                class_.get_strength_proficiency(),
+                class_.proficient(AbilityProficiency.STRENGTH),
                 proficiency_bonus
             )
 
             self._dexterity = self._Ability(
                 dexterity,
                 Natural(race.get_dexterity_bonus()),
-                class_.get_dexterity_proficiency(),
+                class_.proficient(AbilityProficiency.DEXTERITY),
                 proficiency_bonus
             )
 
             self._constitution = self._Ability(
                 constitution,
                 Natural(race.get_constitution_bonus()),
-                class_.get_constitution_proficiency(),
+                class_.proficient(AbilityProficiency.CONSTITUTION),
                 proficiency_bonus
             )
 
             self._intelligence = self._Ability(
                 intelligence,
                 Natural(race.get_intelligence_bonus()),
-                class_.get_intelligence_proficiency(),
+                class_.proficient(AbilityProficiency.INTELLIGENCE),
                 proficiency_bonus
             )
 
             self._wisdom = self._Ability(
                 wisdom,
                 Natural(race.get_wisdom_bonus()),
-                class_.get_wisdom_proficiency(),
+                class_.proficient(AbilityProficiency.WISDOM),
                 proficiency_bonus
             )
 
             self._charisma = self._Ability(
                 charisma,
                 Natural(race.get_charisma_bonus()),
-                class_.get_charisma_proficiency(),
+                class_.proficient(AbilityProficiency.CHARISMA),
                 proficiency_bonus
             )
 

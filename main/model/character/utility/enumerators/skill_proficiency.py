@@ -3,7 +3,7 @@ from enum import Enum
 
 class SkillProficiency(Enum):
     """
-    The character's proficiency in a skill
+    A skill that a character can be proficient in
     """
 
     ACROBATICS = 0

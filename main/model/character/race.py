@@ -14,6 +14,7 @@ class Race(ABC):
 
     # TODO: Add more parameters to account for all aspects of races
     # TODO: Return to dictionary of races?
+    # TODO: test all races and all of their aspects
 
     @staticmethod
     @abstractmethod
