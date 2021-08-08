@@ -8,31 +8,19 @@ from main.model.character.character import Character
 from main.model.character.classes.wizard import Wizard
 from main.model.character.races.elf import Elf
 from main.model.character.skills import generate_character_skills
+from main.model.character.utility.enumerators.skill_proficiency import SkillProficiency
 from main.model.int_types.natural import Natural
 
 
 class SkillsTest(unittest.TestCase):
     def setUp(self):
-        skills = generate_character_skills(
-            acrobatics_proficiency=True,
-            animal_handling_proficiency=True,
-            arcana_proficiency=False,
-            athletics_proficiency=False,
-            deception_proficiency=False,
-            history_proficiency=False,
-            insight_proficiency=True,
-            intimidation_proficiency=False,
-            investigation_proficiency=False,
-            medicine_proficiency=False,
-            nature_proficiency=False,
-            perception_proficiency=True,
-            performance_proficiency=False,
-            persuasion_proficiency=False,
-            religion_proficiency=False,
-            sleight_of_hand_proficiency=False,
-            stealth_proficiency=True,
-            survival_proficiency=False
-        )
+        skills = generate_character_skills((
+            SkillProficiency.ACROBATICS,
+            SkillProficiency.ANIMAL_HANDLING,
+            SkillProficiency.INSIGHT,
+            SkillProficiency.PERCEPTION,
+            SkillProficiency.STEALTH
+        ))
 
         abilities = generate_character_abilities(
             strength=AbilityScore(15),

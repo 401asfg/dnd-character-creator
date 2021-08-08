@@ -1,30 +1,16 @@
-from typing import Callable, Type, Tuple, Union, List
+from typing import Callable, Type, Tuple, Union
 
 from main.model.character.class_ import Class
-from main.model.character.classes.bard import Bard
-from main.model.character.classes.ranger import Ranger
-from main.model.character.classes.wizard import Wizard
 from main.model.character.race import Race
-from main.model.character.races.dragonborn import Dragonborn
-from main.model.character.races.dwarf import Dwarf
-from main.model.character.races.elf import Elf
-from main.model.character.races.gnome import Gnome
-from main.model.character.races.human import Human
 from main.model.int_types.natural import Natural
 
-_races = [
-    Dragonborn,
-    Dwarf,
-    Elf,
-    Gnome,
-    Human
-]
+_races = (
 
-_classes = [
-    Bard,
-    Ranger,
-    Wizard
-]
+)
+
+_classes = (
+
+)
 
 
 class CharacterBuilder:
@@ -60,20 +46,20 @@ class CharacterBuilder:
 
         # TODO: make sure documentation is correct
 
-        def operation(
-                exception_types: Union[Tuple[Type[Exception]], Tuple],
+        def parameter_setter(
+                exception_types: Union[Tuple[Type[Exception], ...], Tuple],
                 error_feedback: str,
                 next_prompt: str,
-                next_operation: Callable[[], None]
+                next_parameter_setter: Callable[[], None]
         ):
             """
-            Convert a function to be one of the builder's operations
+            Convert a function to be a parameter_setter
 
             :param exception_types: The exceptions that, if raised by the function, cause the next feedback to be set to
             the error_feedback and prevents both the next prompt and next operation from being set to the given values
             :param error_feedback: The message to set next feedback to should one of the exception_types be caught
             :param next_prompt: The message to set the next prompt to should no exception be caught
-            :param next_operation: The function to call should no exception be caught
+            :param next_parameter_setter: The function to call should no exception be caught
             :return: A function that will return a function that will call the converted function
             """
 
@@ -100,7 +86,7 @@ class CharacterBuilder:
 
                         self._next_feedback = "The response: " + fn_value + " was accepted."
                         self._next_prompt = next_prompt
-                        self._next_operation = next_operation
+                        self._next_parameter_setter = next_parameter_setter
                     except exception_types:
                         self._next_feedback = error_feedback
 
@@ -108,7 +94,7 @@ class CharacterBuilder:
 
             return get_caller
 
-        @operation(
+        @parameter_setter(
             (ValueError, IndexError),
             "The entered class index was not within acceptable bounds.",
             None,
@@ -124,7 +110,7 @@ class CharacterBuilder:
             """
             self._class = _classes[int(value) - 1]
 
-        @operation(
+        @parameter_setter(
             (ValueError, IndexError),
             "The entered race index was not within acceptable bounds.",
             class_setter_prompt,
@@ -141,7 +127,7 @@ class CharacterBuilder:
 
             self._race = _races[int(value) - 1]
 
-        @operation(
+        @parameter_setter(
             (ValueError,),
             "The entered age was not within acceptable bounds.",
             race_setter_prompt,
@@ -156,7 +142,7 @@ class CharacterBuilder:
 
             self._age = Natural(int(value))
 
-        @operation((), "", "Enter the character's age (can be a positive number):", set_age)
+        @parameter_setter((), "", "Enter the character's age (can be a positive number):", set_age)
         def set_name(value: str):
             """
             Set the name to the given value
@@ -167,7 +153,7 @@ class CharacterBuilder:
             self._name = value
 
         self._next_prompt: str = "Enter the character's name:"
-        self._next_operation: Callable[[str], None] = set_name
+        self._next_parameter_setter: Callable[[str], None] = set_name
         self._next_feedback: str = ""
 
     @property
@@ -175,17 +161,17 @@ class CharacterBuilder:
         return self._next_prompt
 
     @property
-    def next_operation(self) -> Callable[[str], None]:
-        return self._next_operation
+    def next_parameter_setter(self) -> Callable[[str], None]:
+        return self._next_parameter_setter
 
     @property
     def next_feedback(self) -> str:
         return self._next_feedback
 
     @property
-    def races(self) -> List[Type[Race]]:
+    def races(self) -> Tuple[Type[Race], ...]:
         return _races
 
     @property
-    def classes(self) -> List[Type[Class]]:
+    def classes(self) -> Tuple[Type[Class], ...]:
         return _classes

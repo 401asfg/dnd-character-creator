@@ -1,4 +1,4 @@
-from typing import List
+from typing import Tuple
 
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
@@ -43,18 +43,18 @@ class Tiefling(Race):
         return 0
 
     @staticmethod
-    def get_acceptable_alignment_natures() -> List[Alignment.Nature]:
-        return [
+    def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
+        return (
             Alignment.Nature.CHAOTIC,
             Alignment.Nature.NEUTRAL
-        ]
+        )
 
     @staticmethod
-    def get_acceptable_alignment_moralities() -> List[Alignment.Morality]:
-        return [
+    def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
+        return (
             Alignment.Morality.NEUTRAL,
             Alignment.Morality.EVIL
-        ]
+        )
 
     @staticmethod
     def get_min_adult_age() -> int:

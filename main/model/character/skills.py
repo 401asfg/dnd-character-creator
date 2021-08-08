@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Type
+from typing import Type, Tuple
 
 from main.model.character.abilities import Abilities
+from main.model.character.utility.enumerators.skill_proficiency import SkillProficiency
 from main.model.int_types.posint import Posint
 
 # TODO: test skills
@@ -172,48 +173,12 @@ class Skills(ABC):
 
 
 def generate_character_skills(
-        acrobatics_proficiency: bool,
-        animal_handling_proficiency: bool,
-        arcana_proficiency: bool,
-        athletics_proficiency: bool,
-        deception_proficiency: bool,
-        history_proficiency: bool,
-        insight_proficiency: bool,
-        intimidation_proficiency: bool,
-        investigation_proficiency : bool,
-        medicine_proficiency: bool,
-        nature_proficiency: bool,
-        perception_proficiency: bool,
-        performance_proficiency: bool,
-        persuasion_proficiency: bool,
-        religion_proficiency: bool,
-        sleight_of_hand_proficiency: bool,
-        stealth_proficiency: bool,
-        survival_proficiency: bool
+        skill_proficiencies: Tuple[SkillProficiency, ...]
 ) -> Type[Skills]:
     """
     Get the skills for a character
 
-    :param acrobatics_proficiency: Whether the character to whom these skills belong is proficient in acrobatics
-    :param animal_handling_proficiency: Whether the character to whom these skills belong is proficient in animal
-    handling
-    :param arcana_proficiency: Whether the character to whom these skills belong is proficient in arcana
-    :param athletics_proficiency: Whether the character to whom these skills belong is proficient in athletics
-    :param deception_proficiency: Whether the character to whom these skills belong is proficient in deception
-    :param history_proficiency: Whether the character to whom these skills belong is proficient in history
-    :param insight_proficiency: Whether the character to whom these skills belong is proficient in insight
-    :param intimidation_proficiency: Whether the character to whom these skills belong is proficient in intimidation
-    :param investigation_proficiency: Whether the character to whom these skills belong is proficient in investigation
-    :param medicine_proficiency: Whether the character to whom these skills belong is proficient in medicine
-    :param nature_proficiency: Whether the character to whom these skills belong is proficient in nature
-    :param perception_proficiency: Whether the character to whom these skills belong is proficient in perception
-    :param performance_proficiency: Whether the character to whom these skills belong is proficient in performance
-    :param persuasion_proficiency: Whether the character to whom these skills belong is proficient in persuasion
-    :param religion_proficiency: Whether the character to whom these skills belong is proficient in religion
-    :param sleight_of_hand_proficiency: Whether the character to whom these skills belong is proficient in sleight of
-    hand
-    :param stealth_proficiency: Whether the character to whom these skills belong is proficient in stealth
-    :param survival_proficiency: Whether the character to whom these skills belong is proficient in survival
+    :param skill_proficiencies: The skills that the character is proficient in
     :return: The skills of a character
     """
 
@@ -241,24 +206,51 @@ def generate_character_skills(
                 charisma: Abilities.Ability,
                 proficiency_bonus: Posint
         ):
-            self._acrobatics = self._Skill(dexterity, acrobatics_proficiency, proficiency_bonus)
-            self._animal_handling = self._Skill(wisdom, animal_handling_proficiency, proficiency_bonus)
-            self._arcana = self._Skill(intelligence, arcana_proficiency, proficiency_bonus)
-            self._athletics = self._Skill(strength, athletics_proficiency, proficiency_bonus)
-            self._deception = self._Skill(charisma, deception_proficiency, proficiency_bonus)
-            self._history = self._Skill(intelligence, history_proficiency, proficiency_bonus)
-            self._insight = self._Skill(wisdom, insight_proficiency, proficiency_bonus)
-            self._intimidation = self._Skill(charisma, intimidation_proficiency, proficiency_bonus)
-            self._investigation = self._Skill(intelligence, investigation_proficiency, proficiency_bonus)
-            self._medicine = self._Skill(wisdom, medicine_proficiency, proficiency_bonus)
-            self._nature = self._Skill(intelligence, nature_proficiency, proficiency_bonus)
-            self._perception = self._Skill(wisdom, perception_proficiency, proficiency_bonus)
-            self._performance = self._Skill(charisma, performance_proficiency, proficiency_bonus)
-            self._persuasion = self._Skill(charisma, persuasion_proficiency, proficiency_bonus)
-            self._religion = self._Skill(intelligence, religion_proficiency, proficiency_bonus)
-            self._sleight_of_hand = self._Skill(dexterity, sleight_of_hand_proficiency, proficiency_bonus)
-            self._stealth = self._Skill(dexterity, stealth_proficiency, proficiency_bonus)
-            self._survival = self._Skill(wisdom, survival_proficiency, proficiency_bonus)
+            def proficient(skill_proficiency: SkillProficiency) -> bool:
+                """
+                :param skill_proficiency: The skill proficiency
+                :return: True if the given skill_proficiency is in the set skill proficiencies that the character has;
+                otherwise, false
+                """
+
+                return skill_proficiency in skill_proficiencies
+
+            self._acrobatics = self._Skill(dexterity, proficient(SkillProficiency.ACROBATICS), proficiency_bonus)
+
+            self._animal_handling = self._Skill(
+                wisdom,
+                proficient(SkillProficiency.ANIMAL_HANDLING),
+                proficiency_bonus
+            )
+
+            self._arcana = self._Skill(intelligence, proficient(SkillProficiency.ARCANA), proficiency_bonus)
+            self._athletics = self._Skill(strength, proficient(SkillProficiency.ATHLETICS), proficiency_bonus)
+            self._deception = self._Skill(charisma, proficient(SkillProficiency.DECEPTION), proficiency_bonus)
+            self._history = self._Skill(intelligence, proficient(SkillProficiency.HISTORY), proficiency_bonus)
+            self._insight = self._Skill(wisdom, proficient(SkillProficiency.INSIGHT), proficiency_bonus)
+            self._intimidation = self._Skill(charisma, proficient(SkillProficiency.INTIMIDATION), proficiency_bonus)
+
+            self._investigation = self._Skill(
+                intelligence,
+                proficient(SkillProficiency.INVESTIGATION),
+                proficiency_bonus
+            )
+
+            self._medicine = self._Skill(wisdom, proficient(SkillProficiency.MEDICINE), proficiency_bonus)
+            self._nature = self._Skill(intelligence, proficient(SkillProficiency.NATURE), proficiency_bonus)
+            self._perception = self._Skill(wisdom, proficient(SkillProficiency.PERCEPTION), proficiency_bonus)
+            self._performance = self._Skill(charisma, proficient(SkillProficiency.PERFORMANCE), proficiency_bonus)
+            self._persuasion = self._Skill(charisma, proficient(SkillProficiency.PERSUASION), proficiency_bonus)
+            self._religion = self._Skill(intelligence, proficient(SkillProficiency.RELIGION), proficiency_bonus)
+
+            self._sleight_of_hand = self._Skill(
+                dexterity,
+                proficient(SkillProficiency.SLEIGHT_OF_HAND),
+                proficiency_bonus
+            )
+
+            self._stealth = self._Skill(dexterity, proficient(SkillProficiency.STEALTH), proficiency_bonus)
+            self._survival = self._Skill(wisdom, proficient(SkillProficiency.SURVIVAL), proficiency_bonus)
 
         @property
         def acrobatics(self) -> Skills.Skill:

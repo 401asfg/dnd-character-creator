@@ -10,6 +10,7 @@ from main.model.character.races.dragonborn import Dragonborn
 from main.model.character.races.dwarf import Dwarf
 from main.model.character.races.gnome import Gnome
 from main.model.character.skills import generate_character_skills
+from main.model.character.utility.enumerators.skill_proficiency import SkillProficiency
 from main.model.character.utility.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
@@ -32,26 +33,13 @@ class CharacterTest(unittest.TestCase):
             charisma=AbilityScore(15)
         )
 
-        self.skills = generate_character_skills(
-            acrobatics_proficiency=True,
-            animal_handling_proficiency=False,
-            athletics_proficiency=False,
-            arcana_proficiency=False,
-            deception_proficiency=False,
-            history_proficiency=True,
-            insight_proficiency=False,
-            intimidation_proficiency=False,
-            investigation_proficiency=False,
-            medicine_proficiency=False,
-            nature_proficiency=True,
-            perception_proficiency=True,
-            performance_proficiency=False,
-            persuasion_proficiency=False,
-            religion_proficiency=False,
-            sleight_of_hand_proficiency=False,
-            stealth_proficiency=False,
-            survival_proficiency=True
-        )
+        self.skills = generate_character_skills((
+            SkillProficiency.ACROBATICS,
+            SkillProficiency.HISTORY,
+            SkillProficiency.NATURE,
+            SkillProficiency.PERCEPTION,
+            SkillProficiency.SURVIVAL
+        ))
 
         self.personality = Personality(
             trait_one="Angry",
@@ -501,26 +489,12 @@ class CharacterTest(unittest.TestCase):
             charisma=AbilityScore(15)
         )
 
-        skillsB = generate_character_skills(
-            acrobatics_proficiency=True,
-            animal_handling_proficiency=False,
-            athletics_proficiency=False,
-            arcana_proficiency=False,
-            deception_proficiency=False,
-            history_proficiency=True,
-            insight_proficiency=False,
-            intimidation_proficiency=False,
-            investigation_proficiency=False,
-            medicine_proficiency=False,
-            nature_proficiency=True,
-            perception_proficiency=False,
-            performance_proficiency=False,
-            persuasion_proficiency=False,
-            religion_proficiency=False,
-            sleight_of_hand_proficiency=False,
-            stealth_proficiency=False,
-            survival_proficiency=True
-        )
+        skillsB = generate_character_skills((
+            SkillProficiency.ACROBATICS,
+            SkillProficiency.HISTORY,
+            SkillProficiency.NATURE,
+            SkillProficiency.SURVIVAL
+        ))
 
         characterB = Character(
             "Name",
@@ -550,26 +524,12 @@ class CharacterTest(unittest.TestCase):
             charisma=AbilityScore(15)
         )
 
-        skillsB = generate_character_skills(
-            acrobatics_proficiency=True,
-            animal_handling_proficiency=False,
-            athletics_proficiency=False,
-            arcana_proficiency=False,
-            deception_proficiency=False,
-            history_proficiency=True,
-            insight_proficiency=False,
-            intimidation_proficiency=False,
-            investigation_proficiency=False,
-            medicine_proficiency=False,
-            nature_proficiency=True,
-            perception_proficiency=False,
-            performance_proficiency=False,
-            persuasion_proficiency=False,
-            religion_proficiency=False,
-            sleight_of_hand_proficiency=False,
-            stealth_proficiency=False,
-            survival_proficiency=True
-        )
+        skillsB = generate_character_skills((
+            SkillProficiency.ACROBATICS,
+            SkillProficiency.HISTORY,
+            SkillProficiency.NATURE,
+            SkillProficiency.SURVIVAL
+        ))
 
         characterB = Character(
             "Name",
@@ -641,38 +601,24 @@ class CharacterTest(unittest.TestCase):
                 charisma=AbilityScore(15)
             )
 
-            skillsB = generate_character_skills(
-                acrobatics_proficiency=True,
-                animal_handling_proficiency=False,
-                athletics_proficiency=False,
-                arcana_proficiency=False,
-                deception_proficiency=False,
-                history_proficiency=True,
-                insight_proficiency=False,
-                intimidation_proficiency=False,
-                investigation_proficiency=False,
-                medicine_proficiency=False,
-                nature_proficiency=True,
-                perception_proficiency=False,
-                performance_proficiency=False,
-                persuasion_proficiency=False,
-                religion_proficiency=False,
-                sleight_of_hand_proficiency=False,
-                stealth_proficiency=False,
-                survival_proficiency=True
-            )
+            skillsB = generate_character_skills((
+                SkillProficiency.ACROBATICS,
+                SkillProficiency.HISTORY,
+                SkillProficiency.NATURE,
+                SkillProficiency.SURVIVAL
+            ))
 
             characterB = Character(
-                "Name",
-                "Player Name",
-                Wizard,
-                race,
-                abilitiesB,
-                skillsB,
-                "Background",
-                self.personality,
-                alignment,
-                Natural(22)
+                name="Name",
+                player_name="Player Name",
+                class_=Wizard,
+                race=race,
+                abilities=abilitiesB,
+                skills=skillsB,
+                background="Background",
+                personality=self.personality,
+                alignment=alignment,
+                age=Natural(22)
             )
 
             self.assertEqual(characterB.size, expected_size)
@@ -741,26 +687,12 @@ class CharacterTest(unittest.TestCase):
                 charisma=AbilityScore(15)
             )
 
-            skillsB = generate_character_skills(
-                acrobatics_proficiency=True,
-                animal_handling_proficiency=False,
-                athletics_proficiency=False,
-                arcana_proficiency=False,
-                deception_proficiency=False,
-                history_proficiency=True,
-                insight_proficiency=False,
-                intimidation_proficiency=False,
-                investigation_proficiency=False,
-                medicine_proficiency=False,
-                nature_proficiency=True,
-                perception_proficiency=False,
-                performance_proficiency=False,
-                persuasion_proficiency=False,
-                religion_proficiency=False,
-                sleight_of_hand_proficiency=False,
-                stealth_proficiency=False,
-                survival_proficiency=True
-            )
+            skillsB = generate_character_skills((
+                SkillProficiency.ACROBATICS,
+                SkillProficiency.HISTORY,
+                SkillProficiency.NATURE,
+                SkillProficiency.SURVIVAL
+            ))
 
             characterB = Character(
                 "Name",

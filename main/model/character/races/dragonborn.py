@@ -1,4 +1,4 @@
-from typing import List
+from typing import Tuple
 
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
@@ -43,19 +43,19 @@ class Dragonborn(Race):
         return 0
 
     @staticmethod
-    def get_acceptable_alignment_natures() -> List[Alignment.Nature]:
-        return [
+    def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
+        return (
             Alignment.Nature.LAWFUL,
             Alignment.Nature.NEUTRAL,
             Alignment.Nature.CHAOTIC
-        ]
+        )
 
     @staticmethod
-    def get_acceptable_alignment_moralities() -> List[Alignment.Morality]:
-        return [
+    def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
+        return (
             Alignment.Morality.GOOD,
             Alignment.Morality.EVIL
-        ]
+        )
 
     @staticmethod
     def get_min_adult_age() -> int:

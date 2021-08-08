@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import List
+from typing import Tuple
 
 from main.model.character.alignment import Alignment
 from main.model.character.utility.enumerators.size import Size
@@ -89,7 +89,7 @@ class Race(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_acceptable_alignment_natures() -> List[Alignment.Nature]:
+    def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
         """
         :return: The alignment natures that a character can have
         """
@@ -98,7 +98,7 @@ class Race(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_acceptable_alignment_moralities() -> List[Alignment.Morality]:
+    def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
         """
         :return: The alignment moralities that a character can have
         """

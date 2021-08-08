@@ -76,53 +76,53 @@ class RaceTest(unittest.TestCase):
     def test_get_acceptable_alignment_natures(self):
         self.assertEqual(
             Elf.get_acceptable_alignment_natures(),
-            [
+            (
                 Alignment.Nature.NEUTRAL,
                 Alignment.Nature.CHAOTIC
-            ]
+            )
         )
 
         self.assertEqual(
             Gnome.get_acceptable_alignment_natures(),
-            [
+            (
                 Alignment.Nature.LAWFUL,
                 Alignment.Nature.NEUTRAL,
                 Alignment.Nature.CHAOTIC
-            ]
+            )
         )
 
         self.assertEqual(
             Dwarf.get_acceptable_alignment_natures(),
-            [
+            (
                 Alignment.Nature.LAWFUL,
                 Alignment.Nature.NEUTRAL
-            ]
+            )
         )
 
     def test_get_acceptable_alignment_moralities(self):
         self.assertEqual(
             Dragonborn.get_acceptable_alignment_moralities(),
-            [
+            (
                 Alignment.Morality.GOOD,
                 Alignment.Morality.EVIL
-            ]
+            )
         )
 
         self.assertEqual(
             Gnome.get_acceptable_alignment_moralities(),
-            [
+            (
                 Alignment.Morality.GOOD,
                 Alignment.Morality.NEUTRAL
-            ]
+            )
         )
 
         self.assertEqual(
             Human.get_acceptable_alignment_moralities(),
-            [
+            (
                 Alignment.Morality.GOOD,
                 Alignment.Morality.NEUTRAL,
                 Alignment.Morality.EVIL
-            ]
+            )
         )
 
     def test_get_min_adult_age(self):
