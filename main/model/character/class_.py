@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import Tuple
 
-from main.model.character.utility.enumerators.ability_proficiency import AbilityProficiency
+from main.model.character.utility.enumerators.ability import Ability
 from main.model.dice.die import Die
 
 
@@ -31,17 +31,17 @@ class Class(ABC):
         _error()
 
     @classmethod
-    def proficient(cls, ability_proficiency: AbilityProficiency) -> bool:
+    def proficient_in_ability(cls, ability: Ability) -> bool:
         """
-        :param ability_proficiency: The ability proficiency
-        :return: True if the given ability_proficiency is in class' ability proficiencies set; otherwise, false
+        :param ability: The ability proficiency to check
+        :return: True if the given ability is in class' ability proficiencies set; otherwise, false
         """
 
-        return ability_proficiency in cls._get_ability_proficiencies()
+        return ability in cls._get_ability_proficiencies()
 
     @staticmethod
     @abstractmethod
-    def _get_ability_proficiencies() -> Tuple[AbilityProficiency, ...]:
+    def _get_ability_proficiencies() -> Tuple[Ability, ...]:
         """
         :return: The abilities that a character of this class is proficient in
         """

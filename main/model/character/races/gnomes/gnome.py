@@ -1,18 +1,19 @@
+from abc import ABC
 from typing import Tuple, Dict
 
 from main.model.character.alignment import Alignment
 from main.model.character.utility.helper_modules.common_race_collection_items import get_darkvision, get_language
 from main.model.character.race import Race
+from main.model.character.races.half_elf import Language
 from main.model.character.utility.enumerators.ability import Ability
-from main.model.character.utility.enumerators.language import Language
 from main.model.character.utility.enumerators.size import Size
 from main.model.character.utility.enumerators.skill import Skill
 from main.model.collection.collection_item import CollectionItem
 
 
-class HalfOrc(Race):
+class Gnome(Race, ABC):
     """
-    The racial information for a half-orc character
+    The racial information for a gnome character
     """
 
     @property
@@ -20,14 +21,8 @@ class HalfOrc(Race):
         return (
             get_darkvision(),
             CollectionItem(
-                "Relentless Endurance",
-                "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. "
-                "You can’t use this feature again until you finish a long rest."
-            ),
-            CollectionItem(
-                "Savage Attacks",
-                "When you score a critical hit with a melee weapon attack, you can roll one of the weapon’s damage "
-                "dice one additional time and add it to the extra damage of the critical hit."
+                "Gnome Cunning",
+                "You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic."
             )
         )
 
@@ -35,19 +30,20 @@ class HalfOrc(Race):
     def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
         return (
             get_language(Language.COMMON),
-            get_language(Language.ORC)
+            get_language(Language.GNOMISH)
         )
 
     def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
-        return (Skill.INTIMIDATION,)
+        return ()
 
     @staticmethod
     def get_name() -> str:
-        return "Half-Orc"
+        return "Gnome"
 
     @staticmethod
     def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
         return (
+            Alignment.Nature.LAWFUL,
             Alignment.Nature.NEUTRAL,
             Alignment.Nature.CHAOTIC
         )
@@ -55,25 +51,25 @@ class HalfOrc(Race):
     @staticmethod
     def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
         return (
-            Alignment.Morality.NEUTRAL,
-            Alignment.Morality.EVIL
+            Alignment.Morality.GOOD,
+            Alignment.Morality.NEUTRAL
         )
 
     @staticmethod
     def get_min_adult_age() -> int:
-        return 14
+        return 350
 
     @staticmethod
     def get_life_expectancy() -> int:
-        return 75
+        return 500
 
     @staticmethod
     def get_size() -> Size:
-        return Size.MEDIUM
+        return Size.SMALL
 
     @staticmethod
     def get_speed() -> int:
-        return 30
+        return 25
 
     @staticmethod
     def get_hit_point_bonus() -> int:
@@ -81,5 +77,5 @@ class HalfOrc(Race):
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return {
-            Ability.STRENGTH: 2
+            Ability.INTELLIGENCE: 2
         }

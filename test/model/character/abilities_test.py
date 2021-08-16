@@ -4,8 +4,9 @@ from main.model.character.abilities import generate_character_abilities
 from main.model.character.utility.ability_score import AbilityScore
 from main.model.character.classes.bard import Bard
 from main.model.character.classes.ranger import Ranger
-from main.model.character.races.dragonborn import Dragonborn
+from main.model.character.races.dragonborn import Dragonborn, DraconicAncestry
 from main.model.character.races.human import Human
+from main.model.character.utility.enumerators.language import Language
 from main.model.int_types.posint import Posint
 
 
@@ -21,7 +22,7 @@ class AbilitiesTest(unittest.TestCase):
         )
 
         self.abilities = abilities_class(
-            race=Dragonborn,
+            race=Dragonborn(DraconicAncestry.BLUE),
             class_=Bard,
             proficiency_bonus=Posint(3)
         )
@@ -36,7 +37,7 @@ class AbilitiesTest(unittest.TestCase):
         )
 
         self.abilitiesB = abilities_class(
-            race=Human,
+            race=Human(Language.ELVISH),
             class_=Ranger,
             proficiency_bonus=Posint(5)
         )

@@ -1,4 +1,4 @@
-from main.model.character.advancements import get_level, get_proficiency_bonus
+from main.model.character.utility.helper_modules.advancements import get_level, get_proficiency_bonus
 from main.model.character.inventory.inventory import Inventory
 from main.model.character.personality import Personality
 from main.model.character.purse import Purse
@@ -24,6 +24,8 @@ class Character:
 
     # TODO: all tests have actual and expected backwards?
 
+    # TODO: make sure all classes raise correct exceptions (not just ValueError for everything)
+
     MAX_SUCCESSFUL_DEATH_SAVES = 3
     MAX_FAILED_DEATH_SAVES = 3
     _BASE_PASSIVE_WISDOM = 10
@@ -38,7 +40,7 @@ class Character:
             name: str,
             player_name: str,
             class_: Type[Class],
-            race: Type[Race],
+            race: Race,
             abilities: Type[Abilities],
             skills: Type[Skills],
             background: str,
@@ -47,8 +49,8 @@ class Character:
             age: Natural
     ):
         """
-        Builds the character in its initial state; raises ValueError if the given level is unreachable or the given
-        alignment is inappropriate for a character of the given race
+        Builds the character in its initial state; raises ValueError if the given alignment is not acceptable for a
+        character of the given race
 
         :param name: The character's name
         :param player_name: Name of the player playing the character
@@ -71,11 +73,7 @@ class Character:
         self._abilities = abilities(self._race, self._class, Posint(self.proficiency_bonus))
 
         self._skills = skills(
-            strength=self.abilities.strength,
-            dexterity=self.abilities.dexterity,
-            intelligence=self.abilities.intelligence,
-            wisdom=self.abilities.wisdom,
-            charisma=self.abilities.charisma,
+            abilities=self.abilities,
             proficiency_bonus=Posint(self.proficiency_bonus)
         )
 
@@ -285,8 +283,8 @@ class Character:
         return self._purse
 
     @property
-    def proficiencies(self) -> Collection:
-        return self._proficiencies
+    def other_proficiencies(self) -> Collection:
+        return self._other_proficiencies
 
     @property
     def features(self) -> Collection:
@@ -363,7 +361,7 @@ class Character:
             name: str,
             player_name: str,
             class_: Type[Class],
-            race: Type[Race],
+            race: Race,
             background: str,
             personality: Personality,
             age: Natural
@@ -439,13 +437,22 @@ class Character:
         Initializes fields derived from the values of previously defined fields
         """
 
-        self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier
+        self._max_hit_points = self._class.get_hit_die().max_possible_score + self.abilities.constitution.modifier + \
+                               self._race.get_hit_point_bonus()
         self._hit_points = self._max_hit_points
 
         self._inventory = Inventory(self._get_inventory_max_weight())
         self._purse = Purse()
-        self._proficiencies = Collection()
+
+        self._other_proficiencies = Collection()
+
+        for proficiency in self._race.other_proficiencies:
+            self.other_proficiencies.add(proficiency)
+
         self._features = Collection()
+
+        for feature in self._race.traits:
+            self.features.add(feature)
 
     ###### PRIVATE HELPER METHODS ######
 

@@ -1,20 +1,21 @@
 import unittest
-from typing import Type
 
 from main.model.character.abilities import generate_character_abilities
 from main.model.character.personality import Personality
 from main.model.character.utility.ability_score import AbilityScore
 from main.model.character.classes.wizard import Wizard
 from main.model.character.race import Race
-from main.model.character.races.dragonborn import Dragonborn
-from main.model.character.races.dwarf import Dwarf
-from main.model.character.races.gnome import Gnome
+from main.model.character.races.dragonborn import Dragonborn, DraconicAncestry
+from main.model.character.races.dwarves.dwarf import Dwarf, ToolProficiency
+from main.model.character.races.gnomes.gnome import Gnome
 from main.model.character.skills import generate_character_skills
-from main.model.character.utility.enumerators.skill_proficiency import SkillProficiency
+from main.model.character.utility.enumerators.language import Language
+from main.model.character.utility.enumerators.skill import Skill
+from main.model.character.utility.helper_modules.common_race_collection_items import get_language
 from main.model.character.utility.incorrect_character_state_exception import IncorrectCharacterStateException
 from main.model.character.alignment import Alignment
 from main.model.character.character import Character
-from main.model.character.races.elf import Elf
+from main.model.character.races.elves.elf import Elf
 from main.model.character.races.human import Human
 from main.model.character.utility.enumerators.size import Size
 from main.model.character.utility.enumerators.state import State
@@ -34,11 +35,11 @@ class CharacterTest(unittest.TestCase):
         )
 
         self.skills = generate_character_skills((
-            SkillProficiency.ACROBATICS,
-            SkillProficiency.HISTORY,
-            SkillProficiency.NATURE,
-            SkillProficiency.PERCEPTION,
-            SkillProficiency.SURVIVAL
+            Skill.ACROBATICS,
+            Skill.HISTORY,
+            Skill.NATURE,
+            Skill.PERCEPTION,
+            Skill.SURVIVAL
         ))
 
         self.personality = Personality(
@@ -53,7 +54,7 @@ class CharacterTest(unittest.TestCase):
             "Name",
             "Player Name",
             Wizard,
-            Human,
+            Human(Language.ELVISH),
             self.abilities,
             self.skills,
             "Background",
@@ -136,7 +137,9 @@ class CharacterTest(unittest.TestCase):
         self.assertEqual(0, self.character.inventory.weight)
         self.assertEqual(0, len(self.character.inventory))
 
-        self.assertEqual(0, len(self.character.proficiencies))
+        self.assertEqual(2, len(self.character.other_proficiencies))
+        self.assertEqual(get_language(Language.COMMON), self.character.other_proficiencies.get(0))
+        self.assertEqual(get_language(Language.ELVISH), self.character.other_proficiencies.get(1))
         self.assertEqual(0, len(self.character.features))
 
         self.assertEqual("Angry", self.character.personality.trait_one)
@@ -151,7 +154,7 @@ class CharacterTest(unittest.TestCase):
                 "Name",
                 "Player Name",
                 Wizard,
-                Elf,
+                Elf(),
                 self.abilities,
                 self.skills,
                 "Background",
@@ -490,17 +493,17 @@ class CharacterTest(unittest.TestCase):
         )
 
         skillsB = generate_character_skills((
-            SkillProficiency.ACROBATICS,
-            SkillProficiency.HISTORY,
-            SkillProficiency.NATURE,
-            SkillProficiency.SURVIVAL
+            Skill.ACROBATICS,
+            Skill.HISTORY,
+            Skill.NATURE,
+            Skill.SURVIVAL
         ))
 
         characterB = Character(
             "Name",
             "Player Name",
             Wizard,
-            Human,
+            Human(Language.ORC),
             abilitiesB,
             skillsB,
             "Background",
@@ -525,17 +528,17 @@ class CharacterTest(unittest.TestCase):
         )
 
         skillsB = generate_character_skills((
-            SkillProficiency.ACROBATICS,
-            SkillProficiency.HISTORY,
-            SkillProficiency.NATURE,
-            SkillProficiency.SURVIVAL
+            Skill.ACROBATICS,
+            Skill.HISTORY,
+            Skill.NATURE,
+            Skill.SURVIVAL
         ))
 
         characterB = Character(
             "Name",
             "Player Name",
             Wizard,
-            Human,
+            Human(Language.GIANT),
             abilitiesB,
             skillsB,
             "Background",
@@ -583,7 +586,7 @@ class CharacterTest(unittest.TestCase):
         assert_proficiency_bonus(50000, 20, 6)
 
     def test_size(self):
-        def assert_size(race: Type[Race], alignment: Alignment, expected_size: Size):
+        def assert_size(race: Race, alignment: Alignment, expected_size: Size):
             """
             Asserts that a character of the given race has the size
 
@@ -602,10 +605,10 @@ class CharacterTest(unittest.TestCase):
             )
 
             skillsB = generate_character_skills((
-                SkillProficiency.ACROBATICS,
-                SkillProficiency.HISTORY,
-                SkillProficiency.NATURE,
-                SkillProficiency.SURVIVAL
+                Skill.ACROBATICS,
+                Skill.HISTORY,
+                Skill.NATURE,
+                Skill.SURVIVAL
             ))
 
             characterB = Character(
@@ -624,7 +627,7 @@ class CharacterTest(unittest.TestCase):
             self.assertEqual(characterB.size, expected_size)
 
         assert_size(
-            Dragonborn,
+            Dragonborn(DraconicAncestry.BLACK),
             Alignment(
                 Alignment.Nature.CHAOTIC,
                 Alignment.Morality.EVIL
@@ -633,7 +636,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_size(
-            Dwarf,
+            Dwarf(ToolProficiency.SMITHS_TOOLS),
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.GOOD
@@ -642,7 +645,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_size(
-            Elf,
+            Elf(),
             Alignment(
                 Alignment.Nature.CHAOTIC,
                 Alignment.Morality.GOOD
@@ -651,7 +654,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_size(
-            Gnome,
+            Gnome(),
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.NEUTRAL
@@ -660,7 +663,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_size(
-            Human,
+            Human(Language.SYLVAN),
             Alignment(
                 Alignment.Nature.CHAOTIC,
                 Alignment.Morality.EVIL
@@ -669,7 +672,7 @@ class CharacterTest(unittest.TestCase):
         )
 
     def test_speed(self):
-        def assert_speed(race: Type[Race], alignment: Alignment, expected_speed: int):
+        def assert_speed(race: Race, alignment: Alignment, expected_speed: int):
             """
             Asserts that a character of the given race has the speed
 
@@ -688,10 +691,10 @@ class CharacterTest(unittest.TestCase):
             )
 
             skillsB = generate_character_skills((
-                SkillProficiency.ACROBATICS,
-                SkillProficiency.HISTORY,
-                SkillProficiency.NATURE,
-                SkillProficiency.SURVIVAL
+                Skill.ACROBATICS,
+                Skill.HISTORY,
+                Skill.NATURE,
+                Skill.SURVIVAL
             ))
 
             characterB = Character(
@@ -710,7 +713,7 @@ class CharacterTest(unittest.TestCase):
             self.assertEqual(characterB.speed, expected_speed)
 
         assert_speed(
-            Dragonborn,
+            Dragonborn(DraconicAncestry.BRONZE),
             Alignment(
                 Alignment.Nature.CHAOTIC,
                 Alignment.Morality.EVIL
@@ -719,7 +722,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_speed(
-            Dwarf,
+            Dwarf(ToolProficiency.MASONS_TOOLS),
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.GOOD
@@ -728,7 +731,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_speed(
-            Elf,
+            Elf(),
             Alignment(
                 Alignment.Nature.CHAOTIC,
                 Alignment.Morality.GOOD
@@ -737,7 +740,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_speed(
-            Gnome,
+            Gnome(),
             Alignment(
                 Alignment.Nature.LAWFUL,
                 Alignment.Morality.NEUTRAL
@@ -746,7 +749,7 @@ class CharacterTest(unittest.TestCase):
         )
 
         assert_speed(
-            Human,
+            Human(Language.INFERNAL),
             Alignment(
                 Alignment.Nature.CHAOTIC,
                 Alignment.Morality.EVIL

@@ -1,7 +1,8 @@
+from abc import ABC
 from typing import Tuple, Dict
 
 from main.model.character.alignment import Alignment
-from main.model.character.utility.helper_modules.common_race_collection_items import get_darkvision, get_language
+from main.model.character.utility.helper_modules.common_race_collection_items import get_language
 from main.model.character.race import Race
 from main.model.character.utility.enumerators.ability import Ability
 from main.model.character.utility.enumerators.language import Language
@@ -10,24 +11,26 @@ from main.model.character.utility.enumerators.skill import Skill
 from main.model.collection.collection_item import CollectionItem
 
 
-class HalfOrc(Race):
+class Halfling(Race, ABC):
     """
-    The racial information for a half-orc character
+    The racial information for a halfling character
     """
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
         return (
-            get_darkvision(),
             CollectionItem(
-                "Relentless Endurance",
-                "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. "
-                "You can’t use this feature again until you finish a long rest."
+                "Lucky",
+                "When you roll a 1 on the d20 for an attack roll, ability check, or saving throw, you can reroll the "
+                "die and must use the new roll."
             ),
             CollectionItem(
-                "Savage Attacks",
-                "When you score a critical hit with a melee weapon attack, you can roll one of the weapon’s damage "
-                "dice one additional time and add it to the extra damage of the critical hit."
+                "Brave",
+                "You have advantage on saving throws against being frightened."
+            ),
+            CollectionItem(
+                "Halfling Nimbleness",
+                "You can move through the space of any creature that is of a size larger than yours."
             )
         )
 
@@ -35,45 +38,45 @@ class HalfOrc(Race):
     def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
         return (
             get_language(Language.COMMON),
-            get_language(Language.ORC)
+            get_language(Language.HALFLING)
         )
 
     def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
-        return (Skill.INTIMIDATION,)
+        return ()
 
     @staticmethod
     def get_name() -> str:
-        return "Half-Orc"
+        return "Halfling"
 
     @staticmethod
     def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
         return (
-            Alignment.Nature.NEUTRAL,
-            Alignment.Nature.CHAOTIC
+            Alignment.Nature.LAWFUL,
+            Alignment.Nature.NEUTRAL
         )
 
     @staticmethod
     def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
         return (
-            Alignment.Morality.NEUTRAL,
-            Alignment.Morality.EVIL
+            Alignment.Morality.GOOD,
+            Alignment.Morality.NEUTRAL
         )
 
     @staticmethod
     def get_min_adult_age() -> int:
-        return 14
+        return 20
 
     @staticmethod
     def get_life_expectancy() -> int:
-        return 75
+        return 150
 
     @staticmethod
     def get_size() -> Size:
-        return Size.MEDIUM
+        return Size.SMALL
 
     @staticmethod
     def get_speed() -> int:
-        return 30
+        return 25
 
     @staticmethod
     def get_hit_point_bonus() -> int:
@@ -81,5 +84,5 @@ class HalfOrc(Race):
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return {
-            Ability.STRENGTH: 2
+            Ability.DEXTERITY: 2
         }

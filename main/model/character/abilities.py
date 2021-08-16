@@ -5,7 +5,7 @@ from typing import Type
 from main.model.character.utility.ability_score import AbilityScore
 from main.model.character.class_ import Class
 from main.model.character.race import Race
-from main.model.character.utility.enumerators.ability_proficiency import AbilityProficiency
+from main.model.character.utility.enumerators.ability import Ability
 from main.model.int_types.natural import Natural
 from main.model.int_types.posint import Posint
 
@@ -78,7 +78,7 @@ class Abilities(ABC):
     @abstractmethod
     def __init__(
             self,
-            race: Type[Race],
+            race: Race,
             class_: Type[Class],
             proficiency_bonus: Posint
     ):
@@ -170,49 +170,49 @@ def generate_character_abilities(
 
         def __init__(
                 self,
-                race: Type[Race],
+                race: Race,
                 class_: Type[Class],
                 proficiency_bonus: Posint
         ):
             self._strength = self._Ability(
                 strength,
-                Natural(race.get_strength_bonus()),
-                class_.proficient(AbilityProficiency.STRENGTH),
+                Natural(race.get_ability_bonus(Ability.STRENGTH)),
+                class_.proficient_in_ability(Ability.STRENGTH),
                 proficiency_bonus
             )
 
             self._dexterity = self._Ability(
                 dexterity,
-                Natural(race.get_dexterity_bonus()),
-                class_.proficient(AbilityProficiency.DEXTERITY),
+                Natural(race.get_ability_bonus(Ability.DEXTERITY)),
+                class_.proficient_in_ability(Ability.DEXTERITY),
                 proficiency_bonus
             )
 
             self._constitution = self._Ability(
                 constitution,
-                Natural(race.get_constitution_bonus()),
-                class_.proficient(AbilityProficiency.CONSTITUTION),
+                Natural(race.get_ability_bonus(Ability.CONSTITUTION)),
+                class_.proficient_in_ability(Ability.CONSTITUTION),
                 proficiency_bonus
             )
 
             self._intelligence = self._Ability(
                 intelligence,
-                Natural(race.get_intelligence_bonus()),
-                class_.proficient(AbilityProficiency.INTELLIGENCE),
+                Natural(race.get_ability_bonus(Ability.INTELLIGENCE)),
+                class_.proficient_in_ability(Ability.INTELLIGENCE),
                 proficiency_bonus
             )
 
             self._wisdom = self._Ability(
                 wisdom,
-                Natural(race.get_wisdom_bonus()),
-                class_.proficient(AbilityProficiency.WISDOM),
+                Natural(race.get_ability_bonus(Ability.WISDOM)),
+                class_.proficient_in_ability(Ability.WISDOM),
                 proficiency_bonus
             )
 
             self._charisma = self._Ability(
                 charisma,
-                Natural(race.get_charisma_bonus()),
-                class_.proficient(AbilityProficiency.CHARISMA),
+                Natural(race.get_ability_bonus(Ability.CHARISMA)),
+                class_.proficient_in_ability(Ability.CHARISMA),
                 proficiency_bonus
             )
 

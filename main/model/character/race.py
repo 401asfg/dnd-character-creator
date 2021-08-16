@@ -1,8 +1,11 @@
 from abc import abstractmethod, ABC
-from typing import Tuple
+from typing import Tuple, Dict
 
 from main.model.character.alignment import Alignment
+from main.model.character.utility.enumerators.ability import Ability
 from main.model.character.utility.enumerators.size import Size
+from main.model.character.utility.enumerators.skill import Skill
+from main.model.collection.collection_item import CollectionItem
 
 
 class Race(ABC):
@@ -10,80 +13,59 @@ class Race(ABC):
     The abstract representation of a character's race; not to be used, only inherited
     """
 
+    # TODO: test all subclasses independently
+
     # TODO: refactor this and class into subclasses of new type
 
     # TODO: Add more parameters to account for all aspects of races
     # TODO: Return to dictionary of races?
     # TODO: test all races and all of their aspects
 
+    @property
+    @abstractmethod
+    def traits(self) -> Tuple[CollectionItem, ...]:
+        """
+        :return: The traits of a character of this race
+        """
+
+        _error()
+
+    @property
+    @abstractmethod
+    def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
+        """
+        :return: The other proficiencies of this race
+        """
+
+        _error()
+
+    def get_ability_bonus(self, ability: Ability) -> int:
+        """
+        :param ability: The ability to get the racial bonus of
+        :return: The bonus, for the given ability, that a character of this race gets; 0 if this race has no bonus for
+        the given ability
+        """
+
+        ability_bonuses = self._get_ability_bonuses()
+
+        if ability not in ability_bonuses:
+            return 0
+
+        return ability_bonuses[ability]
+
+    def proficient_in_skill(self, skill: Skill) -> bool:
+        """
+        :param skill: The skill proficiency to check
+        :return: True if the given skill is in class' skill proficiencies set; otherwise, false
+        """
+
+        return skill in self._get_skill_proficiencies()
+
     @staticmethod
     @abstractmethod
     def get_name() -> str:
         """
         :return: The race's name
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_strength_bonus() -> int:
-        """
-        :return: The racial bonus given to a character's strength stat
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_dexterity_bonus() -> int:
-        """
-        :return: The racial bonus given to a character's dexterity stat
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_constitution_bonus() -> int:
-        """
-        :return: The racial bonus given to a character's constitution stat
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_intelligence_bonus() -> int:
-        """
-        :return: The racial bonus given to a character's intelligence stat
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_wisdom_bonus() -> int:
-        """
-        :return: The racial bonus given to a character's wisdom stat
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_charisma_bonus() -> int:
-        """
-        :return: The racial bonus given to a character's charisma stat
-        """
-
-        _error()
-
-    @staticmethod
-    @abstractmethod
-    def get_additional_ability_bonus() -> int:
-        """
-        :return: The racial bonus given to one of the character's ability stats, chosen by the player
         """
 
         _error()
@@ -141,6 +123,68 @@ class Race(ABC):
         """
 
         _error()
+
+    @staticmethod
+    @abstractmethod
+    def get_hit_point_bonus() -> int:
+        """
+        :return: The max hit point increase that a character of this race has
+        """
+
+        _error()
+
+    @abstractmethod
+    def _get_ability_bonuses(self) -> Dict[Ability, int]:
+        """
+        :return: The ability bonuses that a character of this race has; doesn't contain entries for abilities that
+        won't provide a bonus
+        """
+
+        _error()
+
+    @abstractmethod
+    def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
+        """
+        :return: The skills that a character of this race is proficient in
+        """
+
+        _error()
+
+    @staticmethod
+    def _get_appended_collection(
+            collection: Tuple[CollectionItem, ...],
+            name: str,
+            info: str
+    ) -> Tuple[CollectionItem, ...]:
+        """
+        Get the given collection with a collection item, containing the given name and info, appended to it
+
+        :param collection: The original collection, which has a collection item, containing the given name and info,
+        appended to it
+        :param name: The name of the collection item that is appended to the collection
+        :param info: The info of the collection item that is appended to the collection
+        :return: The given collection with a collection item, containing the given name and info, appended to it
+        """
+
+        return collection + (CollectionItem(name, info),)
+
+    @staticmethod
+    def _get_appended_ability_bonuses(
+            ability_bonuses: Dict[Ability, int],
+            ability: Ability,
+            bonus: int
+    ) -> Dict[Ability, int]:
+        """
+        Get the given ability_bonuses set with the given ability bonus appended to it
+
+        :param ability_bonuses: The original ability_bonuses set, which has the given ability bonus appended to it
+        :param ability: The key, that corresponds to the bonus value, to append to the ability_bonuses set
+        :param bonus: The value, that corresponds to the ability key, to append to the ability_bonuses set
+        :return: The given ability_bonuses set with the given ability bonus appended to it
+        """
+
+        ability_bonuses[ability] = bonus
+        return ability_bonuses
 
 
 def _error():

@@ -47,7 +47,7 @@ class CharacterBuilder:
         # TODO: make sure documentation is correct
 
         def parameter_setter(
-                exception_types: Union[Tuple[Type[Exception], ...], Tuple],
+                exception_types: Tuple[Type[Exception], ...],
                 error_feedback: str,
                 next_prompt: str,
                 next_parameter_setter: Callable[[], None]

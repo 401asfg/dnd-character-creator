@@ -3,7 +3,7 @@ import unittest
 from main.model.character.classes.bard import Bard
 from main.model.character.classes.ranger import Ranger
 from main.model.character.classes.wizard import Wizard
-from main.model.character.utility.enumerators.ability_proficiency import AbilityProficiency
+from main.model.character.utility.enumerators.ability import Ability
 
 
 class ClassTest(unittest.TestCase):
@@ -18,31 +18,31 @@ class ClassTest(unittest.TestCase):
         self.assertEqual(Wizard.get_hit_die().name, "1d6")
 
     def test_proficient_in_strength(self):
-        self.assertEqual(Bard.proficient(AbilityProficiency.STRENGTH), False)
-        self.assertEqual(Ranger.proficient(AbilityProficiency.STRENGTH), True)
-        self.assertEqual(Wizard.proficient(AbilityProficiency.STRENGTH), False)
+        self.assertEqual(Bard.proficient_in_ability(Ability.STRENGTH), False)
+        self.assertEqual(Ranger.proficient_in_ability(Ability.STRENGTH), True)
+        self.assertEqual(Wizard.proficient_in_ability(Ability.STRENGTH), False)
 
     def test_proficient_in_dexterity(self):
-        self.assertEqual(Bard.proficient(AbilityProficiency.DEXTERITY), True)
-        self.assertEqual(Ranger.proficient(AbilityProficiency.DEXTERITY), True)
-        self.assertEqual(Wizard.proficient(AbilityProficiency.DEXTERITY), False)
+        self.assertEqual(Bard.proficient_in_ability(Ability.DEXTERITY), True)
+        self.assertEqual(Ranger.proficient_in_ability(Ability.DEXTERITY), True)
+        self.assertEqual(Wizard.proficient_in_ability(Ability.DEXTERITY), False)
 
     def test_proficient_in_constitution(self):
-        self.assertEqual(Bard.proficient(AbilityProficiency.CONSTITUTION), False)
-        self.assertEqual(Ranger.proficient(AbilityProficiency.CONSTITUTION), False)
-        self.assertEqual(Wizard.proficient(AbilityProficiency.CONSTITUTION), False)
+        self.assertEqual(Bard.proficient_in_ability(Ability.CONSTITUTION), False)
+        self.assertEqual(Ranger.proficient_in_ability(Ability.CONSTITUTION), False)
+        self.assertEqual(Wizard.proficient_in_ability(Ability.CONSTITUTION), False)
 
     def test_proficient_in_intelligence(self):
-        self.assertEqual(Bard.proficient(AbilityProficiency.INTELLIGENCE), False)
-        self.assertEqual(Ranger.proficient(AbilityProficiency.INTELLIGENCE), False)
-        self.assertEqual(Wizard.proficient(AbilityProficiency.INTELLIGENCE), True)
+        self.assertEqual(Bard.proficient_in_ability(Ability.INTELLIGENCE), False)
+        self.assertEqual(Ranger.proficient_in_ability(Ability.INTELLIGENCE), False)
+        self.assertEqual(Wizard.proficient_in_ability(Ability.INTELLIGENCE), True)
 
     def test_proficient_in_wisdom(self):
-        self.assertEqual(Bard.proficient(AbilityProficiency.WISDOM), False)
-        self.assertEqual(Ranger.proficient(AbilityProficiency.WISDOM), False)
-        self.assertEqual(Wizard.proficient(AbilityProficiency.WISDOM), True)
+        self.assertEqual(Bard.proficient_in_ability(Ability.WISDOM), False)
+        self.assertEqual(Ranger.proficient_in_ability(Ability.WISDOM), False)
+        self.assertEqual(Wizard.proficient_in_ability(Ability.WISDOM), True)
 
     def test_proficient_in_charisma(self):
-        self.assertEqual(Bard.proficient(AbilityProficiency.CHARISMA), True)
-        self.assertEqual(Ranger.proficient(AbilityProficiency.CHARISMA), False)
-        self.assertEqual(Wizard.proficient(AbilityProficiency.CHARISMA), False)
+        self.assertEqual(Bard.proficient_in_ability(Ability.CHARISMA), True)
+        self.assertEqual(Ranger.proficient_in_ability(Ability.CHARISMA), False)
+        self.assertEqual(Wizard.proficient_in_ability(Ability.CHARISMA), False)

@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from main.model.character.class_ import Class
-from main.model.character.utility.enumerators.ability_proficiency import AbilityProficiency
+from main.model.character.utility.enumerators.ability import Ability
 from main.model.dice.die import Die
 
 
@@ -19,8 +19,8 @@ class Paladin(Class):
         return Die(Die.Sides.TEN)
 
     @staticmethod
-    def _get_ability_proficiencies() -> Tuple[AbilityProficiency, ...]:
+    def _get_ability_proficiencies() -> Tuple[Ability, ...]:
         return (
-            AbilityProficiency.WISDOM,
-            AbilityProficiency.CHARISMA
+            Ability.WISDOM,
+            Ability.CHARISMA
         )

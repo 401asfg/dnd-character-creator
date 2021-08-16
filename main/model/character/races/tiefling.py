@@ -1,8 +1,15 @@
-from typing import Tuple
+from typing import Tuple, Dict
 
 from main.model.character.alignment import Alignment
+from main.model.character.utility.helper_modules.common_race_collection_items import get_darkvision, get_language
 from main.model.character.race import Race
+from main.model.character.utility.enumerators.ability import Ability
+from main.model.character.utility.enumerators.language import Language
 from main.model.character.utility.enumerators.size import Size
+from main.model.character.utility.enumerators.skill import Skill
+from main.model.collection.collection_item import CollectionItem
+
+# TODO: ADD THAUMATURGY CANTRIP!!!!!!!!!!!!!!!!!!!
 
 
 class Tiefling(Race):
@@ -10,37 +17,32 @@ class Tiefling(Race):
     The racial information for a tiefling character
     """
 
+    @property
+    def traits(self) -> Tuple[CollectionItem, ...]:
+        return (
+            get_darkvision(),
+            CollectionItem("Hellish Resistance", "You have resistance to fire damage.")
+        )
+
+    @property
+    def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
+        return (
+            get_language(Language.COMMON),
+            get_language(Language.INFERNAL)
+        )
+
+    def _get_ability_bonuses(self) -> Dict[Ability, int]:
+        return {
+            Ability.INTELLIGENCE: 1,
+            Ability.CHARISMA: 2
+        }
+
+    def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
+        pass
+
     @staticmethod
     def get_name() -> str:
         return "Tiefling"
-
-    @staticmethod
-    def get_strength_bonus() -> int:
-        return 0
-
-    @staticmethod
-    def get_dexterity_bonus() -> int:
-        return 0
-
-    @staticmethod
-    def get_constitution_bonus() -> int:
-        return 0
-
-    @staticmethod
-    def get_intelligence_bonus() -> int:
-        return 1
-
-    @staticmethod
-    def get_wisdom_bonus() -> int:
-        return 0
-
-    @staticmethod
-    def get_charisma_bonus() -> int:
-        return 2
-
-    @staticmethod
-    def get_additional_ability_bonus() -> int:
-        return 0
 
     @staticmethod
     def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
@@ -67,6 +69,10 @@ class Tiefling(Race):
     @staticmethod
     def get_size() -> Size:
         return Size.MEDIUM
+
+    @staticmethod
+    def get_hit_point_bonus() -> int:
+        return 0
 
     @staticmethod
     def get_speed() -> int:

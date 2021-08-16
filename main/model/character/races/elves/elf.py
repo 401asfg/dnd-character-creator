@@ -1,33 +1,29 @@
+from abc import ABC
 from typing import Tuple, Dict
 
 from main.model.character.alignment import Alignment
-from main.model.character.utility.helper_modules.common_race_collection_items import get_darkvision, get_language
+from main.model.character.utility.helper_modules.common_race_collection_items import get_darkvision, get_fey_ancestry, get_language
 from main.model.character.race import Race
+from main.model.character.races.half_elf import Language
 from main.model.character.utility.enumerators.ability import Ability
-from main.model.character.utility.enumerators.language import Language
 from main.model.character.utility.enumerators.size import Size
 from main.model.character.utility.enumerators.skill import Skill
 from main.model.collection.collection_item import CollectionItem
 
 
-class HalfOrc(Race):
+class Elf(Race, ABC):
     """
-    The racial information for a half-orc character
+    The racial information for a elf character
     """
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
         return (
             get_darkvision(),
+            get_fey_ancestry(),
             CollectionItem(
-                "Relentless Endurance",
-                "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. "
-                "You can’t use this feature again until you finish a long rest."
-            ),
-            CollectionItem(
-                "Savage Attacks",
-                "When you score a critical hit with a melee weapon attack, you can roll one of the weapon’s damage "
-                "dice one additional time and add it to the extra damage of the critical hit."
+                "Trance",
+                "Elves don’t need to sleep. Instead, they meditate deeply, remaining semiconscious, for 4 hours a day."
             )
         )
 
@@ -35,15 +31,12 @@ class HalfOrc(Race):
     def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
         return (
             get_language(Language.COMMON),
-            get_language(Language.ORC)
+            get_language(Language.ELVISH)
         )
-
-    def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
-        return (Skill.INTIMIDATION,)
 
     @staticmethod
     def get_name() -> str:
-        return "Half-Orc"
+        return "Elf"
 
     @staticmethod
     def get_acceptable_alignment_natures() -> Tuple[Alignment.Nature, ...]:
@@ -55,17 +48,17 @@ class HalfOrc(Race):
     @staticmethod
     def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
         return (
-            Alignment.Morality.NEUTRAL,
-            Alignment.Morality.EVIL
+            Alignment.Morality.GOOD,
+            Alignment.Morality.NEUTRAL
         )
 
     @staticmethod
     def get_min_adult_age() -> int:
-        return 14
+        return 100
 
     @staticmethod
     def get_life_expectancy() -> int:
-        return 75
+        return 750
 
     @staticmethod
     def get_size() -> Size:
@@ -81,5 +74,8 @@ class HalfOrc(Race):
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return {
-            Ability.STRENGTH: 2
+            Ability.DEXTERITY: 2
         }
+
+    def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
+        return (Skill.PERCEPTION,)

@@ -1,6 +1,6 @@
 import unittest
 
-from main.model.character.advancements import get_level, get_min_exp, get_proficiency_bonus
+from main.model.character.utility.helper_modules.advancements import get_level, get_min_exp, get_proficiency_bonus
 
 
 class AdvancementsTest(unittest.TestCase):

@@ -1,9 +1,9 @@
 from enum import Enum
 
 
-class SkillProficiency(Enum):
+class Skill(Enum):
     """
-    A skill that a character can be proficient in
+    One of the character's skills
     """
 
     ACROBATICS = 0

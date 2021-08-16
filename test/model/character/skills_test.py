@@ -1,25 +1,22 @@
 import unittest
 
 from main.model.character.abilities import generate_character_abilities
-from main.model.character.personality import Personality
 from main.model.character.utility.ability_score import AbilityScore
-from main.model.character.alignment import Alignment
-from main.model.character.character import Character
 from main.model.character.classes.wizard import Wizard
-from main.model.character.races.elf import Elf
+from main.model.character.races.elves.elf import Elf
 from main.model.character.skills import generate_character_skills
-from main.model.character.utility.enumerators.skill_proficiency import SkillProficiency
-from main.model.int_types.natural import Natural
+from main.model.character.utility.enumerators.skill import Skill
+from main.model.int_types.posint import Posint
 
 
 class SkillsTest(unittest.TestCase):
     def setUp(self):
-        skills = generate_character_skills((
-            SkillProficiency.ACROBATICS,
-            SkillProficiency.ANIMAL_HANDLING,
-            SkillProficiency.INSIGHT,
-            SkillProficiency.PERCEPTION,
-            SkillProficiency.STEALTH
+        self.skills = generate_character_skills((
+            Skill.ACROBATICS,
+            Skill.ANIMAL_HANDLING,
+            Skill.INSIGHT,
+            Skill.PERCEPTION,
+            Skill.STEALTH
         ))
 
         abilities = generate_character_abilities(
@@ -31,58 +28,55 @@ class SkillsTest(unittest.TestCase):
             charisma=AbilityScore(14)
         )
 
-        self.character = Character(
-            name="Mike-El",
-            player_name="Mike",
+        pb = Posint(2)
+
+        abilities = abilities(
+            race=Elf(),
             class_=Wizard,
-            race=Elf,
+            proficiency_bonus=pb
+        )
+
+        self.skills = self.skills(
             abilities=abilities,
-            skills=skills,
-            background="Beggar",
-            personality=Personality("", "", "", "", ""),
-            alignment=Alignment(
-                Alignment.Nature.NEUTRAL,
-                Alignment.Morality.NEUTRAL
-            ),
-            age=Natural(21)
+            proficiency_bonus=pb
         )
 
     def test_modifier(self):
-        self.assertEqual(7, self.character.skills.acrobatics.modifier)
-        self.assertEqual(4, self.character.skills.animal_handling.modifier)
-        self.assertEqual(-3, self.character.skills.arcana.modifier)
-        self.assertEqual(2, self.character.skills.athletics.modifier)
-        self.assertEqual(2, self.character.skills.deception.modifier)
-        self.assertEqual(-3, self.character.skills.history.modifier)
-        self.assertEqual(4, self.character.skills.insight.modifier)
-        self.assertEqual(2, self.character.skills.intimidation.modifier)
-        self.assertEqual(-3, self.character.skills.investigation.modifier)
-        self.assertEqual(2, self.character.skills.medicine.modifier)
-        self.assertEqual(-3, self.character.skills.nature.modifier)
-        self.assertEqual(4, self.character.skills.perception.modifier)
-        self.assertEqual(2, self.character.skills.performance.modifier)
-        self.assertEqual(2, self.character.skills.persuasion.modifier)
-        self.assertEqual(-3, self.character.skills.religion.modifier)
-        self.assertEqual(5, self.character.skills.sleight_of_hand.modifier)
-        self.assertEqual(7, self.character.skills.stealth.modifier)
-        self.assertEqual(2, self.character.skills.survival.modifier)
+        self.assertEqual(7, self.skills.acrobatics.modifier)
+        self.assertEqual(4, self.skills.animal_handling.modifier)
+        self.assertEqual(-3, self.skills.arcana.modifier)
+        self.assertEqual(2, self.skills.athletics.modifier)
+        self.assertEqual(2, self.skills.deception.modifier)
+        self.assertEqual(-3, self.skills.history.modifier)
+        self.assertEqual(4, self.skills.insight.modifier)
+        self.assertEqual(2, self.skills.intimidation.modifier)
+        self.assertEqual(-3, self.skills.investigation.modifier)
+        self.assertEqual(2, self.skills.medicine.modifier)
+        self.assertEqual(-3, self.skills.nature.modifier)
+        self.assertEqual(4, self.skills.perception.modifier)
+        self.assertEqual(2, self.skills.performance.modifier)
+        self.assertEqual(2, self.skills.persuasion.modifier)
+        self.assertEqual(-3, self.skills.religion.modifier)
+        self.assertEqual(5, self.skills.sleight_of_hand.modifier)
+        self.assertEqual(7, self.skills.stealth.modifier)
+        self.assertEqual(2, self.skills.survival.modifier)
 
     def test_proficient(self):
-        self.assertEqual(True, self.character.skills.acrobatics.proficient)
-        self.assertEqual(True, self.character.skills.animal_handling.proficient)
-        self.assertEqual(False, self.character.skills.arcana.proficient)
-        self.assertEqual(False, self.character.skills.athletics.proficient)
-        self.assertEqual(False, self.character.skills.deception.proficient)
-        self.assertEqual(False, self.character.skills.history.proficient)
-        self.assertEqual(True, self.character.skills.insight.proficient)
-        self.assertEqual(False, self.character.skills.intimidation.proficient)
-        self.assertEqual(False, self.character.skills.investigation.proficient)
-        self.assertEqual(False, self.character.skills.medicine.proficient)
-        self.assertEqual(False, self.character.skills.nature.proficient)
-        self.assertEqual(True, self.character.skills.perception.proficient)
-        self.assertEqual(False, self.character.skills.performance.proficient)
-        self.assertEqual(False, self.character.skills.persuasion.proficient)
-        self.assertEqual(False, self.character.skills.religion.proficient)
-        self.assertEqual(False, self.character.skills.sleight_of_hand.proficient)
-        self.assertEqual(True, self.character.skills.stealth.proficient)
-        self.assertEqual(False, self.character.skills.survival.proficient)
+        self.assertEqual(True, self.skills.acrobatics.proficient_in_ability)
+        self.assertEqual(True, self.skills.animal_handling.proficient_in_ability)
+        self.assertEqual(False, self.skills.arcana.proficient_in_ability)
+        self.assertEqual(False, self.skills.athletics.proficient_in_ability)
+        self.assertEqual(False, self.skills.deception.proficient_in_ability)
+        self.assertEqual(False, self.skills.history.proficient_in_ability)
+        self.assertEqual(True, self.skills.insight.proficient_in_ability)
+        self.assertEqual(False, self.skills.intimidation.proficient_in_ability)
+        self.assertEqual(False, self.skills.investigation.proficient_in_ability)
+        self.assertEqual(False, self.skills.medicine.proficient_in_ability)
+        self.assertEqual(False, self.skills.nature.proficient_in_ability)
+        self.assertEqual(True, self.skills.perception.proficient_in_ability)
+        self.assertEqual(False, self.skills.performance.proficient_in_ability)
+        self.assertEqual(False, self.skills.persuasion.proficient_in_ability)
+        self.assertEqual(False, self.skills.religion.proficient_in_ability)
+        self.assertEqual(False, self.skills.sleight_of_hand.proficient_in_ability)
+        self.assertEqual(True, self.skills.stealth.proficient_in_ability)
+        self.assertEqual(False, self.skills.survival.proficient_in_ability)

@@ -4,9 +4,9 @@ from collections import Callable
 from main.model.character.alignment import Alignment
 from main.model.character.race import Race
 from main.model.character.races.dragonborn import Dragonborn
-from main.model.character.races.dwarf import Dwarf
-from main.model.character.races.elf import Elf
-from main.model.character.races.gnome import Gnome
+from main.model.character.races.dwarves.dwarf import Dwarf
+from main.model.character.races.elves.elf import Elf
+from main.model.character.races.gnomes.gnome import Gnome
 from main.model.character.races.human import Human
 from main.model.character.utility.enumerators.size import Size
 
