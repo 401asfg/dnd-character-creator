@@ -57,7 +57,7 @@ class Gnome(Race, ABC):
 
     @staticmethod
     def get_min_adult_age() -> int:
-        return 350
+        return 40
 
     @staticmethod
     def get_life_expectancy() -> int:

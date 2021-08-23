@@ -27,17 +27,14 @@ class HighElf(Elf):
         self._language = language
 
     @property
-    def traits(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().traits,
-            "Elf Weapon Training",
-            "You have proficiency with the longsword, shortsword, shortbow, and longbow."
+    def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
+        return super().other_proficiencies + (
+            get_language(self._language),
         )
 
-    @property
-    def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
-        language = get_language(self._language)
-        return self._get_appended_collection(super().other_proficiencies, language.name, language.info)
+    @staticmethod
+    def get_name() -> str:
+        return "High Elf"
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return self._get_appended_ability_bonuses(super()._get_ability_bonuses(), Ability.INTELLIGENCE, 1)

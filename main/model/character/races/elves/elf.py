@@ -31,7 +31,11 @@ class Elf(Race, ABC):
     def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
         return (
             get_language(Language.COMMON),
-            get_language(Language.ELVISH)
+            get_language(Language.ELVISH),
+            CollectionItem(
+                "Elf Weapon Training",
+                "You have proficiency with the longsword, shortsword, shortbow, and longbow."
+            )
         )
 
     @staticmethod

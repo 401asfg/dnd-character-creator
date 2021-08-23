@@ -12,11 +12,14 @@ class HillDwarf(Dwarf):
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().traits,
+        return super().traits + (CollectionItem(
             "Dwarven Toughness",
             "Your hit point maximum increases by 1 every time you gain a level."
-        )
+        ),)
+
+    @staticmethod
+    def get_name() -> str:
+        return "Hill Dwarf"
 
     @staticmethod
     def get_hit_point_bonus() -> int:

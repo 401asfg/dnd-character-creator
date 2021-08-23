@@ -12,12 +12,15 @@ class LightfootHalfling(Halfling):
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().traits,
+        return super().traits + (CollectionItem(
             "Naturally Stealthy",
             "You can attempt to hide even when you are obscured only by a creature that is at least one size larger "
             "than you."
-        )
+        ),)
+
+    @staticmethod
+    def get_name() -> str:
+        return "Lightfoot Halfling"
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return self._get_appended_ability_bonuses(

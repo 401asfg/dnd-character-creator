@@ -38,7 +38,7 @@ class Tiefling(Race):
         }
 
     def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:
-        pass
+        return ()
 
     @staticmethod
     def get_name() -> str:

@@ -12,11 +12,14 @@ class MountainDwarf(Dwarf):
 
     @property
     def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().other_proficiencies,
+        return super().other_proficiencies + (CollectionItem(
             "Dwarven Armor Training",
             "You have proficiency with light and medium armor."
-        )
+        ),)
+
+    @staticmethod
+    def get_name() -> str:
+        return "Mountain Dwarf"
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return self._get_appended_ability_bonuses(super()._get_ability_bonuses(), Ability.STRENGTH, 2)

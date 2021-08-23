@@ -15,31 +15,26 @@ class DeepGnome(Gnome):
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
-        traits = self._get_appended_collection(
-            super().traits,
-            "Superior Darkvision",
-            "Your darkvision has a radius of 120 feet."
-        )
-
-        return self._get_appended_collection(
-            traits,
-            "Stone Camouflage",
-            "You have advantage on Dexterity (Stealth) checks to hide in rocky terrain."
+        return super().traits + (
+            CollectionItem("Superior Darkvision", "Your darkvision has a radius of 120 feet."),
+            CollectionItem(
+                "Stone Camouflage",
+                "You have advantage on Dexterity (Stealth) checks to hide in rocky terrain."
+            )
         )
 
     @property
     def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
-        language = get_language(Language.UNDERCOMMON)
-        return self._get_appended_collection(
-            super().other_proficiencies,
-            language.name,
-            language.info
-        )
+        return super().other_proficiencies + (get_language(Language.UNDERCOMMON),)
+
+    @staticmethod
+    def get_name() -> str:
+        return "Deep Gnome"
 
     @staticmethod
     def get_acceptable_alignment_moralities() -> Tuple[Alignment.Morality, ...]:
         return (
-            Alignment.Morality.NEUTRAL
+            Alignment.Morality.NEUTRAL,
         )
 
     @staticmethod

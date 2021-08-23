@@ -81,5 +81,6 @@ class HalfOrc(Race):
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return {
-            Ability.STRENGTH: 2
+            Ability.STRENGTH: 2,
+            Ability.CONSTITUTION: 1
         }

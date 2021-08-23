@@ -41,7 +41,7 @@ _draconic_ancestries = {
         "Brass",
         "Damage Type: Fire\n Breath Weapon: 5 by 30 ft. line (Dex. save)"),
     DraconicAncestry.BRONZE: CollectionItem(
-        "Black",
+        "Bronze",
         "Damage Type: Lightning\n Breath Weapon: 5 by 30 ft. line (Dex. save)"
     ),
     DraconicAncestry.COPPER: CollectionItem(
@@ -148,7 +148,8 @@ class Dragonborn(Race):
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return {
-            Ability.STRENGTH: 2
+            Ability.STRENGTH: 2,
+            Ability.CHARISMA: 1
         }
 
     def _get_skill_proficiencies(self) -> Tuple[Skill, ...]:

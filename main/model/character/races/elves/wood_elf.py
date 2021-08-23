@@ -12,20 +12,15 @@ class WoodElf(Elf):
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().traits,
+        return super().traits + (CollectionItem(
             "Mask of the Wild",
             "You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, "
             "mist, and other natural phenomena."
-        )
+        ),)
 
-    @property
-    def other_proficiencies(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().other_proficiencies,
-            "Elf Weapon Training",
-            "You have proficiency with the longsword, shortsword, shortbow, and longbow."
-        )
+    @staticmethod
+    def get_name() -> str:
+        return "Wood Elf"
 
     @staticmethod
     def get_speed() -> int:

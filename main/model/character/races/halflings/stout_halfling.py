@@ -12,11 +12,14 @@ class StoutHalfling(Halfling):
 
     @property
     def traits(self) -> Tuple[CollectionItem, ...]:
-        return self._get_appended_collection(
-            super().traits,
+        return super().traits + (CollectionItem(
             "Stout Resilience",
             "You have advantage on saving throws against poison, and you have resistance against poison damage."
-        )
+        ),)
+
+    @staticmethod
+    def get_name() -> str:
+        return "Stout Halfling"
 
     def _get_ability_bonuses(self) -> Dict[Ability, int]:
         return self._get_appended_ability_bonuses(super()._get_ability_bonuses(), Ability.CONSTITUTION, 1)

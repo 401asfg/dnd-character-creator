@@ -151,24 +151,6 @@ class Race(ABC):
         _error()
 
     @staticmethod
-    def _get_appended_collection(
-            collection: Tuple[CollectionItem, ...],
-            name: str,
-            info: str
-    ) -> Tuple[CollectionItem, ...]:
-        """
-        Get the given collection with a collection item, containing the given name and info, appended to it
-
-        :param collection: The original collection, which has a collection item, containing the given name and info,
-        appended to it
-        :param name: The name of the collection item that is appended to the collection
-        :param info: The info of the collection item that is appended to the collection
-        :return: The given collection with a collection item, containing the given name and info, appended to it
-        """
-
-        return collection + (CollectionItem(name, info),)
-
-    @staticmethod
     def _get_appended_ability_bonuses(
             ability_bonuses: Dict[Ability, int],
             ability: Ability,
